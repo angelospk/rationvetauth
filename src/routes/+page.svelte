@@ -331,7 +331,24 @@ onMount(async () => {
 		</div>
 		  </div>
 
-			  
+		
+		   <!-- Add Mix Sheet section here -->
+  <hr />
+
+  <div class="heading">
+    <h2>Step 3: Mix Sheet</h2>
+  </div>
+
+  <div class="default">
+    <p>
+      <label for="batch_lb">Set Batch Wt, lb: </label><br />
+      <input id="batch_lb" type="number" step="1" on:input={CalcAnalysis} />
+    </p>
+  </div>
+
+  <div style="overflow-x: auto;">
+    <!-- Add Mix Sheet table here -->
+  </div>
 		</form>
 
 
