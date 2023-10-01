@@ -1,6 +1,7 @@
 <script>
     // Your Svelte component
 import { onMount } from 'svelte';
+
 // import { pool } from '../db'
 let rationName = '';
 let producerName = '';
@@ -64,7 +65,8 @@ let tableInfo=false;
     Glycine: 'cat',
     Category: 'corn',
     EnglishTitle: '',
-    Keywords: ''
+    Keywords: '',
+    weight:0.3
   },
   {
     feedName: 'Κριθάρι',
@@ -73,6 +75,7 @@ let tableInfo=false;
     CrudeFiber: 48,
     Starch: 495,
     Ash: 27,
+    weight: 0,
     Calcium: 0.5,
     Phosphorus: 3.6,
     Potassium: 4.4,
@@ -112,6 +115,7 @@ let tableInfo=false;
   {
     feedName: 'Βρώμη',
     DryMatter: 870,
+    weight:0,
     CrudeProtein: 53,
     CrudeFiber: 100,
     Starch: 370,
@@ -194,13 +198,37 @@ let tableInfo=false;
 	hbt.style.display='none';
   }
 
+    // Function to calculate the sum of a specific column
+    function getColumnSum(column) {
+    if (column === 'weight') {
+      return feeds.reduce((sum, feed) => sum + parseFloat(feed[column] || 0), 0);
+    } else {
+      return feeds.reduce((sum, feed) => sum + (parseFloat(feed[column] || 0) * parseFloat(feed.weight || 0)), 0);
+    }
+  }
+
+  // Computed sums for each column
+  let sumWeight= getColumnSum('weight');
+  let sumLysine = getColumnSum('Lysine');
+  let sumPhosphorus = getColumnSum('Phosphorus');
+  let sumCrudeFiber = getColumnSum('CrudeFiber');
+  let sumCrudeProtein = getColumnSum('CrudeProtein');
 let data = [];
 function CalcAnalysis(){
 	console.log("calcanalysis");
 }
 onMount(async () => {
 	console.log("test");
-	// 	try {
+  let d=await fetch ("/api/data")
+		console.log(d);
+		if (d.ok){
+		let dat=await d.json()
+    console.log(dat)
+    }
+  
+  // let eval(feeds[0].Title)=3
+  // console.log(eval(feeds[0].Ash));
+  // 	try {
 	// 	const connection = await pool.getConnection();
 	// 	const [rows] = await connection.query('SELECT * FROM your_table_name');
 	// 	connection.release();
@@ -213,7 +241,7 @@ onMount(async () => {
 
 </script>
 
-<div class="container h-full mx-auto flex justify-center text-center space-y-10 items-center my-5 overflow-scroll">
+<div class="container h-full mx-auto w-fit md:w-full flex justify-center text-center items-center my-5 overflow-y-scroll">
 	<div class="">
 		<h2 class="h2">Υπολογισμός Σιτηρεσίου</h2>
 		
@@ -276,7 +304,7 @@ onMount(async () => {
 		</div>
 		{/if}
 		<!-- Table for feedstuff entry -->
-		<div class="">
+		<div class="overflow-x-scroll">
 			<table class="bg-white table-auto">
 			  <!-- Table headers -->
 			  <thead>
@@ -315,6 +343,20 @@ onMount(async () => {
 				  </tr>
 				{/each}
 			  </tbody>
+        <tfoot>
+    <tr class="bg-gray-200 text-gray-700">
+      <th class="text-purple-500 w-min">Total</th>
+      <th class="text-purple-500 w-min">{sumWeight.toFixed(2)}</th>
+      <th class="text-purple-500 w-min">{sumLysine.toFixed(2)}</th>
+      <th class="text-purple-500 w-min">{sumPhosphorus.toFixed(2)}</th>
+      <th class="text-purple-500 w-min">{sumCrudeFiber.toFixed(2)}</th>
+      <th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
+      <th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
+      <th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
+      <th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
+      <!-- Add other table footer cells here -->
+    </tr>
+  </tfoot>
 			</table>
 			<div class="secondary" style="margin-top: 5px;">
 				<br />

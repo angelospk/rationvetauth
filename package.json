@@ -41,6 +41,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"mysql2": "^3.6.1"
+		"mysql2": "^3.6.1",
+		"papaparse": "^5.4.1",
+		"xlsx": "^0.18.5"
 	}
 }
