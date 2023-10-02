@@ -159,8 +159,22 @@ let names={};
 //     Keywords: ''
 //   }
 // ];
-
+let selected=[];
 let certain=["Title","weight","DryMatter","Fat","CrudeFiber","CrudeProtein","Ash","Calcium","Phosphorus"]
+function addRow(){
+    let temp={}
+    for (let c of columns){
+      temp[c]=0
+    }
+    temp["Title"]=""
+    selected.push(temp);
+}
+let temp={}
+    for (let c of certain){
+      temp[c]=0
+    }
+    temp["Title"]=""
+    selected.push(temp);
 let columns=[]
 function setCols(certain){
   let temp=[];
@@ -245,7 +259,8 @@ onMount(async () => {
     // console.log(columns);
     columns=setCols(certain);
     console.log(columns)
-  
+    
+    console.log(temp)
     }
   
 
@@ -331,7 +346,7 @@ onMount(async () => {
 		
 			  <!-- Table body -->
 			  <tbody>
-				{#each feeds as feed, i }
+				{#each selected as feed, i }
 				  <tr class="">
 					<td>
 					  <input type="text" readonly class="" bind:value={feed.Title} />
