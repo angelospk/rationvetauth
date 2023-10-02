@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     // Your Svelte component
 import { onMount } from 'svelte';
 
@@ -6,6 +6,8 @@ import { onMount } from 'svelte';
 let rationName = '';
 let producerName = '';
 let tableInfo=false;
+let feeds=[];
+let names={};
 // let feeds = [
 //     {
 //       feedName: '',
@@ -23,160 +25,163 @@ let tableInfo=false;
 //       source: 'BeefMag_2018',
 //     },
 //   ];
-  const feeds = [
-  {
-    feedName: 'Καλαμπόκι',
-    DryMatter: 870,
-    CrudeProtein: 42,
-    CrudeFiber: 22,
-    Starch: 605,
-    Ash: 13.5,
-    Calcium: 0.1,
-    Phosphorus: 2.7,
-    Potassium: 3.3,
-    Sodium: 0.1,
-    GrossEnergy: 3860,
-    MetabolizableEnergyForPoultry: 3431,
-    MetabolizableEnergyForSwine: 2898,
-    MEforLayingHens: 1.1,
-    MEforBroilers: 1.11,
-    MEforTurkeys: 1.15,
-    MetabolizableEnergyForSwine2: 3400,
-    MetabolizableEnergyForSwine3: 3315,
-    MetabolizableEnergyForSwine4: 2525,
-    MetabolizableEnergyForRabbits: 3300,
-    MetabolizableEnergyForRabbits2: 3300,
-    MetabolizableEnergyForPoultry2: 85,
-    OilAndAmnioAcid: 59,
-    ProteinAmnioAcidForPoultry: 69,
-    ProteinAmnioAcidForSwine: 70,
-    ProteinAmnioAcidForRabbits: 2.5,
-    Lysine: 1.7,
-    Methionine: 3.9,
-    MethionineCysteine: 3.2,
-    Threonine: 0.6,
-    Tryptophan: 3.5,
-    Isoleucine: 11.3,
-    Leucine: 4.6,
-    Valine: 4.5,
-    Phenylalanine: 2.5,
-    Histidine: 4.3,
-    Arginine: 3.7,
-    Glycine: 'cat',
-    Category: 'corn',
-    EnglishTitle: '',
-    Keywords: '',
-    weight:0.3
-  },
-  {
-    feedName: 'Κριθάρι',
-    DryMatter: 870,
-    CrudeProtein: 18,
-    CrudeFiber: 48,
-    Starch: 495,
-    Ash: 27,
-    weight: 0,
-    Calcium: 0.5,
-    Phosphorus: 3.6,
-    Potassium: 4.4,
-    Sodium: 0.4,
-    GrossEnergy: 3770,
-    MetabolizableEnergyForPoultry: 3113,
-    MetabolizableEnergyForSwine: 2597,
-    MEforLayingHens: 0.97,
-    MEforBroilers: 0.96,
-    MEforTurkeys: 1,
-    MetabolizableEnergyForSwine2: 2970,
-    MetabolizableEnergyForSwine3: 2890,
-    MetabolizableEnergyForSwine4: 2222,
-    MetabolizableEnergyForRabbits: 2745,
-    MetabolizableEnergyForRabbits2: 2745,
-    MetabolizableEnergyForPoultry2: 95,
-    OilAndAmnioAcid: 68,
-    ProteinAmnioAcidForPoultry: 72,
-    ProteinAmnioAcidForSwine: 68.5,
-    ProteinAmnioAcidForRabbits: 3.5,
-    Lysine: 1.6,
-    Methionine: 4.1,
-    MethionineCysteine: 3.1,
-    Threonine: 1,
-    Tryptophan: 3.5,
-    Isoleucine: 6.4,
-    Leucine: 5,
-    Valine: 5.1,
-    Phenylalanine: 2,
-    Histidine: 4.8,
-    Arginine: 5,
-    Glycine: 'cat2',
-    Category: 'soya',
-    EnglishTitle: '',
-    Keywords: ''
-  },
-  {
-    feedName: 'Βρώμη',
-    DryMatter: 870,
-    weight:0,
-    CrudeProtein: 53,
-    CrudeFiber: 100,
-    Starch: 370,
-    Ash: 27,
-    Calcium: 0.8,
-    Phosphorus: 3.4,
-    Potassium: 4.2,
-    Sodium: 0.7,
-    GrossEnergy: 4010,
-    MetabolizableEnergyForPoultry: 2984,
-    MetabolizableEnergyForSwine: 2485,
-    MEforLayingHens: 0.9,
-    MEforBroilers: 0.86,
-    MEforTurkeys: 0.8,
-    MetabolizableEnergyForSwine2: 230,
-    MetabolizableEnergyForSwine3: 2650,
-    MetabolizableEnergyForSwine4: '-',
-    MetabolizableEnergyForRabbits: 2560,
-    MetabolizableEnergyForRabbits2: '-',
-    MetabolizableEnergyForPoultry2: 2560,
-    OilAndAmnioAcid: 100,
-    ProteinAmnioAcidForPoultry: 73,
-    ProteinAmnioAcidForSwine: 79,
-    ProteinAmnioAcidForRabbits: 80,
-    Lysine: 4,
-    Methionine: '1.6',
-    MethionineCysteine: '5',
-    Threonine: '3.5',
-    Tryptophan: '1.2',
-    Isoleucine: '4.2',
-    Leucine: '7.3',
-    Valine: '5.2',
-    Phenylalanine: '5.6',
-    Histidine: '2.2',
-    Arginine: '6.6',
-    Glycine: '5.5',
-    Category: 'cat3',
-    EnglishTitle: 'vrom',
-    Keywords: ''
-  }
-];
+//   const feeds = [
+//   {
+//     feedName: 'Καλαμπόκι',
+//     DryMatter: 870,
+//     CrudeProtein: 42,
+//     CrudeFiber: 22,
+//     Starch: 605,
+//     Ash: 13.5,
+//     Calcium: 0.1,
+//     Phosphorus: 2.7,
+//     Potassium: 3.3,
+//     Sodium: 0.1,
+//     GrossEnergy: 3860,
+//     MetabolizableEnergyForPoultry: 3431,
+//     MetabolizableEnergyForSwine: 2898,
+//     MEforLayingHens: 1.1,
+//     MEforBroilers: 1.11,
+//     MEforTurkeys: 1.15,
+//     MetabolizableEnergyForSwine2: 3400,
+//     MetabolizableEnergyForSwine3: 3315,
+//     MetabolizableEnergyForSwine4: 2525,
+//     MetabolizableEnergyForRabbits: 3300,
+//     MetabolizableEnergyForRabbits2: 3300,
+//     MetabolizableEnergyForPoultry2: 85,
+//     OilAndAmnioAcid: 59,
+//     ProteinAmnioAcidForPoultry: 69,
+//     ProteinAmnioAcidForSwine: 70,
+//     ProteinAmnioAcidForRabbits: 2.5,
+//     Lysine: 1.7,
+//     Methionine: 3.9,
+//     MethionineCysteine: 3.2,
+//     Threonine: 0.6,
+//     Tryptophan: 3.5,
+//     Isoleucine: 11.3,
+//     Leucine: 4.6,
+//     Valine: 4.5,
+//     Phenylalanine: 2.5,
+//     Histidine: 4.3,
+//     Arginine: 3.7,
+//     Glycine: 'cat',
+//     Category: 'corn',
+//     EnglishTitle: '',
+//     Keywords: '',
+//     weight:0.3
+//   },
+//   {
+//     feedName: 'Κριθάρι',
+//     DryMatter: 870,
+//     CrudeProtein: 18,
+//     CrudeFiber: 48,
+//     Starch: 495,
+//     Ash: 27,
+//     weight: 0,
+//     Calcium: 0.5,
+//     Phosphorus: 3.6,
+//     Potassium: 4.4,
+//     Sodium: 0.4,
+//     GrossEnergy: 3770,
+//     MetabolizableEnergyForPoultry: 3113,
+//     MetabolizableEnergyForSwine: 2597,
+//     MEforLayingHens: 0.97,
+//     MEforBroilers: 0.96,
+//     MEforTurkeys: 1,
+//     MetabolizableEnergyForSwine2: 2970,
+//     MetabolizableEnergyForSwine3: 2890,
+//     MetabolizableEnergyForSwine4: 2222,
+//     MetabolizableEnergyForRabbits: 2745,
+//     MetabolizableEnergyForRabbits2: 2745,
+//     MetabolizableEnergyForPoultry2: 95,
+//     OilAndAmnioAcid: 68,
+//     ProteinAmnioAcidForPoultry: 72,
+//     ProteinAmnioAcidForSwine: 68.5,
+//     ProteinAmnioAcidForRabbits: 3.5,
+//     Lysine: 1.6,
+//     Methionine: 4.1,
+//     MethionineCysteine: 3.1,
+//     Threonine: 1,
+//     Tryptophan: 3.5,
+//     Isoleucine: 6.4,
+//     Leucine: 5,
+//     Valine: 5.1,
+//     Phenylalanine: 2,
+//     Histidine: 4.8,
+//     Arginine: 5,
+//     Glycine: 'cat2',
+//     Category: 'soya',
+//     EnglishTitle: '',
+//     Keywords: ''
+//   },
+//   {
+//     feedName: 'Βρώμη',
+//     DryMatter: 870,
+//     weight:0,
+//     CrudeProtein: 53,
+//     CrudeFiber: 100,
+//     Starch: 370,
+//     Ash: 27,
+//     Calcium: 0.8,
+//     Phosphorus: 3.4,
+//     Potassium: 4.2,
+//     Sodium: 0.7,
+//     GrossEnergy: 4010,
+//     MetabolizableEnergyForPoultry: 2984,
+//     MetabolizableEnergyForSwine: 2485,
+//     MEforLayingHens: 0.9,
+//     MEforBroilers: 0.86,
+//     MEforTurkeys: 0.8,
+//     MetabolizableEnergyForSwine2: 230,
+//     MetabolizableEnergyForSwine3: 2650,
+//     MetabolizableEnergyForSwine4: '-',
+//     MetabolizableEnergyForRabbits: 2560,
+//     MetabolizableEnergyForRabbits2: '-',
+//     MetabolizableEnergyForPoultry2: 2560,
+//     OilAndAmnioAcid: 100,
+//     ProteinAmnioAcidForPoultry: 73,
+//     ProteinAmnioAcidForSwine: 79,
+//     ProteinAmnioAcidForRabbits: 80,
+//     Lysine: 4,
+//     Methionine: '1.6',
+//     MethionineCysteine: '5',
+//     Threonine: '3.5',
+//     Tryptophan: '1.2',
+//     Isoleucine: '4.2',
+//     Leucine: '7.3',
+//     Valine: '5.2',
+//     Phenylalanine: '5.6',
+//     Histidine: '2.2',
+//     Arginine: '6.6',
+//     Glycine: '5.5',
+//     Category: 'cat3',
+//     EnglishTitle: 'vrom',
+//     Keywords: ''
+//   }
+// ];
 
+let certain=["Title","weight","DryMatter","Fat","CrudeFiber","CrudeProtein","Ash","Calcium","Phosphorus"]
+let columns=[]
+function setCols(certain){
+  let temp=[];
+try{
+  for (let c of certain){
+    temp.push(names[c].gr)
+  }
+  return temp;
+}
+catch{
+  return temp;
+}
+}
+$:columns=setCols(certain)
 
 	function tableInfoVisibility(){
 		tableInfo=!tableInfo;
 	}
   function addFeedstuffRow() {
     feeds.push({
-      feedName: '',
-      weight: 0,
-      dm: 0,
-      cp: 0,
-      tdn: 0,
-      cf: 0,
-      fat: 0,
-      nem: 0,
-      neg: 0,
-      nel: 0,
-      ca: 0,
-      p: 0,
-      source: '',
+   weight:0,DryMatter:0,Fat:0,CrudeFiber:0,CrudeProtein:0,Ash:0,Calcium:0,Phospohrus:0,title:""
     });
   }
 
@@ -219,24 +224,31 @@ function CalcAnalysis(){
 }
 onMount(async () => {
 	console.log("test");
+  addFeedstuffRow();
   let d=await fetch ("/api/data")
-		console.log(d);
 		if (d.ok){
 		let dat=await d.json()
-    console.log(dat)
+    // console.log(dat);
+    //t=feeds 
+    let feeds=dat.d[0].data
+    for (let i of feeds){
+      i.weight=0;
+    }
+    console.log("feeds:", feeds)
+    let temp=dat.d[1].data
+    for (const item of temp) {
+    names[item.Title] = item;
+    }
+    // for (let c of certain){
+    //   columns.push(names[c].gr)
+    // }
+    // console.log(columns);
+    columns=setCols(certain);
+    console.log(columns)
+  
     }
   
-  // let eval(feeds[0].Title)=3
-  // console.log(eval(feeds[0].Ash));
-  // 	try {
-	// 	const connection = await pool.getConnection();
-	// 	const [rows] = await connection.query('SELECT * FROM your_table_name');
-	// 	connection.release();
-	// 	// data = rows;
-	// 	console.log(rows);
-	// } catch (error) {
-	// 	console.error('Error fetching data:', error);
-	// }
+
 });
 
 </script>
@@ -309,15 +321,10 @@ onMount(async () => {
 			  <!-- Table headers -->
 			  <thead>
 				 <tr class="bg-gray-200 text-gray-700">
-      			<th class="text-purple-500 w-min">Title</th>
-				  <th class="text-purple-500 w-min">Weight<br>kg</th>
-				  <th class="text-purple-500 w-min">Lyssine</th>
-				  <th class="text-purple-500 w-min">P</th>
-				  <th class="text-purple-500 w-min">CF</th>
-				  <th class="text-purple-500 w-min">CP</th>
-				  <th class="text-purple-500 w-min">CP</th>
-				  <th class="text-purple-500 w-min">CP</th>
-				  <th class="text-purple-500 w-min">CP</th>
+          {#each columns as column }
+          <th class="text-purple-500 w-min">{column}</th>
+          {/each}
+
 				  <!-- Add other table headers here -->
 				</tr>
 			  </thead>
@@ -327,7 +334,7 @@ onMount(async () => {
 				{#each feeds as feed, i }
 				  <tr class="">
 					<td>
-					  <input type="text" readonly class="" bind:value={feed.feedName} />
+					  <input type="text" readonly class="" bind:value={feed.Title} />
 					</td>
 					<td>
 					  <input type="number" bind:value={feed.weight} min="0" step="0.3" />
@@ -345,7 +352,7 @@ onMount(async () => {
 			  </tbody>
         <tfoot>
     <tr class="bg-gray-200 text-gray-700">
-      <th class="text-purple-500 w-min">Total</th>
+      <th class="text-purple-500 w-min">Σύνολο</th>
       <th class="text-purple-500 w-min">{sumWeight.toFixed(2)}</th>
       <th class="text-purple-500 w-min">{sumLysine.toFixed(2)}</th>
       <th class="text-purple-500 w-min">{sumPhosphorus.toFixed(2)}</th>
