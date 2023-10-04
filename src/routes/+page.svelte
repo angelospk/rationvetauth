@@ -165,8 +165,8 @@
 	// ];
 
 	let selected =[];
-	let out=[];
-	$: out=selected
+	let out=writable([])
+	// out.subscribe()
 	let certain = [
 		'Title',
 		'weight',
@@ -208,7 +208,7 @@
 	let inputChip = '';
   	let inputChipList: string[] = [];
 	let autocompleteOptions : AutocompleteOption<string>[];
-
+	$: selected=feeds.filter(x=>inputChipList.includes(x.Title))
 	function tableInfoVisibility() {
 		tableInfo = !tableInfo;
 	}
@@ -307,8 +307,10 @@
 		if (inputChipList.includes(event.detail.value) === false) {
 			inputChipList = [...inputChipList, event.detail.value];
 			inputChip = '';
-			selected.push(feeds.filter(x=>x.Title==event.detail.value))
-			console.log(selected);
+			// selected.push(feeds.filter(x=>x.Title==event.detail.value))
+			// console.log(selected);
+			// out.set(selected);
+			console.log($out);
 			// selected.
 		}
 	}
@@ -318,8 +320,10 @@ function validateFoodInput(value:string): boolean{
 	if (inputChipList.includes(value)) return false;
 	if (feeds.filter(x=>x.keywords.includes(value))){
 	console.log(feeds.filter(x=>x.Title==value))
-	selected.push(feeds.filter(x=>x.Title==value))
+	// selected.push(feeds.filter(x=>x.Title==value))
+	// out.set(selected);
 	console.log(selected)
+	console.log($out);
 	return true
 	};
 	
@@ -440,22 +444,21 @@ function validateFoodInput(value:string): boolean{
 							<td>{l}</td>
 						</tr>
 						{/each} -->
-						{#each out as feed, i}
-							<p>{feed.Title}</p>
+						{#each selected as feed, i}
 							<tr class="">
 								<td>
-									<input type="text" readonly class="" bind:value={feed.Title} />
+									<input type="text" readonly class="" value={feed.Title} />
 								</td>
 								<td>
-									<input type="number" bind:value={feed.weight} min="0" step="0.3" />
+									<input type="number" value={feed.weight} min="0" step="0.3" />
 								</td>
-								<td><input type="number" bind:value={feed.Lysine} min="0" step="0.3" /></td>
-								<td><input type="number" bind:value={feed.Phosphorus} min="0" step="0.3" /></td>
-								<td><input type="number" bind:value={feed.CrudeFiber} min="0" step="0.3" /></td>
-								<td><input type="number" bind:value={feed.CrudeProtein} min="0" step="0.3" /></td>
-								<td><input type="number" bind:value={feed.CrudeProtein} min="0" step="0.3" /></td>
-								<td><input type="number" bind:value={feed.CrudeProtein} min="0" step="0.3" /></td>
-								<td><input type="number" bind:value={feed.CrudeProtein} min="0" step="0.3" /></td>
+								<td><input type="number" value={feed.Lysine} min="0" step="0.3" /></td>
+								<td><input type="number" value={feed.Phosphorus} min="0" step="0.3" /></td>
+								<td><input type="number" value={feed.CrudeFiber} min="0" step="0.3" /></td>
+								<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
+								<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
+								<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
+								<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
 								<!-- Add other input fields here -->
 							</tr>
 						{/each}
@@ -478,9 +481,9 @@ function validateFoodInput(value:string): boolean{
 				<div class="secondary" style="margin-top: 5px;">
 					<br />
 				</div>
-				<p>{selected.length}</p>
-				{#each selected as feed, i}
-				<p>{feed.Title}</p>
+				<p>{$out.length}</p>
+				{#each $out as feed (feed.Title)} 
+				<p>{feed.DryMatter}</p>
 				{/each}
 				<InputChip
 					bind:input={inputChip}
