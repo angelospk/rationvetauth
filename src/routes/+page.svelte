@@ -1,12 +1,16 @@
 <script lang="ts">
 	// Your Svelte component
 	import { onMount } from 'svelte';
+	import { normalizeGreek } from '../greekfuncts';
+	import { Autocomplete } from '@skeletonlabs/skeleton';
 	import { InputChip } from '@skeletonlabs/skeleton';
+	import { writable } from 'svelte/store';
+	import type { AutocompleteOption } from '@skeletonlabs/skeleton';
 	// import { pool } from '../db'
 	let rationName = '';
 	let producerName = '';
 	let tableInfo = false;
-	let feeds = [];
+	let feeds=[];
 	let names = {};
 	// let feeds = [
 	//     {
@@ -159,9 +163,10 @@
 	//     Keywords: ''
 	//   }
 	// ];
-	let list: string[] = ['foo', 'bar', 'fizz', 'buzz'];
-	let flavorsWhitelist = ['vanilla', 'chocolate', 'strawberry', 'peach', 'rocky road'];
-	let selected = [];
+
+	let selected =[];
+	let out=[];
+	$: out=selected
 	let certain = [
 		'Title',
 		'weight',
@@ -186,7 +191,7 @@
 		temp[c] = 0;
 	}
 	temp['Title'] = '';
-	selected.push(temp);
+	// selected.push(temp);
 	let columns = [];
 	function setCols(certain) {
 		let temp = [];
@@ -200,6 +205,9 @@
 		}
 	}
 	$: columns = setCols(certain);
+	let inputChip = '';
+  	let inputChipList: string[] = [];
+	let autocompleteOptions : AutocompleteOption<string>[];
 
 	function tableInfoVisibility() {
 		tableInfo = !tableInfo;
@@ -239,9 +247,9 @@
 	// Function to calculate the sum of a specific column
 	function getColumnSum(column) {
 		if (column === 'weight') {
-			return feeds.reduce((sum, feed) => sum + parseFloat(feed[column] || 0), 0);
+			return selected.reduce((sum, feed) => sum + parseFloat(feed[column] || 0), 0);
 		} else {
-			return feeds.reduce(
+			return selected.reduce(
 				(sum, feed) => sum + parseFloat(feed[column] || 0) * parseFloat(feed.weight || 0),
 				0
 			);
@@ -260,13 +268,13 @@
 	}
 	onMount(async () => {
 		console.log('test');
-		addFeedstuffRow();
+		// addFeedstuffRow();
 		let d = await fetch('/api/data');
 		if (d.ok) {
 			let dat = await d.json();
 			// console.log(dat);
 			//t=feeds
-			let feeds = dat.d[0].data;
+			feeds = dat.d[0].data;
 			for (let i of feeds) {
 				i.weight = 0;
 			}
@@ -283,8 +291,41 @@
 			console.log(columns);
 
 			console.log(temp);
+
+			autocompleteOptions = feeds.map((feed) => ({
+				label: feed.Title,
+				value: feed.Title,
+				keywords: feed.keywords.split(', ').concat(normalizeGreek(feed.Title))
+			}));
+
+			console.log(autocompleteOptions);
 		}
 	});
+
+	function onInputChipSelect(event: CustomEvent<AutocompleteOption<string>>): void {
+		console.log('onInputChipSelect', event.detail);
+		if (inputChipList.includes(event.detail.value) === false) {
+			inputChipList = [...inputChipList, event.detail.value];
+			inputChip = '';
+			selected.push(feeds.filter(x=>x.Title==event.detail.value))
+			console.log(selected);
+			// selected.
+		}
+	}
+function validateFoodInput(value:string): boolean{
+	// console.log(value,feeds);
+	if (!autocompleteOptions.map(x=>x.label).includes(value)) return false;
+	if (inputChipList.includes(value)) return false;
+	if (feeds.filter(x=>x.keywords.includes(value))){
+	console.log(feeds.filter(x=>x.Title==value))
+	selected.push(feeds.filter(x=>x.Title==value))
+	console.log(selected)
+	return true
+	};
+	
+		console.log(value,feeds.filter(x=>x.Title));
+	
+}
 </script>
 
 <div
@@ -292,7 +333,6 @@
 >
 	<div class="">
 		<h2 class="h2">Υπολογισμός Σιτηρεσίου</h2>
-		<InputChip bind:value={list} name="chips" whitelist={flavorsWhitelist} placeholder="Enter any value..." />
 		<form id="FeedRationForm" on:submit|preventDefault={CalcAnalysis}>
 			<hr />
 
@@ -394,13 +434,14 @@
 
 					<!-- Table body -->
 					<tbody>
-						{#each list as l}
+						<!-- {#each list as l}
 						
 						<tr class="">
 							<td>{l}</td>
 						</tr>
-						{/each}
-						{#each selected as feed, i}
+						{/each} -->
+						{#each out as feed, i}
+							<p>{feed.Title}</p>
 							<tr class="">
 								<td>
 									<input type="text" readonly class="" bind:value={feed.Title} />
@@ -436,6 +477,26 @@
 				</table>
 				<div class="secondary" style="margin-top: 5px;">
 					<br />
+				</div>
+				<p>{selected.length}</p>
+				{#each selected as feed, i}
+				<p>{feed.Title}</p>
+				{/each}
+				<InputChip
+					bind:input={inputChip}
+					bind:value={inputChipList}
+					name="chips"
+					validation={validateFoodInput}
+					allowUpperCase
+					placeholder="Εισάγετε τροφή..."
+				/>
+				<div class="card w-full max-w-sm max-h-48 p-4 overflow-y-auto" tabindex="-1">
+					<Autocomplete
+						bind:input={inputChip}
+						options={autocompleteOptions}
+						denylist={inputChipList}
+						on:selection={onInputChipSelect}
+					/>
 				</div>
 
 				<div class="my-3 flex justify-center">
