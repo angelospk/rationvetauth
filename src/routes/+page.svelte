@@ -310,51 +310,52 @@ function validateMetricInput(value:string): boolean{
 				Note: Scroll table left and right if all columns are not visible.
 			</div>
 
-			<button
-				class="btn-sm my-3 variant-ghost-secondary hover:scale-110"
-				on:click|preventDefault={tableInfoVisibility}>Επεξήγηση Πίνακα</button
-			>
-			{#if tableInfo}
-				<div class="text-sm max-w-lg  text-center" id="footnotes">
-					<div class="info" style="margin-top:10px;">
-						Feedstuffs entered here will be used to generate rations in output.<br />
-						<ul style="margin-left:-15px;buffer-left:0;">
-							<li>Price entries should be provided on an as-fed basis.</li>
-							<li>
-								Select <i>[Custom]</i> and manually set nutritional info for feeds not listed.
-							</li>
-							<li>All nutritional info is considered to be on a dry matter basis.</li>
-						</ul>
-						Abbreviations:
-						<ul style="margin-left:-15px;buffer-left:0;">
-							<li>DM = Dry Matter</li>
-							<li>CP = Crude Protein</li>
-							<li>TDN = Total Digestible Nutrients</li>
-							<li>CF = Crude Fiber</li>
-							<li>NE<sub>m</sub> = Net Energy for Maintenance</li>
-							<li>NE<sub>g</sub> = Net Energy for Gain</li>
-							<li>NE<sub>l</sub> = Net Energy for Lactation</li>
-							<li>Ca = Calcium</li>
-							<li>P = Phosphorus</li>
-						</ul>
-						<u>Feedstuff nutritional data sources:</u>
-						<ul style="margin-left:-15px;buffer-left:0;">
-							<li>
-								BeefMag_2018: Beef Magazine. (2018, August 9). 2018 Feed Composition Tables: Use
-								this to mix your cattle feed rations.
-								https://www.beefmagazine.com/nutrition/2018-feed-composition-tables-use-mix-your-cattle-feed-rations
-							</li>
-							<li>
-								OSU_2013: OSU Beef Extension. (2018, November 15). OSU_Ration_Calculator_2013.xlsx.
-								http://beef.okstate.edu/files/OSU_Ration_Calculator_2013.xlsx/view
-							</li>
-							<li>User_Data: User-provided, laboratory feed analysis.</li>
-						</ul>
-					</div>
-				</div>
-			{/if}
+			
 			<!-- Table for feedstuff entry -->
 			{#if feeds.length>0}
+			<button
+			class="btn-sm my-3 variant-ghost-secondary hover:scale-110"
+			on:click|preventDefault={tableInfoVisibility}>Επεξήγηση Πίνακα</button
+		>
+		{#if tableInfo}
+			<div class="text-sm max-w-lg  text-center" id="footnotes">
+				<div class="info" style="margin-top:10px;">
+					Feedstuffs entered here will be used to generate rations in output.<br />
+					<ul style="margin-left:-15px;buffer-left:0;">
+						<li>Price entries should be provided on an as-fed basis.</li>
+						<li>
+							Select <i>[Custom]</i> and manually set nutritional info for feeds not listed.
+						</li>
+						<li>All nutritional info is considered to be on a dry matter basis.</li>
+					</ul>
+					Abbreviations:
+					<ul style="margin-left:-15px;buffer-left:0;">
+						<li>DM = Dry Matter</li>
+						<li>CP = Crude Protein</li>
+						<li>TDN = Total Digestible Nutrients</li>
+						<li>CF = Crude Fiber</li>
+						<li>NE<sub>m</sub> = Net Energy for Maintenance</li>
+						<li>NE<sub>g</sub> = Net Energy for Gain</li>
+						<li>NE<sub>l</sub> = Net Energy for Lactation</li>
+						<li>Ca = Calcium</li>
+						<li>P = Phosphorus</li>
+					</ul>
+					<u>Feedstuff nutritional data sources:</u>
+					<ul style="margin-left:-15px;buffer-left:0;">
+						<li>
+							BeefMag_2018: Beef Magazine. (2018, August 9). 2018 Feed Composition Tables: Use
+							this to mix your cattle feed rations.
+							https://www.beefmagazine.com/nutrition/2018-feed-composition-tables-use-mix-your-cattle-feed-rations
+						</li>
+						<li>
+							OSU_2013: OSU Beef Extension. (2018, November 15). OSU_Ration_Calculator_2013.xlsx.
+							http://beef.okstate.edu/files/OSU_Ration_Calculator_2013.xlsx/view
+						</li>
+						<li>User_Data: User-provided, laboratory feed analysis.</li>
+					</ul>
+				</div>
+			</div>
+		{/if}
 				<div class="overflow-x-scroll">
 					<table class="bg-white table-auto">
 						<!-- Table headers -->
@@ -444,7 +445,7 @@ function validateMetricInput(value:string): boolean{
 								{#if column.Title=="Title"}
 								<th class="text-purple-500 w-min">Μονάδες</th>
 								{:else if column.units!==undefined}
-								<td>{column.units}</td>
+								<td class="text-lg">{column.units}</td>
 								{:else}
 								<td> </td>
 								{/if}
@@ -470,7 +471,7 @@ function validateMetricInput(value:string): boolean{
 						> -->
 					</div>
 					{#if addMetrics}
-					<div class="card max-w-md max-h-48 p-4 overflow-y-auto" tabindex="-1">
+					<div class="card max-w-md max-h-48 p-4 overflow-y-auto place-content-end" tabindex="-1">
 					<InputChip
 						bind:input={inputMetric}
 						bind:value={inputmlist}
@@ -510,7 +511,23 @@ function validateMetricInput(value:string): boolean{
 	
 			
 			{:else}
-			<p>Οι διαθέσιμες τροφές φορτώνονται...</p>
+			<p>Οι διαθέσιμες τροφές φορτώνονται...<br>Σε περίπτωση καθυστέρησης, ξαναφορτώστε τη σελίδα.</p>
+			<section class="card w-full">
+				<div class="p-4 space-y-4">
+					<div class="placeholder" />
+					<div class="grid grid-cols-3 gap-8">
+						<div class="placeholder" />
+						<div class="placeholder" />
+						<div class="placeholder" />
+					</div>
+					<div class="grid grid-cols-4 gap-4">
+						<div class="placeholder" />
+						<div class="placeholder" />
+						<div class="placeholder" />
+						<div class="placeholder" />
+					</div>
+				</div>
+			</section>
 			{/if}
 			<!-- Add Mix Sheet section here -->
 			<hr />
@@ -542,6 +559,9 @@ function validateMetricInput(value:string): boolean{
 		margin-top: 1rem;
 	}
 	input[type='number'] {
-		width: 3rem;
+		width: 3.5rem;
+	}
+	th,td{
+		border: 1px dotted  black;
 	}
 </style>
