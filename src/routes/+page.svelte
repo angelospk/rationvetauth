@@ -195,7 +195,7 @@
 			autocompleteOptions = feeds.map((feed) => ({
 				label: feed.Title,
 				value: feed.Title,
-				keywords: feed.keywords.split(', ').concat(normalizeGreek(feed.Title))
+				keywords: feed.keywords ? feed.keywords.split(', ').concat(normalizeGreek(feed.Title)) : normalizeGreek(feed.Title)
 			}));
 			metricsAutocomplete = metrics
 				.filter((x) => !certain.includes(x.Title))
@@ -288,8 +288,6 @@
 						id="ration_name"
 						type="text"
 						bind:value={rationName}
-						maxlength="20"
-						style="background-color: lightpink;"
 					/>
 				</p>
 
@@ -299,8 +297,6 @@
 						id="producer_name"
 						type="text"
 						bind:value={producerName}
-						maxlength="20"
-						style="background-color: lightpink;"
 					/>
 				</p>
 			</div>
