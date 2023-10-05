@@ -10,13 +10,13 @@
 	let rationName = '';
 	let producerName = '';
 	let tableInfo = false;
-	let addFoodVisible=true;
-	let addMetrics=false;
-	let feeds=[];
+	let addFoodVisible = true;
+	let addMetrics = false;
+	let feeds = [];
 	let names = {};
-		
-	let selected =[];
-	let out=writable([])
+
+	let selected = [];
+	let out = writable([]);
 	// out.subscribe()
 	let certain = [
 		'Title',
@@ -37,7 +37,7 @@
 		temp['Title'] = '';
 		selected.push(temp);
 	}
-	let metrics=[];
+	let metrics = [];
 	let temp = {};
 	for (let c of certain) {
 		temp[c] = 0;
@@ -57,48 +57,49 @@
 		}
 	}
 	$: columns = setCols(certain);
-	let sum={}
+	let sum = {};
 	let emptySum;
-	let addedMetrics=[];
+	let addedMetrics = [];
 	let inputChip = '';
-  	let inputChipList: string[] = [];
+	let inputChipList: string[] = [];
 	let inputMetric = '';
-  	let inputmlist: string[] = [];
-	$: addedMetrics=metrics.filter(x=>inputmlist.includes(x.Title))
-	let autocompleteOptions : AutocompleteOption<string>[];
-	let metricsAutocomplete : AutocompleteOption<string>[];
+	let inputmlist: string[] = [];
+	$: addedMetrics = metrics.filter((x) => inputmlist.includes(x.Title));
+	let autocompleteOptions: AutocompleteOption<string>[];
+	let metricsAutocomplete: AutocompleteOption<string>[];
 	//filtrarei ta feeds kathe fora pou allazei to inputChipList dld to koutaki pou pliktrologei o xristis
-	$: selected=feeds.filter(x=>inputChipList.includes(x.Title))
+	$: selected = feeds.filter((x) => inputChipList.includes(x.Title));
 	$: {
-  console.log('empty:', emptySum);
-  sum = { ...emptySum }; // Reset the sum object to emptySum
+		console.log('empty:', emptySum);
+		sum = { ...emptySum }; // Reset the sum object to emptySum
 
-  if (selected.length > 0) {
-    for (let i = 0; i < selected.length; i++) {
-      sum.weight += selected[i].weight;
-      console.log(sum.weight, selected[i].weight);
+		if (selected.length > 0) {
+			for (let i = 0; i < selected.length; i++) {
+				sum.weight += selected[i].weight;
+				console.log(sum.weight, selected[i].weight);
 
-      for (let m in sum) {
-        if (m !== 'weight') {
-          // Use square brackets to access the property dynamically
-		  if (typeof(selected[i][m]=="number")){
-          sum[m] += selected[i].weight * selected[i][m];}
-        }
-        console.log(sum);
-      }
-    }
-  }
-}
+				for (let m in sum) {
+					if (m !== 'weight') {
+						// Use square brackets to access the property dynamically
+						if (typeof (selected[i][m] == 'number')) {
+							sum[m] += selected[i].weight * selected[i][m];
+						}
+					}
+					console.log(sum);
+				}
+			}
+		}
+	}
 	function tableInfoVisibility() {
 		tableInfo = !tableInfo;
 	}
-	function feedAddAppear(){
-		addMetrics=false;
-		addFoodVisible=!addFoodVisible;
+	function feedAddAppear() {
+		addMetrics = false;
+		addFoodVisible = !addFoodVisible;
 	}
-	function addMetricsAppear(){
-		addFoodVisible=false;
-		addMetrics=!addMetrics;
+	function addMetricsAppear() {
+		addFoodVisible = false;
+		addMetrics = !addMetrics;
 	}
 	function addFeedstuffRow() {
 		feeds.push({
@@ -168,17 +169,17 @@
 			}
 			console.log('feeds:', feeds);
 			//arxikopoisi sum
-			let tmp=feeds[0]
-			for (let f in tmp){
-				if (typeof(tmp[f])!="string"){
-					sum[f]=0
+			let tmp = feeds[0];
+			for (let f in tmp) {
+				if (typeof tmp[f] != 'string') {
+					sum[f] = 0;
 				}
 			}
 			emptySum = { ...sum };
 			console.log(sum);
 			let temp = dat.d[1].data;
-			metrics=dat.d[1].data;
-			columns=metrics.filter(x=>certain.includes(x.Title))
+			metrics = dat.d[1].data;
+			columns = metrics.filter((x) => certain.includes(x.Title));
 			for (const item of temp) {
 				names[item.Title] = item;
 			}
@@ -196,11 +197,13 @@
 				value: feed.Title,
 				keywords: feed.keywords.split(', ').concat(normalizeGreek(feed.Title))
 			}));
-			metricsAutocomplete=metrics.filter(x=>!certain.includes(x.Title)).map((x)=>({
-				label: x.labelgr,
-				value: x.Title,
-				keywords: x.gr
-		}))
+			metricsAutocomplete = metrics
+				.filter((x) => !certain.includes(x.Title))
+				.map((x) => ({
+					label: x.labelgr,
+					value: x.Title,
+					keywords: x.gr
+				}));
 			console.log(autocompleteOptions, metricsAutocomplete);
 		}
 	});
@@ -229,45 +232,46 @@
 			// selected.
 		}
 	}
-function validateFoodInput(value:string): boolean{
-	// console.log(value,feeds);
-	if (!autocompleteOptions.map(x=>x.label).includes(value)) return false;
-	if (inputChipList.includes(value)) return false;
-	if (feeds.filter(x=>x.keywords.includes(value))){
-	console.log(feeds.filter(x=>x.Title==value))
-	// selected.push(feeds.filter(x=>x.Title==value))
-	// out.set(selected);
-	console.log(selected)
-	console.log($out);
-	return true
-	};
-	
-		console.log(value,feeds.filter(x=>x.Title));
-	
-}
-function validateMetricInput(value:string): boolean{
-	// console.log(value,feeds);
-	if (!metricsAutocomplete.map(x=>x.label).includes(value)) return false;
-	if (inputmlist.includes(value)) return false;
-	if (metricsAutocomplete.map(x=>x.label).includes(value)){
-	// console.log(feeds.filter(x=>x.Title==value))
-	// selected.push(feeds.filter(x=>x.Title==value))
-	// out.set(selected);
-	// console.log(selected)
-	// console.log($out);
-	return true
-	};
-	
+	function validateFoodInput(value: string): boolean {
+		// console.log(value,feeds);
+		if (!autocompleteOptions.map((x) => x.label).includes(value)) return false;
+		if (inputChipList.includes(value)) return false;
+		if (feeds.filter((x) => x.keywords.includes(value))) {
+			console.log(feeds.filter((x) => x.Title == value));
+			// selected.push(feeds.filter(x=>x.Title==value))
+			// out.set(selected);
+			console.log(selected);
+			console.log($out);
+			return true;
+		}
+
+		console.log(
+			value,
+			feeds.filter((x) => x.Title)
+		);
+	}
+	function validateMetricInput(value: string): boolean {
+		// console.log(value,feeds);
+		if (!metricsAutocomplete.map((x) => x.label).includes(value)) return false;
+		if (inputmlist.includes(value)) return false;
+		if (metricsAutocomplete.map((x) => x.label).includes(value)) {
+			// console.log(feeds.filter(x=>x.Title==value))
+			// selected.push(feeds.filter(x=>x.Title==value))
+			// out.set(selected);
+			// console.log(selected)
+			// console.log($out);
+			return true;
+		}
+
 		// console.log(value,feeds.filter(x=>x.Title));
-	
-}
+	}
 </script>
 
 <div
 	class="container h-full mx-auto w-fit md:w-full flex justify-center text-center items-center my-5 overflow-y-scroll"
 >
-	<div class="">
-		<h2 class="h2">Υπολογισμός Σιτηρεσίου</h2>
+	<div class="w-full md:w-4/5 lg:w-3/4 xl:w-2/3">
+		<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-5">Υπολογισμός Σιτηρεσίου</h2>
 		<form id="FeedRationForm" on:submit|preventDefault={CalcAnalysis}>
 			<hr />
 
@@ -310,53 +314,53 @@ function validateMetricInput(value:string): boolean{
 				Note: Scroll table left and right if all columns are not visible.
 			</div>
 
-			
 			<!-- Table for feedstuff entry -->
-			{#if feeds.length>0}
-			<button
-			class="btn-sm my-3 variant-ghost-secondary hover:scale-110"
-			on:click|preventDefault={tableInfoVisibility}>Επεξήγηση Πίνακα</button
-		>
-		{#if tableInfo}
-			<div class="text-sm max-w-lg  text-center" id="footnotes">
-				<div class="info" style="margin-top:10px;">
-					Feedstuffs entered here will be used to generate rations in output.<br />
-					<ul style="margin-left:-15px;buffer-left:0;">
-						<li>Price entries should be provided on an as-fed basis.</li>
-						<li>
-							Select <i>[Custom]</i> and manually set nutritional info for feeds not listed.
-						</li>
-						<li>All nutritional info is considered to be on a dry matter basis.</li>
-					</ul>
-					Abbreviations:
-					<ul style="margin-left:-15px;buffer-left:0;">
-						<li>DM = Dry Matter</li>
-						<li>CP = Crude Protein</li>
-						<li>TDN = Total Digestible Nutrients</li>
-						<li>CF = Crude Fiber</li>
-						<li>NE<sub>m</sub> = Net Energy for Maintenance</li>
-						<li>NE<sub>g</sub> = Net Energy for Gain</li>
-						<li>NE<sub>l</sub> = Net Energy for Lactation</li>
-						<li>Ca = Calcium</li>
-						<li>P = Phosphorus</li>
-					</ul>
-					<u>Feedstuff nutritional data sources:</u>
-					<ul style="margin-left:-15px;buffer-left:0;">
-						<li>
-							BeefMag_2018: Beef Magazine. (2018, August 9). 2018 Feed Composition Tables: Use
-							this to mix your cattle feed rations.
-							https://www.beefmagazine.com/nutrition/2018-feed-composition-tables-use-mix-your-cattle-feed-rations
-						</li>
-						<li>
-							OSU_2013: OSU Beef Extension. (2018, November 15). OSU_Ration_Calculator_2013.xlsx.
-							http://beef.okstate.edu/files/OSU_Ration_Calculator_2013.xlsx/view
-						</li>
-						<li>User_Data: User-provided, laboratory feed analysis.</li>
-					</ul>
-				</div>
-			</div>
-		{/if}
-				<div class="overflow-x-scroll">
+			{#if feeds.length > 0}
+				<button
+					class="btn-sm my-3 variant-ghost-secondary hover:scale-110"
+					on:click|preventDefault={tableInfoVisibility}>Επεξήγηση Πίνακα</button
+				>
+				{#if tableInfo}
+					<div class="text-sm max-w-lg flex content-center justify-center text-center" id="footnotes">
+						<div class="info" style="margin-top:10px;">
+							Feedstuffs entered here will be used to generate rations in output.<br />
+							<ul style="margin-left:-15px;buffer-left:0;">
+								<li>Price entries should be provided on an as-fed basis.</li>
+								<li>
+									Select <i>[Custom]</i> and manually set nutritional info for feeds not listed.
+								</li>
+								<li>All nutritional info is considered to be on a dry matter basis.</li>
+							</ul>
+							Abbreviations:
+							<ul style="margin-left:-15px;buffer-left:0;">
+								<li>DM = Dry Matter</li>
+								<li>CP = Crude Protein</li>
+								<li>TDN = Total Digestible Nutrients</li>
+								<li>CF = Crude Fiber</li>
+								<li>NE<sub>m</sub> = Net Energy for Maintenance</li>
+								<li>NE<sub>g</sub> = Net Energy for Gain</li>
+								<li>NE<sub>l</sub> = Net Energy for Lactation</li>
+								<li>Ca = Calcium</li>
+								<li>P = Phosphorus</li>
+							</ul>
+							<u>Feedstuff nutritional data sources:</u>
+							<ul style="margin-left:-15px;buffer-left:0;">
+								<li>
+									BeefMag_2018: Beef Magazine. (2018, August 9). 2018 Feed Composition Tables: Use
+									this to mix your cattle feed rations.
+									https://www.beefmagazine.com/nutrition/2018-feed-composition-tables-use-mix-your-cattle-feed-rations
+								</li>
+								<li>
+									OSU_2013: OSU Beef Extension. (2018, November 15).
+									OSU_Ration_Calculator_2013.xlsx.
+									http://beef.okstate.edu/files/OSU_Ration_Calculator_2013.xlsx/view
+								</li>
+								<li>User_Data: User-provided, laboratory feed analysis.</li>
+							</ul>
+						</div>
+					</div>
+				{/if}
+				<div class="overflow-auto flex content-center justify-center">
 					<table class="bg-white table-auto">
 						<!-- Table headers -->
 						<thead>
@@ -370,41 +374,37 @@ function validateMetricInput(value:string): boolean{
 								<!-- Add other table headers here -->
 							</tr>
 						</thead>
-	
+
 						<!-- Table body -->
 						<tbody>
-							<!-- {#each list as l}
-							
-							<tr class="">
-								<td>{l}</td>
-							</tr>
-							{/each} -->
 							{#each selected as feed, i}
 								<tr class="">
 									<th>
 										<input type="text" readonly class="text-center" value={feed.Title} />
 									</th>
-								{#each columns as column}
-								{#if column.Title!="Title"}
-								<!-- <p>{column}</p> -->
-								<td><input type="number" bind:value={feed[column.Title]} min="0" step="0.3" /></td>
-								{/if}
-	
-								{/each}
-								{#each addedMetrics as column}
-								<td><input type="number" bind:value={feed[column.Title]} min="0" step="0.3" /></td>
-								{/each}
-									<!-- <td>
-										<input type="number" value={feed.weight} min="0" step="0.3" />
-									</td>
-									<td><input type="number" value={feed.Lysine} min="0" step="0.3" /></td>
-									<td><input type="number" value={feed.Phosphorus} min="0" step="0.3" /></td>
-									<td><input type="number" value={feed.CrudeFiber} min="0" step="0.3" /></td>
-									<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
-									<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
-									<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
-									<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
-									Add other input fields here -->
+									{#each columns as column}
+										{#if column.Title != 'Title'}
+											<!-- <p>{column}</p> -->
+											<td
+												><input
+													type="number"
+													bind:value={feed[column.Title]}
+													min="0"
+													step="0.3"
+												/></td
+											>
+										{/if}
+									{/each}
+									{#each addedMetrics as column}
+										<td
+											><input
+												type="number"
+												bind:value={feed[column.Title]}
+												min="0"
+												step="0.3"
+											/></td
+										>
+									{/each}
 								</tr>
 							{/each}
 						</tbody>
@@ -412,92 +412,80 @@ function validateMetricInput(value:string): boolean{
 							<tr class="bg-gray-200 text-gray-700">
 								<th class="text-purple-500 w-min">Σύνολο</th>
 								{#each columns as column}
-								{#if column.Title!="Title"}
-								<td class="font-bold">{sum[column.Title].toFixed(2)}</td>
-								{/if}
+									{#if column.Title != 'Title'}
+										<td class="font-bold">{sum[column.Title].toFixed(2)}</td>
+									{/if}
 								{/each}
 								{#each addedMetrics as column}
-								<td class="font-bold">{sum[column.Title].toFixed(2)}</td>
+									<td class="font-bold">{sum[column.Title].toFixed(2)}</td>
 								{/each}
-								<!-- <th class="text-purple-500 w-min">{sumWeight.toFixed(2)}</th>
-								<th class="text-purple-500 w-min">{sumLysine.toFixed(2)}</th>
-								<th class="text-purple-500 w-min">{sumPhosphorus.toFixed(2)}</th>
-								<th class="text-purple-500 w-min">{sumCrudeFiber.toFixed(2)}</th>
-								<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
-								<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
-								<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
-								<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th> -->
-								<!-- Add other table footer cells here -->
 							</tr>
 							<tr class="bg-gray-200 text-gray-700">
 								{#each columns as column}
-								{#if column.Title=="Title"}
-								<th class="text-purple-500 w-min">Μονάδες</th>
-								{:else if column.units!==undefined}
-								<td>{column.units}</td>
-								{:else}
-								<td> </td>
-								{/if}
-							
-	
+									{#if column.Title == 'Title'}
+										<th class="text-purple-500 w-min">Μονάδες</th>
+									{:else if column.units !== undefined}
+										<td>{column.units}</td>
+									{:else}
+										<td />
+									{/if}
 								{/each}
 								{#each addedMetrics as column}
-								{#if column.Title=="Title"}
-								<th class="text-purple-500 w-min">Μονάδες</th>
-								{:else if column.units!==undefined}
-								<td class="text-lg">{column.units}</td>
-								{:else}
-								<td> </td>
-								{/if}
-							
-	
+									{#if column.Title == 'Title'}
+										<th class="text-purple-500 w-min">Μονάδες</th>
+									{:else if column.units !== undefined}
+										<td class="text-lg">{column.units}</td>
+									{:else}
+										<td />
+									{/if}
 								{/each}
 							</tr>
 						</tfoot>
 					</table>
-					<div class="secondary" style="margin-top: 5px;">
-						<br />
-					</div>
-					
-					<div class="my-3 flex justify-center">
-						<button class="btn variant-filled w-1/3" on:click|preventDefault={feedAddAppear}
-							>Αλλαγή Τροφών</button
-						>
-						<button class="btn variant-filled w-1/3 mx-6" on:click|preventDefault={addMetricsAppear}>
-							Αλλαγή στηλών</button
-						>
-						<!-- <button class="btn variant-filled w-1/3" on:click|preventDefault={addFeedstuffRow}>
-							Αλλαγή τροφών</button
-						> -->
-					</div>
+				</div>
+				<div class="secondary" style="margin-top: 5px;">
+					<br />
+				</div>
+
+				<div class="my-3 flex justify-between">
+					<button class="btn variant-filled w-1/3" on:click|preventDefault={feedAddAppear}
+						>Αλλαγή Τροφών</button
+					>
+					<button class="btn variant-filled w-1/3 mx-6" on:click|preventDefault={addMetricsAppear}>
+						Αλλαγή στηλών</button
+					>
+				</div>
+				<div class="my-3 flex justify-end">
 					{#if addMetrics}
-					<div class="card max-w-md max-h-48 p-4 overflow-y-auto place-content-end" tabindex="-1">
-					<InputChip
-						bind:input={inputMetric}
-						bind:value={inputmlist}
-						name="chips"
-						validation={validateMetricInput}
-						allowUpperCase
-						placeholder="Εισάγετε στήλη..."
-					/>
-						<Autocomplete
-							bind:input={inputMetric}
-							options={metricsAutocomplete}
-							denylist={inputmlist}
-							on:selection={onInputMetricSelect}
-						/>
-					</div>
+						<div class="card max-w-md max-h-48 p-4 overflow-y-auto" tabindex="-1">
+							<InputChip
+								bind:input={inputMetric}
+								bind:value={inputmlist}
+								name="chips"
+								validation={validateMetricInput}
+								allowUpperCase
+								placeholder="Εισάγετε στήλη..."
+							/>
+							<Autocomplete
+								bind:input={inputMetric}
+								options={metricsAutocomplete}
+								denylist={inputmlist}
+								on:selection={onInputMetricSelect}
+							/>
+						</div>
 					{/if}
+				</div>
+				<div class="my-3 max-w-lg flex justify-start">
 					{#if addFoodVisible}
-					<div class="card max-w-md max-h-48 p-4 overflow-y-auto" tabindex="-1">
-						<InputChip
-							bind:input={inputChip}
-							bind:value={inputChipList}
-							name="στήλη"
-							validation={validateFoodInput}
-							allowUpperCase
-							placeholder="Εισάγετε τροφή..."
-						/>
+						<div class="card max-w-md max-h-48 p-4 overflow-y-auto" tabindex="-1">
+							<InputChip
+								bind:input={inputChip}
+								bind:value={inputChipList}
+								name="στήλη"
+								validation={validateFoodInput}
+								allowUpperCase
+								placeholder="Εισάγετε τροφή..."
+							/>
 							<Autocomplete
 								bind:input={inputChip}
 								options={autocompleteOptions}
@@ -505,29 +493,29 @@ function validateMetricInput(value:string): boolean{
 								on:selection={onInputChipSelect}
 							/>
 						</div>
-						{/if}
-				
+					{/if}
 				</div>
-	
-			
 			{:else}
-			<p>Οι διαθέσιμες τροφές φορτώνονται...<br>Σε περίπτωση καθυστέρησης, ξαναφορτώστε τη σελίδα.</p>
-			<section class="card w-full">
-				<div class="p-4 space-y-4">
-					<div class="placeholder" />
-					<div class="grid grid-cols-3 gap-8">
+				<p>
+					Οι διαθέσιμες τροφές φορτώνονται...<br />Σε περίπτωση καθυστέρησης, ξαναφορτώστε τη
+					σελίδα.
+				</p>
+				<section class="card w-full">
+					<div class="p-4 space-y-4">
 						<div class="placeholder" />
-						<div class="placeholder" />
-						<div class="placeholder" />
+						<div class="grid grid-cols-3 gap-8">
+							<div class="placeholder" />
+							<div class="placeholder" />
+							<div class="placeholder" />
+						</div>
+						<div class="grid grid-cols-4 gap-4">
+							<div class="placeholder" />
+							<div class="placeholder" />
+							<div class="placeholder" />
+							<div class="placeholder" />
+						</div>
 					</div>
-					<div class="grid grid-cols-4 gap-4">
-						<div class="placeholder" />
-						<div class="placeholder" />
-						<div class="placeholder" />
-						<div class="placeholder" />
-					</div>
-				</div>
-			</section>
+				</section>
 			{/if}
 			<!-- Add Mix Sheet section here -->
 			<hr class="my-3" />
@@ -561,7 +549,8 @@ function validateMetricInput(value:string): boolean{
 	input[type='number'] {
 		width: 3.5rem;
 	}
-	th,td{
-		border: 1px dotted  black;
+	th,
+	td {
+		border: 1px dotted black;
 	}
 </style>
