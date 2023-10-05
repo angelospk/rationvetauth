@@ -10,160 +10,11 @@
 	let rationName = '';
 	let producerName = '';
 	let tableInfo = false;
+	let addFoodVisible=true;
+	let addMetrics=false;
 	let feeds=[];
 	let names = {};
-	// let feeds = [
-	//     {
-	//       feedName: '',
-	//       weight: 0,
-	//       dm: 0,
-	//       cp: 0,
-	//       tdn: 0,
-	//       cf: 0,
-	//       fat: 0,
-	//       nem: 0,
-	//       neg: 0,
-	//       nel: 0,
-	//       ca: 0,
-	//       p: 0,
-	//       source: 'BeefMag_2018',
-	//     },
-	//   ];
-	//   const feeds = [
-	//   {
-	//     feedName: 'Καλαμπόκι',
-	//     DryMatter: 870,
-	//     CrudeProtein: 42,
-	//     CrudeFiber: 22,
-	//     Starch: 605,
-	//     Ash: 13.5,
-	//     Calcium: 0.1,
-	//     Phosphorus: 2.7,
-	//     Potassium: 3.3,
-	//     Sodium: 0.1,
-	//     GrossEnergy: 3860,
-	//     MetabolizableEnergyForPoultry: 3431,
-	//     MetabolizableEnergyForSwine: 2898,
-	//     MEforLayingHens: 1.1,
-	//     MEforBroilers: 1.11,
-	//     MEforTurkeys: 1.15,
-	//     MetabolizableEnergyForSwine2: 3400,
-	//     MetabolizableEnergyForSwine3: 3315,
-	//     MetabolizableEnergyForSwine4: 2525,
-	//     MetabolizableEnergyForRabbits: 3300,
-	//     MetabolizableEnergyForRabbits2: 3300,
-	//     MetabolizableEnergyForPoultry2: 85,
-	//     OilAndAmnioAcid: 59,
-	//     ProteinAmnioAcidForPoultry: 69,
-	//     ProteinAmnioAcidForSwine: 70,
-	//     ProteinAmnioAcidForRabbits: 2.5,
-	//     Lysine: 1.7,
-	//     Methionine: 3.9,
-	//     MethionineCysteine: 3.2,
-	//     Threonine: 0.6,
-	//     Tryptophan: 3.5,
-	//     Isoleucine: 11.3,
-	//     Leucine: 4.6,
-	//     Valine: 4.5,
-	//     Phenylalanine: 2.5,
-	//     Histidine: 4.3,
-	//     Arginine: 3.7,
-	//     Glycine: 'cat',
-	//     Category: 'corn',
-	//     EnglishTitle: '',
-	//     Keywords: '',
-	//     weight:0.3
-	//   },
-	//   {
-	//     feedName: 'Κριθάρι',
-	//     DryMatter: 870,
-	//     CrudeProtein: 18,
-	//     CrudeFiber: 48,
-	//     Starch: 495,
-	//     Ash: 27,
-	//     weight: 0,
-	//     Calcium: 0.5,
-	//     Phosphorus: 3.6,
-	//     Potassium: 4.4,
-	//     Sodium: 0.4,
-	//     GrossEnergy: 3770,
-	//     MetabolizableEnergyForPoultry: 3113,
-	//     MetabolizableEnergyForSwine: 2597,
-	//     MEforLayingHens: 0.97,
-	//     MEforBroilers: 0.96,
-	//     MEforTurkeys: 1,
-	//     MetabolizableEnergyForSwine2: 2970,
-	//     MetabolizableEnergyForSwine3: 2890,
-	//     MetabolizableEnergyForSwine4: 2222,
-	//     MetabolizableEnergyForRabbits: 2745,
-	//     MetabolizableEnergyForRabbits2: 2745,
-	//     MetabolizableEnergyForPoultry2: 95,
-	//     OilAndAmnioAcid: 68,
-	//     ProteinAmnioAcidForPoultry: 72,
-	//     ProteinAmnioAcidForSwine: 68.5,
-	//     ProteinAmnioAcidForRabbits: 3.5,
-	//     Lysine: 1.6,
-	//     Methionine: 4.1,
-	//     MethionineCysteine: 3.1,
-	//     Threonine: 1,
-	//     Tryptophan: 3.5,
-	//     Isoleucine: 6.4,
-	//     Leucine: 5,
-	//     Valine: 5.1,
-	//     Phenylalanine: 2,
-	//     Histidine: 4.8,
-	//     Arginine: 5,
-	//     Glycine: 'cat2',
-	//     Category: 'soya',
-	//     EnglishTitle: '',
-	//     Keywords: ''
-	//   },
-	//   {
-	//     feedName: 'Βρώμη',
-	//     DryMatter: 870,
-	//     weight:0,
-	//     CrudeProtein: 53,
-	//     CrudeFiber: 100,
-	//     Starch: 370,
-	//     Ash: 27,
-	//     Calcium: 0.8,
-	//     Phosphorus: 3.4,
-	//     Potassium: 4.2,
-	//     Sodium: 0.7,
-	//     GrossEnergy: 4010,
-	//     MetabolizableEnergyForPoultry: 2984,
-	//     MetabolizableEnergyForSwine: 2485,
-	//     MEforLayingHens: 0.9,
-	//     MEforBroilers: 0.86,
-	//     MEforTurkeys: 0.8,
-	//     MetabolizableEnergyForSwine2: 230,
-	//     MetabolizableEnergyForSwine3: 2650,
-	//     MetabolizableEnergyForSwine4: '-',
-	//     MetabolizableEnergyForRabbits: 2560,
-	//     MetabolizableEnergyForRabbits2: '-',
-	//     MetabolizableEnergyForPoultry2: 2560,
-	//     OilAndAmnioAcid: 100,
-	//     ProteinAmnioAcidForPoultry: 73,
-	//     ProteinAmnioAcidForSwine: 79,
-	//     ProteinAmnioAcidForRabbits: 80,
-	//     Lysine: 4,
-	//     Methionine: '1.6',
-	//     MethionineCysteine: '5',
-	//     Threonine: '3.5',
-	//     Tryptophan: '1.2',
-	//     Isoleucine: '4.2',
-	//     Leucine: '7.3',
-	//     Valine: '5.2',
-	//     Phenylalanine: '5.6',
-	//     Histidine: '2.2',
-	//     Arginine: '6.6',
-	//     Glycine: '5.5',
-	//     Category: 'cat3',
-	//     EnglishTitle: 'vrom',
-	//     Keywords: ''
-	//   }
-	// ];
-	
+		
 	let selected =[];
 	let out=writable([])
 	// out.subscribe()
@@ -207,10 +58,14 @@
 	}
 	$: columns = setCols(certain);
 	let sum={}
-
+	let addedMetrics=[];
 	let inputChip = '';
   	let inputChipList: string[] = [];
+	let inputMetric = '';
+  	let inputmlist: string[] = [];
+	$: addedMetrics=metrics.filter(x=>inputmlist.includes(x.Title))
 	let autocompleteOptions : AutocompleteOption<string>[];
+	let metricsAutocomplete : AutocompleteOption<string>[];
 	//filtrarei ta feeds kathe fora pou allazei to inputChipList dld to koutaki pou pliktrologei o xristis
 	$: selected=feeds.filter(x=>inputChipList.includes(x.Title))
 	// $: {
@@ -228,6 +83,14 @@
 	// }
 	function tableInfoVisibility() {
 		tableInfo = !tableInfo;
+	}
+	function feedAddAppear(){
+		addMetrics=false;
+		addFoodVisible=!addFoodVisible;
+	}
+	function addMetricsAppear(){
+		addFoodVisible=false;
+		addMetrics=!addMetrics;
 	}
 	function addFeedstuffRow() {
 		feeds.push({
@@ -324,8 +187,12 @@
 				value: feed.Title,
 				keywords: feed.keywords.split(', ').concat(normalizeGreek(feed.Title))
 			}));
-
-			console.log(autocompleteOptions);
+			metricsAutocomplete=metrics.filter(x=>!certain.includes(x.Title)).map((x)=>({
+				label: x.labelgr,
+				value: x.Title,
+				keywords: x.gr
+		}))
+			console.log(autocompleteOptions, metricsAutocomplete);
 		}
 	});
 
@@ -338,6 +205,18 @@
 			// console.log(selected);
 			// out.set(selected);
 			console.log($out);
+			// selected.
+		}
+	}
+	function onInputMetricSelect(event: CustomEvent<AutocompleteOption<string>>): void {
+		console.log('onInputMetricSelect', event.detail);
+		if (inputmlist.includes(event.detail.value) === false) {
+			inputmlist = [...inputmlist, event.detail.value];
+			inputMetric = '';
+			// selected.push(feeds.filter(x=>x.Title==event.detail.value))
+			// console.log(selected);
+			// out.set(selected);
+			// console.log($out);
 			// selected.
 		}
 	}
@@ -355,6 +234,22 @@ function validateFoodInput(value:string): boolean{
 	};
 	
 		console.log(value,feeds.filter(x=>x.Title));
+	
+}
+function validateMetricInput(value:string): boolean{
+	// console.log(value,feeds);
+	if (!metricsAutocomplete.map(x=>x.label).includes(value)) return false;
+	if (inputmlist.includes(value)) return false;
+	if (metricsAutocomplete.map(x=>x.label).includes(value)){
+	// console.log(feeds.filter(x=>x.Title==value))
+	// selected.push(feeds.filter(x=>x.Title==value))
+	// out.set(selected);
+	// console.log(selected)
+	// console.log($out);
+	return true
+	};
+	
+		// console.log(value,feeds.filter(x=>x.Title));
 	
 }
 </script>
@@ -458,7 +353,9 @@ function validateFoodInput(value:string): boolean{
 							{#each columns as column}
 								<th class="text-purple-500 w-min">{column.gr}</th>
 							{/each}
-
+							{#each addedMetrics as column}
+								<th class="text-purple-500 w-min">{column.gr}</th>
+							{/each}
 							<!-- Add other table headers here -->
 						</tr>
 					</thead>
@@ -473,15 +370,18 @@ function validateFoodInput(value:string): boolean{
 						{/each} -->
 						{#each selected as feed, i}
 							<tr class="">
-								<td>
-									<input type="text" readonly class="" value={feed.Title} />
-								</td>
+								<th>
+									<input type="text" readonly class="text-center" value={feed.Title} />
+								</th>
 							{#each columns as column}
 							{#if column.Title!="Title"}
 							<!-- <p>{column}</p> -->
 							<td><input type="number" value={feed[column.Title]} min="0" step="0.3" /></td>
 							{/if}
 
+							{/each}
+							{#each addedMetrics as column}
+							<td><input type="number" value={feed[column.Title]} min="0" step="0.3" /></td>
 							{/each}
 								<!-- <td>
 									<input type="number" value={feed.weight} min="0" step="0.3" />
@@ -502,8 +402,11 @@ function validateFoodInput(value:string): boolean{
 							<th class="text-purple-500 w-min">Σύνολο</th>
 							{#each columns as column}
 							{#if column.Title!="Title"}
-							<th class="text-purple-500 w-min">{sum[column.Title]}</th>
+							<td class="">{sum[column.Title]}</td>
 							{/if}
+							{/each}
+							{#each addedMetrics as column}
+							<td class="">{sum[column.Title]}</td>
 							{/each}
 							<!-- <th class="text-purple-500 w-min">{sumWeight.toFixed(2)}</th>
 							<th class="text-purple-500 w-min">{sumLysine.toFixed(2)}</th>
@@ -527,35 +430,65 @@ function validateFoodInput(value:string): boolean{
 						
 
 							{/each}
+							{#each addedMetrics as column}
+							{#if column.Title=="Title"}
+							<th class="text-purple-500 w-min">Μονάδες</th>
+							{:else if column.units!==undefined}
+							<td>{column.units}</td>
+							{:else}
+							<td> </td>
+							{/if}
+						
+
+							{/each}
 						</tr>
 					</tfoot>
 				</table>
 				<div class="secondary" style="margin-top: 5px;">
 					<br />
 				</div>
-		
+				
+				{#if addMetrics}
 				<div class="card w-full max-w-md max-h-48 p-4 overflow-y-auto" tabindex="-1">
 				<InputChip
-					bind:input={inputChip}
-					bind:value={inputChipList}
+					bind:input={inputMetric}
+					bind:value={inputmlist}
 					name="chips"
-					validation={validateFoodInput}
+					validation={validateMetricInput}
 					allowUpperCase
-					placeholder="Εισάγετε τροφή..."
+					placeholder="Εισάγετε στήλη..."
 				/>
 					<Autocomplete
-						bind:input={inputChip}
-						options={autocompleteOptions}
-						denylist={inputChipList}
-						on:selection={onInputChipSelect}
+						bind:input={inputMetric}
+						options={metricsAutocomplete}
+						denylist={inputmlist}
+						on:selection={onInputMetricSelect}
 					/>
 				</div>
-
+				{/if}
+				{#if addFoodVisible}
+				<div class="card w-full max-w-md max-h-48 p-4 overflow-y-auto" tabindex="-1">
+					<InputChip
+						bind:input={inputChip}
+						bind:value={inputChipList}
+						name="στήλη"
+						validation={validateFoodInput}
+						allowUpperCase
+						placeholder="Εισάγετε τροφή..."
+					/>
+						<Autocomplete
+							bind:input={inputChip}
+							options={autocompleteOptions}
+							denylist={inputChipList}
+							on:selection={onInputChipSelect}
+						/>
+					</div>
+					{/if}
 				<div class="my-3 flex justify-center">
-					<button class="btn variant-filled w-1/3" on:click|preventDefault={addFeedstuffRow}
+					<button class="btn variant-filled w-1/3" on:click|preventDefault={feedAddAppear}
 						>Αλλαγή Τροφών</button
 					>
-					<button class="btn variant-filled w-1/3 mx-6" on:click|preventDefault={addFeedstuffRow}>
+					<button class="btn variant-filled w-1/3 mx-6" on:click|preventDefault={addMetricsAppear}>
 						Αλλαγή στηλών</button
 					>
 					<!-- <button class="btn variant-filled w-1/3" on:click|preventDefault={addFeedstuffRow}>
