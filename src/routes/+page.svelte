@@ -413,11 +413,11 @@ function validateMetricInput(value:string): boolean{
 								<th class="text-purple-500 w-min">Σύνολο</th>
 								{#each columns as column}
 								{#if column.Title!="Title"}
-								<td class="">{sum[column.Title].toFixed(2)}</td>
+								<td class="font-bold">{sum[column.Title].toFixed(2)}</td>
 								{/if}
 								{/each}
 								{#each addedMetrics as column}
-								<td class="">{sum[column.Title].toFixed(2)}</td>
+								<td class="font-bold">{sum[column.Title].toFixed(2)}</td>
 								{/each}
 								<!-- <th class="text-purple-500 w-min">{sumWeight.toFixed(2)}</th>
 								<th class="text-purple-500 w-min">{sumLysine.toFixed(2)}</th>
@@ -530,7 +530,7 @@ function validateMetricInput(value:string): boolean{
 			</section>
 			{/if}
 			<!-- Add Mix Sheet section here -->
-			<hr />
+			<hr class="my-3" />
 
 			<div class="heading">
 				<h2>Step 3: Mix Sheet</h2>
