@@ -58,6 +58,7 @@
 	}
 	$: columns = setCols(certain);
 	let sum={}
+	let emptySum;
 	let addedMetrics=[];
 	let inputChip = '';
   	let inputChipList: string[] = [];
@@ -68,19 +69,26 @@
 	let metricsAutocomplete : AutocompleteOption<string>[];
 	//filtrarei ta feeds kathe fora pou allazei to inputChipList dld to koutaki pou pliktrologei o xristis
 	$: selected=feeds.filter(x=>inputChipList.includes(x.Title))
-	// $: {
-	// 	console.log(selected, sum);
-	// 	for (let i=0;i<selected.length;i++){
-	// 		for (let m in sum){
-	// 			if (m=="weight"){
-	// 				sum[weight]+=selected[i].weight
-	// 			}
-	// 			else{
-	// 				sum[m]+=selected[i].weight*selected[i].m
-	// 			}
-	// 		}
-	// 	}
-	// }
+	$: {
+  console.log('empty:', emptySum);
+  sum = { ...emptySum }; // Reset the sum object to emptySum
+
+  if (selected.length > 0) {
+    for (let i = 0; i < selected.length; i++) {
+      sum.weight += selected[i].weight;
+      console.log(sum.weight, selected[i].weight);
+
+      for (let m in sum) {
+        if (m !== 'weight') {
+          // Use square brackets to access the property dynamically
+		  if (typeof(selected[i][m]=="number")){
+          sum[m] += selected[i].weight * selected[i][m];}
+        }
+        console.log(sum);
+      }
+    }
+  }
+}
 	function tableInfoVisibility() {
 		tableInfo = !tableInfo;
 	}
@@ -166,6 +174,7 @@
 					sum[f]=0
 				}
 			}
+			emptySum = { ...sum };
 			console.log(sum);
 			let temp = dat.d[1].data;
 			metrics=dat.d[1].data;
@@ -306,7 +315,7 @@ function validateMetricInput(value:string): boolean{
 				on:click|preventDefault={tableInfoVisibility}>Επεξήγηση Πίνακα</button
 			>
 			{#if tableInfo}
-				<div class="text-sm max-w-50 justify-center text-center" id="footnotes">
+				<div class="text-sm max-w-lg  text-center" id="footnotes">
 					<div class="info" style="margin-top:10px;">
 						Feedstuffs entered here will be used to generate rations in output.<br />
 						<ul style="margin-left:-15px;buffer-left:0;">
@@ -345,158 +354,164 @@ function validateMetricInput(value:string): boolean{
 				</div>
 			{/if}
 			<!-- Table for feedstuff entry -->
-			<div class="overflow-x-scroll">
-				<table class="bg-white table-auto">
-					<!-- Table headers -->
-					<thead>
-						<tr class="bg-gray-200 text-gray-700">
-							{#each columns as column}
-								<th class="text-purple-500 w-min">{column.gr}</th>
-							{/each}
-							{#each addedMetrics as column}
-								<th class="text-purple-500 w-min">{column.gr}</th>
-							{/each}
-							<!-- Add other table headers here -->
-						</tr>
-					</thead>
-
-					<!-- Table body -->
-					<tbody>
-						<!-- {#each list as l}
-						
-						<tr class="">
-							<td>{l}</td>
-						</tr>
-						{/each} -->
-						{#each selected as feed, i}
-							<tr class="">
-								<th>
-									<input type="text" readonly class="text-center" value={feed.Title} />
-								</th>
-							{#each columns as column}
-							{#if column.Title!="Title"}
-							<!-- <p>{column}</p> -->
-							<td><input type="number" value={feed[column.Title]} min="0" step="0.3" /></td>
-							{/if}
-
-							{/each}
-							{#each addedMetrics as column}
-							<td><input type="number" value={feed[column.Title]} min="0" step="0.3" /></td>
-							{/each}
-								<!-- <td>
-									<input type="number" value={feed.weight} min="0" step="0.3" />
-								</td>
-								<td><input type="number" value={feed.Lysine} min="0" step="0.3" /></td>
-								<td><input type="number" value={feed.Phosphorus} min="0" step="0.3" /></td>
-								<td><input type="number" value={feed.CrudeFiber} min="0" step="0.3" /></td>
-								<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
-								<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
-								<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
-								<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
-								Add other input fields here -->
+			{#if feeds.length>0}
+				<div class="overflow-x-scroll">
+					<table class="bg-white table-auto">
+						<!-- Table headers -->
+						<thead>
+							<tr class="bg-gray-200 text-gray-700">
+								{#each columns as column}
+									<th class="text-purple-500 w-min">{column.gr}</th>
+								{/each}
+								{#each addedMetrics as column}
+									<th class="text-purple-500 w-min">{column.gr}</th>
+								{/each}
+								<!-- Add other table headers here -->
 							</tr>
-						{/each}
-					</tbody>
-					<tfoot>
-						<tr class="bg-gray-200 text-gray-700">
-							<th class="text-purple-500 w-min">Σύνολο</th>
-							{#each columns as column}
-							{#if column.Title!="Title"}
-							<td class="">{sum[column.Title]}</td>
-							{/if}
+						</thead>
+	
+						<!-- Table body -->
+						<tbody>
+							<!-- {#each list as l}
+							
+							<tr class="">
+								<td>{l}</td>
+							</tr>
+							{/each} -->
+							{#each selected as feed, i}
+								<tr class="">
+									<th>
+										<input type="text" readonly class="text-center" value={feed.Title} />
+									</th>
+								{#each columns as column}
+								{#if column.Title!="Title"}
+								<!-- <p>{column}</p> -->
+								<td><input type="number" bind:value={feed[column.Title]} min="0" step="0.3" /></td>
+								{/if}
+	
+								{/each}
+								{#each addedMetrics as column}
+								<td><input type="number" bind:value={feed[column.Title]} min="0" step="0.3" /></td>
+								{/each}
+									<!-- <td>
+										<input type="number" value={feed.weight} min="0" step="0.3" />
+									</td>
+									<td><input type="number" value={feed.Lysine} min="0" step="0.3" /></td>
+									<td><input type="number" value={feed.Phosphorus} min="0" step="0.3" /></td>
+									<td><input type="number" value={feed.CrudeFiber} min="0" step="0.3" /></td>
+									<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
+									<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
+									<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
+									<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
+									Add other input fields here -->
+								</tr>
 							{/each}
-							{#each addedMetrics as column}
-							<td class="">{sum[column.Title]}</td>
-							{/each}
-							<!-- <th class="text-purple-500 w-min">{sumWeight.toFixed(2)}</th>
-							<th class="text-purple-500 w-min">{sumLysine.toFixed(2)}</th>
-							<th class="text-purple-500 w-min">{sumPhosphorus.toFixed(2)}</th>
-							<th class="text-purple-500 w-min">{sumCrudeFiber.toFixed(2)}</th>
-							<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
-							<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
-							<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
-							<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th> -->
-							<!-- Add other table footer cells here -->
-						</tr>
-						<tr class="bg-gray-200 text-gray-700">
-							{#each columns as column}
-							{#if column.Title=="Title"}
-							<th class="text-purple-500 w-min">Μονάδες</th>
-							{:else if column.units!==undefined}
-							<td>{column.units}</td>
-							{:else}
-							<td> </td>
-							{/if}
-						
-
-							{/each}
-							{#each addedMetrics as column}
-							{#if column.Title=="Title"}
-							<th class="text-purple-500 w-min">Μονάδες</th>
-							{:else if column.units!==undefined}
-							<td>{column.units}</td>
-							{:else}
-							<td> </td>
-							{/if}
-						
-
-							{/each}
-						</tr>
-					</tfoot>
-				</table>
-				<div class="secondary" style="margin-top: 5px;">
-					<br />
-				</div>
-				
-				{#if addMetrics}
-				<div class="card w-full max-w-md max-h-48 p-4 overflow-y-auto" tabindex="-1">
-				<InputChip
-					bind:input={inputMetric}
-					bind:value={inputmlist}
-					name="chips"
-					validation={validateMetricInput}
-					allowUpperCase
-					placeholder="Εισάγετε στήλη..."
-				/>
-					<Autocomplete
-						bind:input={inputMetric}
-						options={metricsAutocomplete}
-						denylist={inputmlist}
-						on:selection={onInputMetricSelect}
-					/>
-				</div>
-				{/if}
-				{#if addFoodVisible}
-				<div class="card w-full max-w-md max-h-48 p-4 overflow-y-auto" tabindex="-1">
+						</tbody>
+						<tfoot>
+							<tr class="bg-gray-200 text-gray-700">
+								<th class="text-purple-500 w-min">Σύνολο</th>
+								{#each columns as column}
+								{#if column.Title!="Title"}
+								<td class="">{sum[column.Title].toFixed(2)}</td>
+								{/if}
+								{/each}
+								{#each addedMetrics as column}
+								<td class="">{sum[column.Title].toFixed(2)}</td>
+								{/each}
+								<!-- <th class="text-purple-500 w-min">{sumWeight.toFixed(2)}</th>
+								<th class="text-purple-500 w-min">{sumLysine.toFixed(2)}</th>
+								<th class="text-purple-500 w-min">{sumPhosphorus.toFixed(2)}</th>
+								<th class="text-purple-500 w-min">{sumCrudeFiber.toFixed(2)}</th>
+								<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
+								<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
+								<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
+								<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th> -->
+								<!-- Add other table footer cells here -->
+							</tr>
+							<tr class="bg-gray-200 text-gray-700">
+								{#each columns as column}
+								{#if column.Title=="Title"}
+								<th class="text-purple-500 w-min">Μονάδες</th>
+								{:else if column.units!==undefined}
+								<td>{column.units}</td>
+								{:else}
+								<td> </td>
+								{/if}
+							
+	
+								{/each}
+								{#each addedMetrics as column}
+								{#if column.Title=="Title"}
+								<th class="text-purple-500 w-min">Μονάδες</th>
+								{:else if column.units!==undefined}
+								<td>{column.units}</td>
+								{:else}
+								<td> </td>
+								{/if}
+							
+	
+								{/each}
+							</tr>
+						</tfoot>
+					</table>
+					<div class="secondary" style="margin-top: 5px;">
+						<br />
+					</div>
+					
+					<div class="my-3 flex justify-center">
+						<button class="btn variant-filled w-1/3" on:click|preventDefault={feedAddAppear}
+							>Αλλαγή Τροφών</button
+						>
+						<button class="btn variant-filled w-1/3 mx-6" on:click|preventDefault={addMetricsAppear}>
+							Αλλαγή στηλών</button
+						>
+						<!-- <button class="btn variant-filled w-1/3" on:click|preventDefault={addFeedstuffRow}>
+							Αλλαγή τροφών</button
+						> -->
+					</div>
+					{#if addMetrics}
+					<div class="card max-w-md max-h-48 p-4 overflow-y-auto" tabindex="-1">
 					<InputChip
-						bind:input={inputChip}
-						bind:value={inputChipList}
-						name="στήλη"
-						validation={validateFoodInput}
+						bind:input={inputMetric}
+						bind:value={inputmlist}
+						name="chips"
+						validation={validateMetricInput}
 						allowUpperCase
-						placeholder="Εισάγετε τροφή..."
+						placeholder="Εισάγετε στήλη..."
 					/>
 						<Autocomplete
-							bind:input={inputChip}
-							options={autocompleteOptions}
-							denylist={inputChipList}
-							on:selection={onInputChipSelect}
+							bind:input={inputMetric}
+							options={metricsAutocomplete}
+							denylist={inputmlist}
+							on:selection={onInputMetricSelect}
 						/>
 					</div>
 					{/if}
-				<div class="my-3 flex justify-center">
-					<button class="btn variant-filled w-1/3" on:click|preventDefault={feedAddAppear}
-						>Αλλαγή Τροφών</button
-					>
-					<button class="btn variant-filled w-1/3 mx-6" on:click|preventDefault={addMetricsAppear}>
-						Αλλαγή στηλών</button
-					>
-					<!-- <button class="btn variant-filled w-1/3" on:click|preventDefault={addFeedstuffRow}>
-						Αλλαγή τροφών</button
-					> -->
+					{#if addFoodVisible}
+					<div class="card max-w-md max-h-48 p-4 overflow-y-auto" tabindex="-1">
+						<InputChip
+							bind:input={inputChip}
+							bind:value={inputChipList}
+							name="στήλη"
+							validation={validateFoodInput}
+							allowUpperCase
+							placeholder="Εισάγετε τροφή..."
+						/>
+							<Autocomplete
+								bind:input={inputChip}
+								options={autocompleteOptions}
+								denylist={inputChipList}
+								on:selection={onInputChipSelect}
+							/>
+						</div>
+						{/if}
+				
 				</div>
-			</div>
-
+	
+			
+			{:else}
+			<p>Οι διαθέσιμες τροφές φορτώνονται...</p>
+			{/if}
 			<!-- Add Mix Sheet section here -->
 			<hr />
 
