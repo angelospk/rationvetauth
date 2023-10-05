@@ -163,7 +163,7 @@
 	//     Keywords: ''
 	//   }
 	// ];
-
+	
 	let selected =[];
 	let out=writable([])
 	// out.subscribe()
@@ -186,6 +186,7 @@
 		temp['Title'] = '';
 		selected.push(temp);
 	}
+	let metrics=[];
 	let temp = {};
 	for (let c of certain) {
 		temp[c] = 0;
@@ -197,7 +198,7 @@
 		let temp = [];
 		try {
 			for (let c of certain) {
-				temp.push(names[c].gr);
+				temp.push(names[c].Title);
 			}
 			return temp;
 		} catch {
@@ -205,10 +206,26 @@
 		}
 	}
 	$: columns = setCols(certain);
+	let sum={}
+
 	let inputChip = '';
   	let inputChipList: string[] = [];
 	let autocompleteOptions : AutocompleteOption<string>[];
+	//filtrarei ta feeds kathe fora pou allazei to inputChipList dld to koutaki pou pliktrologei o xristis
 	$: selected=feeds.filter(x=>inputChipList.includes(x.Title))
+	// $: {
+	// 	console.log(selected, sum);
+	// 	for (let i=0;i<selected.length;i++){
+	// 		for (let m in sum){
+	// 			if (m=="weight"){
+	// 				sum[weight]+=selected[i].weight
+	// 			}
+	// 			else{
+	// 				sum[m]+=selected[i].weight*selected[i].m
+	// 			}
+	// 		}
+	// 	}
+	// }
 	function tableInfoVisibility() {
 		tableInfo = !tableInfo;
 	}
@@ -279,7 +296,17 @@
 				i.weight = 0;
 			}
 			console.log('feeds:', feeds);
+			//arxikopoisi sum
+			let tmp=feeds[0]
+			for (let f in tmp){
+				if (typeof(tmp[f])!="string"){
+					sum[f]=0
+				}
+			}
+			console.log(sum);
 			let temp = dat.d[1].data;
+			metrics=dat.d[1].data;
+			columns=metrics.filter(x=>certain.includes(x.Title))
 			for (const item of temp) {
 				names[item.Title] = item;
 			}
@@ -287,11 +314,11 @@
 			//   columns.push(names[c].gr)
 			// }
 			// console.log(columns);
-			columns = setCols(certain);
-			console.log(columns);
+			// columns = setCols(certain);
+			// console.log(columns);
 
-			console.log(temp);
-
+			// console.log(temp);
+			console.log(metrics);
 			autocompleteOptions = feeds.map((feed) => ({
 				label: feed.Title,
 				value: feed.Title,
@@ -429,7 +456,7 @@ function validateFoodInput(value:string): boolean{
 					<thead>
 						<tr class="bg-gray-200 text-gray-700">
 							{#each columns as column}
-								<th class="text-purple-500 w-min">{column}</th>
+								<th class="text-purple-500 w-min">{column.gr}</th>
 							{/each}
 
 							<!-- Add other table headers here -->
@@ -449,7 +476,14 @@ function validateFoodInput(value:string): boolean{
 								<td>
 									<input type="text" readonly class="" value={feed.Title} />
 								</td>
-								<td>
+							{#each columns as column}
+							{#if column.Title!="Title"}
+							<!-- <p>{column}</p> -->
+							<td><input type="number" value={feed[column.Title]} min="0" step="0.3" /></td>
+							{/if}
+
+							{/each}
+								<!-- <td>
 									<input type="number" value={feed.weight} min="0" step="0.3" />
 								</td>
 								<td><input type="number" value={feed.Lysine} min="0" step="0.3" /></td>
@@ -459,32 +493,48 @@ function validateFoodInput(value:string): boolean{
 								<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
 								<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
 								<td><input type="number" value={feed.CrudeProtein} min="0" step="0.3" /></td>
-								<!-- Add other input fields here -->
+								Add other input fields here -->
 							</tr>
 						{/each}
 					</tbody>
 					<tfoot>
 						<tr class="bg-gray-200 text-gray-700">
 							<th class="text-purple-500 w-min">Σύνολο</th>
-							<th class="text-purple-500 w-min">{sumWeight.toFixed(2)}</th>
+							{#each columns as column}
+							{#if column.Title!="Title"}
+							<th class="text-purple-500 w-min">{sum[column.Title]}</th>
+							{/if}
+							{/each}
+							<!-- <th class="text-purple-500 w-min">{sumWeight.toFixed(2)}</th>
 							<th class="text-purple-500 w-min">{sumLysine.toFixed(2)}</th>
 							<th class="text-purple-500 w-min">{sumPhosphorus.toFixed(2)}</th>
 							<th class="text-purple-500 w-min">{sumCrudeFiber.toFixed(2)}</th>
 							<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
 							<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
 							<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
-							<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th>
+							<th class="text-purple-500 w-min">{sumCrudeProtein.toFixed(2)}</th> -->
 							<!-- Add other table footer cells here -->
+						</tr>
+						<tr class="bg-gray-200 text-gray-700">
+							{#each columns as column}
+							{#if column.Title=="Title"}
+							<th class="text-purple-500 w-min">Μονάδες</th>
+							{:else if column.units!==undefined}
+							<td>{column.units}</td>
+							{:else}
+							<td> </td>
+							{/if}
+						
+
+							{/each}
 						</tr>
 					</tfoot>
 				</table>
 				<div class="secondary" style="margin-top: 5px;">
 					<br />
 				</div>
-				<p>{$out.length}</p>
-				{#each $out as feed (feed.Title)} 
-				<p>{feed.DryMatter}</p>
-				{/each}
+		
+				<div class="card w-full max-w-md max-h-48 p-4 overflow-y-auto" tabindex="-1">
 				<InputChip
 					bind:input={inputChip}
 					bind:value={inputChipList}
@@ -493,7 +543,6 @@ function validateFoodInput(value:string): boolean{
 					allowUpperCase
 					placeholder="Εισάγετε τροφή..."
 				/>
-				<div class="card w-full max-w-sm max-h-48 p-4 overflow-y-auto" tabindex="-1">
 					<Autocomplete
 						bind:input={inputChip}
 						options={autocompleteOptions}
@@ -504,14 +553,14 @@ function validateFoodInput(value:string): boolean{
 
 				<div class="my-3 flex justify-center">
 					<button class="btn variant-filled w-1/3" on:click|preventDefault={addFeedstuffRow}
-						>+ ADD FEEDSTUFF ROW</button
+						>Αλλαγή Τροφών</button
 					>
-					<button class="btn variant-filled w-1/3 mx-3" on:click|preventDefault={addFeedstuffRow}>
+					<button class="btn variant-filled w-1/3 mx-6" on:click|preventDefault={addFeedstuffRow}>
 						Αλλαγή στηλών</button
 					>
-					<button class="btn variant-filled w-1/3" on:click|preventDefault={addFeedstuffRow}>
+					<!-- <button class="btn variant-filled w-1/3" on:click|preventDefault={addFeedstuffRow}>
 						Αλλαγή τροφών</button
-					>
+					> -->
 				</div>
 			</div>
 
