@@ -155,6 +155,9 @@
 	function CalcAnalysis() {
 		console.log('calcanalysis');
 	}
+	function formatNumber(number) {
+  return Number.isInteger(number) ? number.toString() : number.toFixed(2);
+}
 	onMount(async () => {
 		console.log('test');
 		// addFeedstuffRow();
@@ -409,11 +412,11 @@
 								<th class="text-purple-500 w-min">Σύνολο</th>
 								{#each columns as column}
 									{#if column.Title != 'Title'}
-										<td class="font-bold">{sum[column.Title].toFixed(2)}</td>
+										<td class="font-bold">{formatNumber(sum[column.Title])}</td>
 									{/if}
 								{/each}
 								{#each addedMetrics as column}
-									<td class="font-bold">{sum[column.Title].toFixed(2)}</td>
+									<td class="font-bold">{formatNumber(sum[column.Title])}</td>
 								{/each}
 							</tr>
 							<tr class="bg-gray-200 text-gray-700">
