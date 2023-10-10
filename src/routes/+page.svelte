@@ -437,8 +437,18 @@
 									{:else}
 										<td />
 									{/if}
-								{/each}
-							</tr>
+								{/each}</tr>
+								<tr class="bg-gray-200 text-gray-700">
+								<th class="text-purple-500 w-min">Ποσοστό</th>
+								{#each columns as column}
+								{#if column.Title != 'Title'}
+									<td class="font-bold">{formatNumber(sum[column.Title]/sum["weight"]/10)}</td>
+								{/if}
+							{/each}
+							{#each addedMetrics as column}
+								<td class="font-bold">{formatNumber(sum[column.Title]/sum["weight"]/10)}</td>
+							{/each}
+						</tr>
 						</tfoot>
 					</table>
 				</div>
