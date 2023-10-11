@@ -320,12 +320,11 @@
 					class="btn-sm my-3 variant-ghost-secondary hover:scale-110" use:popup={popupClick}
 					on:click|preventDefault={tableInfoVisibility}>Επεξήγηση Πίνακα</button
 				> -->
-				<button class="btn-sm my-3 variant-ghost-secondary hover:scale-110" use:popup={popupClick}
+				<button class="btn-sm my-3 variant-ghost-secondary hover:scale-110"  use:popup={popupClick}
 					>Επεξήγηση Πίνακα</button
 				>
 				<div class="card p-4 variant-filled-primary" data-popup="popupClick">
-					<p>Επιλέξτε ζωοτροφές και προσαρμόστε τα αντίστοιχα βάρη τους.</p>
-					Εξήγηση διατροφικών στοιχείων πίνακα:
+					<p class="underline">Διατροφικά στοιχεία πίνακα:</p>
 					<ul>
 						<li>ΞΟ = Ξηρά Ουσία</li>
 						<li>ΟΛΟ = Ολικές Λιπαρές Ουσίες</li>
@@ -335,7 +334,9 @@
 						<!-- <li>NE<sub>g</sub> = Net Energy for Gain</li> -->
 						<!-- <li>NE<sub>l</sub> = Net Energy for Lactation</li> -->
 						<li>P = Φωσφόρος</li>
+						<li>ΟΑΟ = Ολικές Αζωτούχες Ουσίες</li>
 					</ul>
+					<p class="text-xs my-2">Στη γραμμή "Σύνολο" οι μονάδες εκτός τη στήλης "Βάρος" είναι g ή kcal αντίστοιχα.</p>
 					<!-- <u>Feedstuff nutritional data sources:</u>
 							<ul>
 								<li>
@@ -396,19 +397,19 @@
 					<table class="bg-white w-full">
 						<!-- Table headers -->
 						<thead>
-							<tr class="bg-gray-200 text-gray-700">
+							<tr class="bg-stone-400 text-gray-700">
 								{#each columns as column}
-									<th class="text-purple-500 w-min">{column.gr}</th>
+									<th class="text-primary  w-min">{column.gr}</th>
 								{/each}
 								{#each addedMetrics as column}
-									<th class="text-purple-500 w-min">{column.gr}</th>
+									<th class="text-primary bg w-min">{column.gr}</th>
 								{/each}
 								<!-- Add other table headers here -->
 							</tr>
-							<tr class="bg-gray-200 text-gray-700">
+							<tr class="text-gray-700 bg-green-100 text-sm">
 								{#each columns as column}
 									{#if column.Title == 'Title'}
-										<th class="text-purple-500 w-min">Μονάδες</th>
+										<th class="text-black-700 w-min">Μονάδες</th>
 									{:else if column.units !== undefined}
 										<td>{column.units}</td>
 									{:else}
@@ -432,7 +433,8 @@
 							{#each selected as feed, i}
 								<tr class="">
 									<th>
-										<input type="text" readonly class="text-center" value={feed.Title} />
+										<!-- <input type="text" readonly class="text-center" value={feed.Title} /> -->
+										<span class="w-min text-gray-500 text-sm">{feed.Title}</span>
 									</th>
 									{#each columns as column}
 										{#if column.Title != 'Title'}
@@ -461,7 +463,7 @@
 							{/each}
 						</tbody>
 						<tfoot>
-							<tr class="bg-gray-200 text-gray-700">
+							<tr class="bg-gray-300 text-gray-700 text-lg">
 								<th class="text-purple-500 w-min">Σύνολο</th>
 								{#each columns as column}
 									{#if column.Title != 'Title'}
@@ -474,7 +476,7 @@
 							</tr>
 
 							<tr class="bg-gray-200 text-gray-700">
-								<th class="text-purple-500 w-min">Ποσοστό</th>
+								<th class="text-purple-500 w-min text-sm">Ποσοστό</th>
 								<td />
 								{#each columns as column}
 									{#if column.Title != 'Title' && column.Title != 'weight'}
@@ -487,7 +489,7 @@
 								{/each}
 							</tr>
 							<tr class="bg-gray-200 text-gray-700">
-								<th class="text-purple-500 w-min">Ποσοστό / ΞΟ </th>
+								<th class="text-purple-500 w-min text-sm">Ποσοστό / ΞΟ </th>
 								<td />
 								{#each columns as column}
 									{#if column.Title != 'Title' && column.Title != 'weight'}
