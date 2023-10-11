@@ -41,6 +41,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@floating-ui/dom": "^1.5.3",
 		"mysql2": "^3.6.1",
 		"papaparse": "^5.4.1",
 		"xlsx": "^0.18.5"

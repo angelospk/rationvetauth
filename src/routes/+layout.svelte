@@ -1,8 +1,11 @@
 <script lang="ts">
 	import '../app.postcss';
+	import { storePopup } from '@skeletonlabs/skeleton';
 	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
+	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
 
-	
+storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
+			
 </script>
 
 <!-- App Shell -->

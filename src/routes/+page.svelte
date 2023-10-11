@@ -6,6 +6,13 @@
 	import { InputChip } from '@skeletonlabs/skeleton';
 	import { writable } from 'svelte/store';
 	import type { AutocompleteOption } from '@skeletonlabs/skeleton';
+	import { popup } from '@skeletonlabs/skeleton';
+	import type { PopupSettings } from '@skeletonlabs/skeleton';
+	const popupClick: PopupSettings = {
+		event: 'click',
+		target: 'popupClick',
+		placement: 'top'
+	};
 	// import { pool } from '../db'
 	let rationName = '';
 	let producerName = '';
@@ -156,8 +163,8 @@
 		console.log('calcanalysis');
 	}
 	function formatNumber(number) {
-  return Number.isInteger(number) ? number.toString() : number.toFixed(2);
-}
+		return Number.isInteger(number) ? number.toString() : number.toFixed(2);
+	}
 	onMount(async () => {
 		console.log('test');
 		// addFeedstuffRow();
@@ -198,7 +205,9 @@
 			autocompleteOptions = feeds.map((feed) => ({
 				label: feed.Title,
 				value: feed.Title,
-				keywords: feed.keywords ? feed.keywords.split(', ').concat(normalizeGreek(feed.Title)) : normalizeGreek(feed.Title)
+				keywords: feed.keywords
+					? feed.keywords.split(', ').concat(normalizeGreek(feed.Title))
+					: normalizeGreek(feed.Title)
 			}));
 			metricsAutocomplete = metrics
 				.filter((x) => !certain.includes(x.Title))
@@ -271,7 +280,7 @@
 </script>
 
 <div
-	class="container h-full mx-auto w-fit md:w-full flex justify-center text-center items-center my-5 overflow-y-scroll"
+	class="container h-full mx-auto md:w-full flex justify-center text-center items-center my-5 overflow-y-scroll overflow-x-auto"
 >
 	<div class="w-full md:w-4/5 lg:w-3/4 xl:w-2/3">
 		<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-5">Υπολογισμός Σιτηρεσίου</h2>
@@ -287,20 +296,12 @@
 			<div class="text-lg my-4">
 				<p>
 					<label for="ration_name">Τίτλος Σιτηρεσίου: </label>
-					<input
-						id="ration_name"
-						type="text"
-						bind:value={rationName}
-					/>
+					<input id="ration_name" type="text" bind:value={rationName} />
 				</p>
 
 				<p>
 					<label for="producer_name">Δημιουργός: </label>
-					<input
-						id="producer_name"
-						type="text"
-						bind:value={producerName}
-					/>
+					<input id="producer_name" type="text" bind:value={producerName} />
 				</p>
 			</div>
 
@@ -315,15 +316,47 @@
 
 			<!-- Table for feedstuff entry -->
 			{#if feeds.length > 0}
-				<button
-					class="btn-sm my-3 variant-ghost-secondary hover:scale-110"
+				<!-- <button
+					class="btn-sm my-3 variant-ghost-secondary hover:scale-110" use:popup={popupClick}
 					on:click|preventDefault={tableInfoVisibility}>Επεξήγηση Πίνακα</button
+				> -->
+				<button class="btn-sm my-3 variant-ghost-secondary hover:scale-110" use:popup={popupClick}
+					>Επεξήγηση Πίνακα</button
 				>
-				{#if tableInfo}
-					<div class="text-sm max-w-lg flex content-center justify-center text-center" id="footnotes">
-						<div class="info" style="margin-top:10px;">
+				<div class="card p-4 variant-filled-primary" data-popup="popupClick">
+					<p>Επιλέξτε ζωοτροφές και προσαρμόστε τα αντίστοιχα βάρη τους.</p>
+					Εξήγηση διατροφικών στοιχείων πίνακα:
+					<ul>
+						<li>ΞΟ = Ξηρά Ουσία</li>
+						<li>ΟΛΟ = Ολικές Λιπαρές Ουσίες</li>
+						<li>ΟΚ = Ολικές Κυταρρίνες</li>
+						<li>Ca = Ασβέστιο</li>
+						<!-- <li>NE<sub>m</sub> = Net Energy for Maintenance</li> -->
+						<!-- <li>NE<sub>g</sub> = Net Energy for Gain</li> -->
+						<!-- <li>NE<sub>l</sub> = Net Energy for Lactation</li> -->
+						<li>P = Φωσφόρος</li>
+					</ul>
+					<!-- <u>Feedstuff nutritional data sources:</u>
+							<ul>
+								<li>
+									BeefMag_2018: Beef Magazine. (2018, August 9). 2018 Feed Composition Tables: Use
+									this to mix your cattle feed rations.
+									https://www.beefmagazine.com/nutrition/2018-feed-composition-tables-use-mix-your-cattle-feed-rations
+								</li>
+								<li>
+									OSU_2013: OSU Beef Extension. (2018, November 15).
+									OSU_Ration_Calculator_2013.xlsx.
+									http://beef.okstate.edu/files/OSU_Ration_Calculator_2013.xlsx/view
+								</li>
+								<li>User_Data: User-provided, laboratory feed analysis.</li>
+							</ul> -->
+					<div class="arrow variant-filled-primary" />
+				</div>
+				<div class="text-sm max-w-lg flex" id="footnotes">
+					{#if tableInfo}
+						<div class="info justify-center content-center text-center border-red-500">
 							Feedstuffs entered here will be used to generate rations in output.<br />
-							<ul style="margin-left:-15px;buffer-left:0;">
+							<ul>
 								<li>Price entries should be provided on an as-fed basis.</li>
 								<li>
 									Select <i>[Custom]</i> and manually set nutritional info for feeds not listed.
@@ -331,7 +364,7 @@
 								<li>All nutritional info is considered to be on a dry matter basis.</li>
 							</ul>
 							Abbreviations:
-							<ul style="margin-left:-15px;buffer-left:0;">
+							<ul>
 								<li>DM = Dry Matter</li>
 								<li>CP = Crude Protein</li>
 								<li>TDN = Total Digestible Nutrients</li>
@@ -343,7 +376,7 @@
 								<li>P = Phosphorus</li>
 							</ul>
 							<u>Feedstuff nutritional data sources:</u>
-							<ul style="margin-left:-15px;buffer-left:0;">
+							<ul>
 								<li>
 									BeefMag_2018: Beef Magazine. (2018, August 9). 2018 Feed Composition Tables: Use
 									this to mix your cattle feed rations.
@@ -357,10 +390,10 @@
 								<li>User_Data: User-provided, laboratory feed analysis.</li>
 							</ul>
 						</div>
-					</div>
-				{/if}
-				<div class="overflow-auto flex content-center justify-center">
-					<table class="bg-white table-auto">
+					{/if}
+				</div>
+				<div class="relative overflow-x-auto">
+					<table class="bg-white w-full">
 						<!-- Table headers -->
 						<thead>
 							<tr class="bg-gray-200 text-gray-700">
@@ -372,6 +405,26 @@
 								{/each}
 								<!-- Add other table headers here -->
 							</tr>
+							<tr class="bg-gray-200 text-gray-700">
+								{#each columns as column}
+									{#if column.Title == 'Title'}
+										<th class="text-purple-500 w-min">Μονάδες</th>
+									{:else if column.units !== undefined}
+										<td>{column.units}</td>
+									{:else}
+										<td />
+									{/if}
+								{/each}
+								{#each addedMetrics as column}
+									{#if column.Title == 'Title'}
+										<th class="text-purple-500 w-min">Μονάδες</th>
+									{:else if column.units !== undefined}
+										<td class="text-lg">{column.units}</td>
+									{:else}
+										<td />
+									{/if}
+								{/each}</tr
+							>
 						</thead>
 
 						<!-- Table body -->
@@ -419,36 +472,36 @@
 									<td class="font-bold">{formatNumber(sum[column.Title])}</td>
 								{/each}
 							</tr>
+
 							<tr class="bg-gray-200 text-gray-700">
+								<th class="text-purple-500 w-min">Ποσοστό</th>
+								<td />
 								{#each columns as column}
-									{#if column.Title == 'Title'}
-										<th class="text-purple-500 w-min">Μονάδες</th>
-									{:else if column.units !== undefined}
-										<td>{column.units}</td>
-									{:else}
-										<td />
+									{#if column.Title != 'Title' && column.Title != 'weight'}
+										<td class="font-bold">{formatNumber(sum[column.Title] / sum['weight'] / 10)}</td
+										>
 									{/if}
 								{/each}
 								{#each addedMetrics as column}
-									{#if column.Title == 'Title'}
-										<th class="text-purple-500 w-min">Μονάδες</th>
-									{:else if column.units !== undefined}
-										<td class="text-lg">{column.units}</td>
-									{:else}
-										<td />
-									{/if}
-								{/each}</tr>
-								<tr class="bg-gray-200 text-gray-700">
-								<th class="text-purple-500 w-min">Ποσοστό</th>
+									<td class="font-bold">{formatNumber(sum[column.Title] / sum['weight'] / 10)}</td>
+								{/each}
+							</tr>
+							<tr class="bg-gray-200 text-gray-700">
+								<th class="text-purple-500 w-min">Ποσοστό / ΞΟ </th>
+								<td />
 								{#each columns as column}
-								{#if column.Title != 'Title'}
-									<td class="font-bold">{formatNumber(sum[column.Title]/sum["weight"]/10)}</td>
-								{/if}
-							{/each}
-							{#each addedMetrics as column}
-								<td class="font-bold">{formatNumber(sum[column.Title]/sum["weight"]/10)}</td>
-							{/each}
-						</tr>
+									{#if column.Title != 'Title' && column.Title != 'weight'}
+										<td class="font-bold"
+											>{formatNumber((100 * sum[column.Title]) / sum.DryMatter)}</td
+										>
+									{/if}
+								{/each}
+								{#each addedMetrics as column}
+									<td class="font-bold"
+										>{formatNumber((100 * sum[column.Title]) / sum.DryMatter)}</td
+									>
+								{/each}
+							</tr>
 						</tfoot>
 					</table>
 				</div>
