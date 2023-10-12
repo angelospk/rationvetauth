@@ -291,7 +291,7 @@
 	}
 </script>
 
-<div class="w-full md:w-4/5 lg:w-3/4 xl:w-2/3">
+
 	<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-5">Υπολογισμός Σιτηρεσίου</h2>
 	<form id="FeedRationForm" on:submit|preventDefault={CalcAnalysis}>
 		<hr />
@@ -637,7 +637,7 @@
 			<!-- Add Mix Sheet table here -->
 		</div>
 	</form>
-</div>
+
 
 <style lang="postcss">
 	.info {

@@ -19,11 +19,10 @@ storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 			<svelte:fragment slot="trail">
 				<a
 					class="btn btn-sm variant-ghost-surface"
-					href="https://discord.gg/EXqV7W8MtY"
-					target="_blank"
+					href="/test"
 					rel="noreferrer"
 				>
-					Discord
+					test
 				</a>
 				<a
 					class="btn btn-sm variant-ghost-surface"
@@ -46,6 +45,7 @@ storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 	<div
 		class="container h-full mx-auto md:w-full flex justify-center text-center items-center my-5 overflow-y-scroll overflow-x-auto"
 	>
+	<div class="w-full md:w-4/5 lg:w-3/4 xl:w-2/3">
 	<slot > </slot>
-</div>
+</div></div>
 </AppShell>

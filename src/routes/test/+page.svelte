@@ -11,4 +11,11 @@ onMount(async () => {
 
 </script>
 
-<p>{JSON.stringify(records)}</p>
+{#if records}
+<div>{JSON.stringify(records)}</div>
+
+{:else } 
+<p>loading data</p>
+
+	
+{/if}
