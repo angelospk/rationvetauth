@@ -292,10 +292,11 @@
 </script>
 
 <div class="hide-scrollbar">
-	<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-5 print:hidden">Υπολογισμός Σιτηρεσίου</h2>
+	<div class="print:hidden">
+		<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-5">Υπολογισμός Σιτηρεσίου</h2>
+		<hr />
+	</div>
 	<form id="FeedRationForm" on:submit|preventDefault={CalcAnalysis}>
-		<hr class="print:hidden" />
-
 		<div class="heading print:hidden">
 			<h2>Βήμα 1: Γενικές Πληροφορίες</h2>
 		</div>
@@ -304,20 +305,17 @@
 
 		<div class="text-lg my-4">
 			<p>
-				<label for="ration_name">Τίτλος Σιτηρεσίου: </label>
-				<input id="ration_name" type="text" bind:value={rationName} />
+				<label for="ration_name" class="print:underline">Τίτλος: </label>
+				<input id="ration_name" class="print:text-center" type="text" bind:value={rationName} />
 			</p>
 
 			<p>
-				<label for="producer_name">Δημιουργός: </label>
-				<input id="producer_name" type="text" bind:value={producerName} />
+				<label for="producer_name" class="print:underline">Δημιουργός: </label>
+				<input id="producer_name" type="text" class="print:text-center" bind:value={producerName} />
 			</p>
 			<p>
-				<label for="entry_date">Ημερομηνία: </label>
-				<span
-					class="text-center  bg-primary-hover-token"
-					id="entry_date"
-				>{currentDate}</span>
+				<label for="entry_date" class="print:underline">Ημερομηνία: </label>
+				<span class="text-center bg-primary-hover-token" id="entry_date">{currentDate}</span>
 			</p>
 		</div>
 
@@ -326,20 +324,23 @@
 		<div class="heading print:hidden">
 			<h2>Βήμα 2: Εισαγωγή Τροφών</h2>
 		</div>
-        <div class="hidden print:block text-center text-lg my-3">Πίνακας Σιτηρεσίου</div>
+		<div class="hidden print:block text-center text-lg my-3">Πίνακας Σιτηρεσίου</div>
 		<div class="info" style="">
 			Σημείωση: Προσθέστε τροφές πατώντας στο "Αλλαγή Τροφών.<br />
 		</div>
 
 		<!-- Table for feedstuff entry -->
 		{#if feeds.length > 0}
-	
-			<div class="flex space-x-5 justify-center print:hidden">
-				<button class="btn-sm my-3 variant-ghost-secondary hover:scale-110" on:click|preventDefault use:popup={popupClick}
-					>Επεξήγηση Πίνακα</button
+			<div class="flex space-x-5 md:space-x-10 justify-center print:hidden">
+				<button
+					class="btn-sm my-3 variant-ghost-secondary hover:scale-110"
+					on:click|preventDefault
+					use:popup={popupClick}>Επεξήγηση Πίνακα</button
 				>
-				<button class="btn-sm my-3 variant-ghost-secondary hover:scale-110" on:click|preventDefault use:popup={optionsClick}
-					>Επιλογές Πίνακα</button
+				<button
+					class="btn-sm my-3 variant-ghost-secondary hover:scale-110"
+					on:click|preventDefault
+					use:popup={optionsClick}>Επιλογές Πίνακα</button
 				>
 			</div>
 			<div class="card p-4 variant-filled-secondary" data-popup="optionsClick">
@@ -458,7 +459,7 @@
 									{#if column.Title == 'Title'}
 										<th class="text-purple-500 w-min">Μονάδες</th>
 									{:else if column.units !== undefined}
-										<td class="text-lg">{column.units}</td>
+										<td>{column.units}</td>
 									{:else}
 										<td />
 									{/if}
@@ -514,12 +515,21 @@
 								<td />
 								{#each columns as column}
 									{#if column.Title != 'Title' && column.Title != 'weight'}
-										<td class="font-bold">{formatNumber(sum[column.Title] / sum['weight'] / 10)}</td
-										>
+										{#if column.units == 'g/kg'}
+											<td class="font-bold"
+												>{formatNumber(sum[column.Title] / sum['weight'] / 10)}</td
+											>
+										{/if}
 									{/if}
 								{/each}
 								{#each addedMetrics as column}
+								{#if column.Title != 'Title' && column.Title != 'weight'}
+										{#if column.units == 'g/kg'}
 									<td class="font-bold">{formatNumber(sum[column.Title] / sum['weight'] / 10)}</td>
+									{:else}<td></td>
+									{/if}
+							
+									{/if}
 								{/each}
 							</tr>
 						{/if}
@@ -529,15 +539,22 @@
 								<td />
 								{#each columns as column}
 									{#if column.Title != 'Title' && column.Title != 'weight'}
-										<td class="font-bold"
-											>{formatNumber((100 * sum[column.Title]) / sum.DryMatter)}</td
-										>
+										{#if column.units == 'g/kg'}
+											<td class="font-bold"
+												>{formatNumber((100 * sum[column.Title]) / sum.DryMatter)}</td
+											>
+										{/if}
 									{/if}
 								{/each}
 								{#each addedMetrics as column}
-									<td class="font-bold"
+								{#if column.Title != 'Title' && column.Title != 'weight'}
+										{#if column.units == 'g/kg'}	
+								<td class="font-bold"
 										>{formatNumber((100 * sum[column.Title]) / sum.DryMatter)}</td
 									>
+									{:else}<td></td>
+									{/if}
+									{/if}
 								{/each}
 							</tr>
 						{/if}
@@ -618,8 +635,6 @@
 			</section>
 		{/if}
 		<!-- Add Mix Sheet section here -->
-	
-
 	</form>
 </div>
 
@@ -642,6 +657,10 @@
 		/* Hide buttons and explanatory text */
 		.btn {
 			display: none;
+		}
+		th,
+		td {
+			border: 1px solid black;
 		}
 		.info {
 			display: none;
