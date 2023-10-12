@@ -3,7 +3,7 @@
 	import { storePopup } from '@skeletonlabs/skeleton';
 	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
-
+	import { page } from '$app/stores';
 storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 			
 </script>
@@ -13,11 +13,13 @@ storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 	<svelte:fragment slot="header">
 		<!-- App Bar -->
 		<AppBar>
+			
 			<svelte:fragment slot="lead">
 				<strong class="text-xl uppercase">ΣΙΤ</strong>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<a
+			<div class="print:hidden">
+			<a
 					class="btn btn-sm variant-ghost-surface"
 					href="/test"
 					rel="noreferrer"
@@ -37,15 +39,31 @@ storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 					rel="noreferrer"
 				>
 					Σύνδεση
-				</a>
+				</a></div>	
 			</svelte:fragment>
 		</AppBar>
 	</svelte:fragment>
 	<!-- Page Route Content -->
 	<div
-		class="container h-full mx-auto md:w-full flex justify-center text-center items-center my-5 overflow-y-scroll overflow-x-auto"
+		class="container h-full mx-auto md:w-full flex justify-center text-center items-center my-5 overflow-x-auto"
 	>
 	<div class="w-full md:w-4/5 lg:w-3/4 xl:w-2/3">
 	<slot > </slot>
 </div></div>
+<svelte:fragment slot="pageFooter">
+	<footer class="p-4 text-center text-secondary-700 dark:bg-secondary-700 dark:text-secondary-200">
+		<hr class="border-t-1 mb-2 border-primary-500 mx-auto">
+		© 2023  Εργαστήριο Διατροφής <a class="text-base italic hover:underline" href="https://www.vet.auth.gr">Κτηνιατρικής Σχολής ΑΠΘ</a><br>
+		<div class="text-slate-600 dark:text-secondary-300 print:hidden">
+		  Powered by
+		  <a class="text-primary-500 hover:underline" href="https://sveltekit.dev">SvelteKit</a>,
+		  <a class="text-primary-500 hover:underline" href="https://skeleton.dev">Skeleton UI</a>, and
+		  <a class="text-primary-500 hover:underline" href="https://pocketbase.io">PocketBase</a>
+		</div>
+		<div class="hidden text-sm italic print:block">Δημιουργήθηκε με χρήση της ιστοσελίδας: <a href={$page.url.toString()}>{$page.url}</a></div>
+	  </footer>
+		  
+</svelte:fragment>
 </AppShell>
+
+  

@@ -291,12 +291,12 @@
 	}
 </script>
 
-
-	<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-5">Υπολογισμός Σιτηρεσίου</h2>
+<div class="hide-scrollbar">
+	<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-5 print:hidden">Υπολογισμός Σιτηρεσίου</h2>
 	<form id="FeedRationForm" on:submit|preventDefault={CalcAnalysis}>
-		<hr />
+		<hr class="print:hidden" />
 
-		<div class="heading">
+		<div class="heading print:hidden">
 			<h2>Βήμα 1: Γενικές Πληροφορίες</h2>
 		</div>
 
@@ -323,20 +323,18 @@
 
 		<hr />
 
-		<div class="heading">
+		<div class="heading print:hidden">
 			<h2>Βήμα 2: Εισαγωγή Τροφών</h2>
 		</div>
+        <div class="hidden print:block text-center text-lg my-3">Πίνακας Σιτηρεσίου</div>
 		<div class="info" style="">
 			Σημείωση: Προσθέστε τροφές πατώντας στο "Αλλαγή Τροφών.<br />
 		</div>
 
 		<!-- Table for feedstuff entry -->
 		{#if feeds.length > 0}
-			<!-- <button
-					class="btn-sm my-3 variant-ghost-secondary hover:scale-110" use:popup={popupClick}
-					on:click|preventDefault={tableInfoVisibility}>Επεξήγηση Πίνακα</button
-				> -->
-			<div class="flex space-x-5 justify-center">
+	
+			<div class="flex space-x-5 justify-center print:hidden">
 				<button class="btn-sm my-3 variant-ghost-secondary hover:scale-110" on:click|preventDefault use:popup={popupClick}
 					>Επεξήγηση Πίνακα</button
 				>
@@ -558,7 +556,7 @@
 					Αλλαγή στηλών</button
 				>
 			</div>
-			<div class="my-3 flex justify-end">
+			<div class="my-3 flex justify-end print:hidden">
 				{#if addMetrics}
 					<div class="card max-w-md max-h-60 p-4 overflow-y-auto" tabindex="-1">
 						<InputChip
@@ -578,7 +576,7 @@
 					</div>
 				{/if}
 			</div>
-			<div class="my-3 max-w-lg flex justify-start">
+			<div class="my-3 max-w-lg flex justify-start print:hidden">
 				{#if addFoodVisible}
 					<div class="card max-w-md max-h-60 p-4 overflow-y-auto" tabindex="-1">
 						<InputChip
@@ -599,7 +597,7 @@
 				{/if}
 			</div>
 		{:else}
-			<p>
+			<p class="my-3">
 				Οι διαθέσιμες τροφές φορτώνονται...<br />Σε περίπτωση καθυστέρησης, ξαναφορτώστε τη σελίδα.
 			</p>
 			<section class="card w-full">
@@ -620,28 +618,14 @@
 			</section>
 		{/if}
 		<!-- Add Mix Sheet section here -->
-		<hr class="my-3" />
+	
 
-		<div class="heading">
-			<h2>Step 3: Mix Sheet</h2>
-		</div>
-
-		<div class="default">
-			<p>
-				<label for="batch_lb">Set Batch Wt, lb: </label><br />
-				<input id="batch_lb" type="number" step="1" on:input={CalcAnalysis} />
-			</p>
-		</div>
-
-		<div style="overflow-x: auto;">
-			<!-- Add Mix Sheet table here -->
-		</div>
 	</form>
-
+</div>
 
 <style lang="postcss">
 	.info {
-		@apply my-2 bg-secondary-400 rounded-lg;
+		@apply my-2 bg-secondary-400 rounded-lg print:hidden;
 	}
 	.heading {
 		font-size: x-large;
