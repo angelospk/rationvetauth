@@ -10,6 +10,9 @@ dependencies:
   papaparse:
     specifier: ^5.4.1
     version: 5.4.1
+  pocketbase:
+    specifier: ^0.18.2
+    version: 0.18.2
   xlsx:
     specifier: ^0.18.5
     version: 0.18.5
@@ -2005,6 +2008,10 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
     dev: true
+
+  /pocketbase@0.18.2:
+    resolution: {integrity: sha512-kFtbGiRxEiqtE/GkNkBNgjg7XCaVnzo6t/q1lc2wm7cTBpOyXTTHHN+B27TKlt8H+ZxO3NRxmq5tlVI/U9V9yQ==}
+    dev: false
 
   /postcss-import@15.1.0(postcss@8.4.30):
     resolution: {integrity: sha512-hpr+J05B2FVYUAXHeK1YyI267J/dDDhMU6B6civm8hSY1jYJnBXxzKDKDswzJmtLHryrjhnDjqqp/49t8FALew==}

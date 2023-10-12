@@ -27,23 +27,25 @@ storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 				</a>
 				<a
 					class="btn btn-sm variant-ghost-surface"
-					href="https://twitter.com/SkeletonUI"
-					target="_blank"
+					href="/sit"
 					rel="noreferrer"
 				>
-					Twitter
+					Επίλυση
 				</a>
 				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://github.com/skeletonlabs/skeleton"
-					target="_blank"
+					class="btn btn-sm variant-ghost-surface hover:underline hover:variant-filled-primary"
+					href="/login"
 					rel="noreferrer"
 				>
-					GitHub
+					Σύνδεση
 				</a>
 			</svelte:fragment>
 		</AppBar>
 	</svelte:fragment>
 	<!-- Page Route Content -->
-	<slot />
+	<div
+		class="container h-full mx-auto md:w-full flex justify-center text-center items-center my-5 overflow-y-scroll overflow-x-auto"
+	>
+	<slot > </slot>
+</div>
 </AppShell>
