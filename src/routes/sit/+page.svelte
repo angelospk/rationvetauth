@@ -43,21 +43,13 @@
 		'Calcium',
 		'Phosphorus'
 	];
-	function addRow() {
-		let temp = {};
-		for (let c of columns) {
-			temp[c] = 0;
-		}
-		temp['Title'] = '';
-		selected.push(temp);
-	}
+
 	let metrics = [];
 	let temp = {};
 	for (let c of certain) {
 		temp[c] = 0;
 	}
 	temp['Title'] = '';
-	// selected.push(temp);
 	let columns = [];
 	function setCols(certain) {
 		let temp = [];
@@ -84,22 +76,21 @@
 	//filtrarei ta feeds kathe fora pou allazei to inputChipList dld to koutaki pou pliktrologei o xristis
 	$: selected = feeds.filter((x) => inputChipList.includes(x.Title));
 	$: {
-		console.log('empty:', emptySum);
 		sum = { ...emptySum }; // Reset the sum object to emptySum
-
+		console.log(sum)
 		if (selected.length > 0) {
 			for (let i = 0; i < selected.length; i++) {
 				sum.weight += selected[i].weight;
-				console.log(sum.weight, selected[i].weight);
 
 				for (let m in sum) {
-					if (m !== 'weight') {
-						// Use square brackets to access the property dynamically
-						if (typeof (selected[i][m] == 'number')) {
+					if (m != 'weight') {
+						if (selected[i].hasOwnProperty(m)) {
 							sum[m] += selected[i].weight * selected[i][m];
 						}
+						else{
+							console.log(selected[i], m)
+						}
 					}
-					console.log(sum);
 				}
 			}
 		}
@@ -120,77 +111,19 @@
 		addFoodVisible = false;
 		addMetrics = !addMetrics;
 	}
-	function addFeedstuffRow() {
-		feeds.push({
-			weight: 0,
-			DryMatter: 0,
-			Fat: 0,
-			CrudeFiber: 0,
-			CrudeProtein: 0,
-			Ash: 0,
-			Calcium: 0,
-			Phospohrus: 0,
-			title: ''
-		});
-	}
 
-	function showFootnotes() {
-		const footnotes = document.getElementById('footnotes');
-		const sbt = document.getElementById('showf');
-		const hbt = document.getElementById('hidef');
-		sbt.style.display = 'none';
-		hbt.style.display = 'block';
-		footnotes.style.display = 'block';
-	}
-
-	function hideFootnotes() {
-		const footnotes = document.getElementById('footnotes');
-		footnotes.style.display = 'none';
-		const sbt = document.getElementById('showf');
-		const hbt = document.getElementById('hidef');
-		sbt.style.display = 'block';
-		hbt.style.display = 'none';
-	}
-
-	// Function to calculate the sum of a specific column
-	function getColumnSum(column) {
-		if (column === 'weight') {
-			return selected.reduce((sum, feed) => sum + parseFloat(feed[column] || 0), 0);
-		} else {
-			return selected.reduce(
-				(sum, feed) => sum + parseFloat(feed[column] || 0) * parseFloat(feed.weight || 0),
-				0
-			);
-		}
-	}
-
-	// Computed sums for each column
-	let sumWeight = getColumnSum('weight');
-	let sumLysine = getColumnSum('Lysine');
-	let sumPhosphorus = getColumnSum('Phosphorus');
-	let sumCrudeFiber = getColumnSum('CrudeFiber');
-	let sumCrudeProtein = getColumnSum('CrudeProtein');
-	let data = [];
-	function CalcAnalysis() {
-		console.log('calcanalysis');
-	}
-	function formatNumber(number) {
+	function formatNumber(number: Number) {
 		return Number.isInteger(number) ? number.toString() : number.toFixed(2);
 	}
 	onMount(async () => {
-		console.log('test');
-		// addFeedstuffRow();
 		let d = await fetch('/api/data');
 		if (d.ok) {
 			let dat = await d.json();
-			// console.log(dat);
-			//t=feeds
 			feeds = dat.d[0].data;
 			for (let i of feeds) {
 				i.weight = 0;
 			}
 			console.log('feeds:', feeds);
-			//arxikopoisi sum
 			let tmp = feeds[0];
 			for (let f in tmp) {
 				if (typeof tmp[f] != 'string') {
@@ -205,15 +138,7 @@
 			for (const item of temp) {
 				names[item.Title] = item;
 			}
-			// for (let c of certain){
-			//   columns.push(names[c].gr)
-			// }
-			// console.log(columns);
-			// columns = setCols(certain);
-			// console.log(columns);
 
-			// console.log(temp);
-			console.log(metrics);
 			autocompleteOptions = feeds.map((feed) => ({
 				label: feed.Title,
 				value: feed.Title,
@@ -228,66 +153,36 @@
 					value: x.Title,
 					keywords: normalizeGreek(x.labelgr)
 				}));
-			console.log(autocompleteOptions, metricsAutocomplete);
 		}
 	});
 
 	function onInputChipSelect(event: CustomEvent<AutocompleteOption<string>>): void {
-		console.log('onInputChipSelect', event.detail);
 		if (inputChipList.includes(event.detail.value) === false) {
 			inputChipList = [...inputChipList, event.detail.value];
 			inputChip = '';
-			// selected.push(feeds.filter(x=>x.Title==event.detail.value))
-			// console.log(selected);
-			// out.set(selected);
-			console.log($out);
-			// selected.
 		}
 	}
 	function onInputMetricSelect(event: CustomEvent<AutocompleteOption<string>>): void {
-		console.log('onInputMetricSelect', event.detail);
 		if (inputmlist.includes(event.detail.value) === false) {
 			inputmlist = [...inputmlist, event.detail.value];
 			inputMetric = '';
-			// selected.push(feeds.filter(x=>x.Title==event.detail.value))
-			// console.log(selected);
-			// out.set(selected);
-			// console.log($out);
-			// selected.
 		}
 	}
 	function validateFoodInput(value: string): boolean {
-		// console.log(value,feeds);
 		if (!autocompleteOptions.map((x) => x.label).includes(value)) return false;
 		if (inputChipList.includes(value)) return false;
 		if (feeds.filter((x) => x.keywords.includes(value))) {
-			console.log(feeds.filter((x) => x.Title == value));
-			// selected.push(feeds.filter(x=>x.Title==value))
-			// out.set(selected);
-			console.log(selected);
-			console.log($out);
 			return true;
 		}
-
-		console.log(
-			value,
-			feeds.filter((x) => x.Title)
-		);
 	}
 	function validateMetricInput(value: string): boolean {
 		// console.log(value,feeds);
 		if (!metricsAutocomplete.map((x) => x.label).includes(value)) return false;
 		if (inputmlist.includes(value)) return false;
 		if (metricsAutocomplete.map((x) => x.label).includes(value)) {
-			// console.log(feeds.filter(x=>x.Title==value))
-			// selected.push(feeds.filter(x=>x.Title==value))
-			// out.set(selected);
-			// console.log(selected)
-			// console.log($out);
 			return true;
 		}
 
-		// console.log(value,feeds.filter(x=>x.Title));
 	}
 </script>
 
@@ -296,7 +191,7 @@
 		<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-5">Υπολογισμός Σιτηρεσίου</h2>
 		<hr />
 	</div>
-	<form id="FeedRationForm" on:submit|preventDefault={CalcAnalysis}>
+	<form id="FeedRationForm" on:submit|preventDefault>
 		<div class="heading print:hidden">
 			<h2>Βήμα 1: Γενικές Πληροφορίες</h2>
 		</div>
@@ -523,12 +418,13 @@
 									{/if}
 								{/each}
 								{#each addedMetrics as column}
-								{#if column.Title != 'Title' && column.Title != 'weight'}
+									{#if column.Title != 'Title' && column.Title != 'weight'}
 										{#if column.units == 'g/kg'}
-									<td class="font-bold">{formatNumber(sum[column.Title] / sum['weight'] / 10)}</td>
-									{:else}<td></td>
-									{/if}
-							
+											<td class="font-bold"
+												>{formatNumber(sum[column.Title] / sum['weight'] / 10)}</td
+											>
+										{:else}<td />
+										{/if}
 									{/if}
 								{/each}
 							</tr>
@@ -547,13 +443,13 @@
 									{/if}
 								{/each}
 								{#each addedMetrics as column}
-								{#if column.Title != 'Title' && column.Title != 'weight'}
-										{#if column.units == 'g/kg'}	
-								<td class="font-bold"
-										>{formatNumber((100 * sum[column.Title]) / sum.DryMatter)}</td
-									>
-									{:else}<td></td>
-									{/if}
+									{#if column.Title != 'Title' && column.Title != 'weight'}
+										{#if column.units == 'g/kg'}
+											<td class="font-bold"
+												>{formatNumber((100 * sum[column.Title]) / sum.DryMatter)}</td
+											>
+										{:else}<td />
+										{/if}
 									{/if}
 								{/each}
 							</tr>

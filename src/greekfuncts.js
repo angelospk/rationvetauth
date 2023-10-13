@@ -2,7 +2,6 @@
  * @param {string} text
  */
 export function normalizeGreek(text) {
-    console.log(text);
     text = text.replace(/Ά|Α|ά/g, 'α')
         .replace(/Έ|Ε|έ/g, 'ε')
         .replace(/Ή|Η|ή/g, 'η')
