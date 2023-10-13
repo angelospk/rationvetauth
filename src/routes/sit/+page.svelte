@@ -9,6 +9,7 @@
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
+	import { browser } from '$app/environment';
 	const popupClick: PopupSettings = {
 		event: 'click',
 		target: 'popupClick',
@@ -43,7 +44,11 @@
 		'Calcium',
 		'Phosphorus'
 	];
-
+	let tableOptions = [
+		{ label: 'Εμφάνιση Μονάδων', visible: true },
+		{ label: 'Εμφάνιση Ποσοστού', visible: true },
+		{ label: 'Εμφάνιση Ποσοστού ανά ΞΟ', visible: false }
+	];
 	let metrics = [];
 	let temp = {};
 	for (let c of certain) {
@@ -62,6 +67,9 @@
 			return temp;
 		}
 	}
+
+  // Function to load the saved state
+
 	$: columns = setCols(certain);
 	let sum = {};
 	let emptySum;
@@ -73,6 +81,43 @@
 	$: addedMetrics = metrics.filter((x) => inputmlist.includes(x.Title));
 	let autocompleteOptions: AutocompleteOption<string>[];
 	let metricsAutocomplete: AutocompleteOption<string>[];
+	  // Function to save the state
+
+
+  // Function to load the saved state
+  function loadState() {
+    
+      const savedState = localStorage.getItem('livestockFeedState');
+      if (savedState) {
+        const state = JSON.parse(savedState);
+        inputChipList = state.inputChipList || [];
+        inputmlist = state.inputmlist || [];
+		if (state.weights) {
+          selected.forEach((item, index) => (item.weight = state.weights[index] || 0));
+        }
+        if (state.toptions) {
+          tableOptions.forEach((item, index) => (item.visible = state.toptions[index] || false));
+        }
+		console.log("loaded", state, selected)
+        // Set other variables from the saved state if needed
+      }
+    }
+  
+  function saveState() {
+    if (selected.length>0) {
+		const toptions=tableOptions.map(x=>x.visible)
+      const weights=selected.map(x=>x.weight)||[];
+		const state = {
+        inputChipList,
+        inputmlist,
+		weights,
+		toptions
+        // Add other variables to save if needed
+      };
+      localStorage.setItem('livestockFeedState', JSON.stringify(state));
+	  console.log("Saved", state)
+    }
+  }
 	//filtrarei ta feeds kathe fora pou allazei to inputChipList dld to koutaki pou pliktrologei o xristis
 	$: selected = feeds.filter((x) => inputChipList.includes(x.Title));
 	$: {
@@ -94,12 +139,9 @@
 				}
 			}
 		}
+		saveState()
 	}
-	const tableOptions = [
-		{ label: 'Εμφάνιση Μονάδων', visible: true },
-		{ label: 'Εμφάνιση Ποσοστού', visible: true },
-		{ label: 'Εμφάνιση Ποσοστού ανά ΞΟ', visible: false }
-	];
+
 	function tableInfoVisibility() {
 		tableInfo = !tableInfo;
 	}
@@ -154,6 +196,7 @@
 					keywords: normalizeGreek(x.labelgr)
 				}));
 		}
+		loadState();
 	});
 
 	function onInputChipSelect(event: CustomEvent<AutocompleteOption<string>>): void {
@@ -461,12 +504,15 @@
 				<br />
 			</div>
 
-			<div class="my-3 flex justify-between">
+			<div class="my-3 flex justify-between space-x-1 md:space-x-5">
 				<button class="btn variant-filled w-1/3" on:click|preventDefault={feedAddAppear}
-					>Αλλαγή Τροφών</button
+					>Δημόσιες Τροφές</button
 				>
-				<button class="btn variant-filled w-1/3 ml-6" on:click|preventDefault={addMetricsAppear}>
-					Αλλαγή στηλών</button
+				<button class="btn variant-filled w-1/3" on:click|preventDefault={feedAddAppear}
+					>Τροφές Χρήστη</button
+				>
+				<button class="btn variant-filled w-1/3" on:click|preventDefault={addMetricsAppear}>
+					Αλλαγή Στηλών</button
 				>
 			</div>
 			<div class="my-3 flex justify-end print:hidden">
