@@ -1,17 +1,24 @@
 <script lang="ts">
-	import { pb } from '$lib/pocketbase';
+	import { currentUser, pb } from '$lib/pocketbase';
 	import { applyAction, enhance } from '$app/forms';
 	import { redirect } from '@sveltejs/kit';
+	import { goto } from '$app/navigation';
 	let username: String;
 	let password: String;
-	// export let form;
-	// $: if (form?.logged){
-	//     currentUser.set(form.user)
-	//     pb.authStore
+	export let form;
+    let text="loading";
+	let loading = false;
+	// $: if (form?.logged) {
+	// 	console.log(form);
+	// 	pb.authStore.loadFromCookie(form.st);
+	// 	goto('/');
+	// }
+	// function logging(){
+	//     sf
 	// }
 	async function login() {
-		await pb.collections('users').authWithPassword(username, password);
-		throw redirect(303, '/');
+		await pb.collection('users').authWithPassword(username, password);
+		goto('/');
 	}
 </script>
 
@@ -23,98 +30,118 @@
 		>Επιστροφή στην Αρχική</a
 	>
 {:else} -->
-	<div class=" dark:bg-gray-900">
-		<div class="flex justify-center h-screen">
-			<div
-				class="hidden bg-cover lg:block lg:w-2/3"
-				style="background-image: url(https://images.unsplash.com/photo-1616763355603-9755a640a287?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80)"
-			>
-				<div class="flex items-center h-full px-20 bg-gray-900 bg-opacity-40">
-					<div>
-						<h2 class="text-4xl font-bold text-white">Brand</h2>
+<div class=" dark:bg-gray-900">
+	<div class="flex justify-center h-screen">
+		<div
+			class="hidden bg-cover lg:block lg:w-2/3"
+			style="background-image: url(https://images.unsplash.com/photo-1616763355603-9755a640a287?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80)"
+		>
+			<div class="flex items-center h-full px-20 bg-gray-900 bg-opacity-40">
+				<div>
+					<h2 class="text-4xl font-bold text-white">Brand</h2>
 
-						<p class="max-w-xl mt-3 text-gray-300">
-							Lorem ipsum dolor sit, amet consectetur adipisicing elit. In autem ipsa, nulla
-							laboriosam dolores, repellendus perferendis libero suscipit nam temporibus molestiae
-						</p>
-					</div>
+					<p class="max-w-xl mt-3 text-gray-300">
+						Lorem ipsum dolor sit, amet consectetur adipisicing elit. In autem ipsa, nulla
+						laboriosam dolores, repellendus perferendis libero suscipit nam temporibus molestiae
+					</p>
 				</div>
 			</div>
+		</div>
 
-			<div class="flex items-center w-full max-w-lg px-6 mx-auto lg:w-2/6">
-				<div class="flex-1">
-					<div class="text-center">
-						<p class="mt-3 text-gray-500 dark:text-gray-300">Σύνδεση σε λογαριασμό</p>
-					</div>
+		<div class="flex items-center w-full max-w-lg px-6 mx-auto lg:w-2/6">
+			<div class="flex-1">
+				<div class="text-center">
+					<p class="mt-3 text-gray-500 dark:text-gray-300">Σύνδεση σε λογαριασμό</p>
+				</div>
 
-					<div class="mt-8">
-						<form
-							method="POST"
-							class="card"
-							use:enhance={() => {
-								return async ({ result }) => {
-									pb.authStore.loadFromCookie(document.cookie);
-									await applyAction(result);
-								};
-							}}
-						>
-							<div>
-								<label
-									for="email"
-									class="block mb-2 text-sm text-gray-600 dark:text-gray-200 text-left">Email</label
+				<div class="mt-8">
+					<form
+						method="POST"
+						
+						action="?/login"
+						use:enhance={({ formElement, formData, action, cancel }) => {
+							loading = true;
+                            text="loading..."
+							return async ({ result }) => {
+								// `result` is an `ActionResult` object
+								loading = false;
+								console.log(result);
+								try{
+									// console.log(form);
+									pb.authStore.loadFromCookie(result.data.st);
+								    goto('/');
+                                }
+                                catch(e){
+                                console.log(e)
+                                text="Δεν μπόρεσε να πραγματοποιηθεί είσοδος."
+                                loading=true
+                                }
+								
+							};
+						}}
+					>
+						<!-- <form> -->
+						<div>
+							<label
+								for="email"
+								class="block mb-2 text-sm text-gray-600 dark:text-gray-200 text-left">Email</label
+							>
+							<input
+								type="email"
+								bind:value={username}
+								name="email"
+								id="email"
+								placeholder="example@example.com"
+								class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+							/>
+						</div>
+
+						<div class="mt-6">
+							<div class="flex justify-between mb-2">
+								<label for="password" class="text-sm text-gray-600 dark:text-gray-200"
+									>Κωδικός</label
 								>
-								<input
-									type="email"
-									bind:value={username}
-									name="email"
-									id="email"
-									placeholder="example@example.com"
-									class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
-								/>
-							</div>
-
-							<div class="mt-6">
-								<div class="flex justify-between mb-2">
-									<label for="password" class="text-sm text-gray-600 dark:text-gray-200"
-										>Κωδικός</label
-									>
-									<a
-										href="#"
-										class="text-sm text-gray-400 focus:text-blue-500 hover:text-blue-500 hover:underline"
-										>Ξέχασες τον κωδικό;</a
-									>
-								</div>
-
-								<input
-									type="password"
-									bind:value={password}
-									name="password"
-									id="password"
-									placeholder="Your Password"
-									class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
-								/>
-							</div>
-
-							<div class="mt-6">
-								<!-- <button on:click={login} -->
-								<button
-									class="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+								<a
+									href="#"
+									class="text-sm text-gray-400 focus:text-blue-500 hover:text-blue-500 hover:underline"
+									>Ξέχασες τον κωδικό;</a
 								>
-									Είσοδος
-								</button>
 							</div>
-						</form>
 
-						<p class="mt-6 text-sm text-center text-gray-400">
-							Δεν έχεις λογαριασμό; <a
-								href="/register"
-								class="text-blue-500 focus:outline-none focus:underline hover:underline"
-								>Κάνε εγγραφή</a
-							>.
-						</p>
-					</div>
+							<input
+								type="password"
+								bind:value={password}
+								name="password"
+								id="password"
+								placeholder="Your Password"
+								class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+							/>
+						</div>
+
+						<div class="mt-6">
+							<!-- <button on:click={login} -->
+							<button
+								class="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+							>
+								Είσοδος
+							</button>
+
+							{#if loading}
+								<p class="mt-2 card justify-center">{text}</p>
+							{/if}
+						</div>
+					</form>
+
+					<p class="mt-6 text-sm text-center text-gray-400">
+						Δεν έχεις λογαριασμό; <a
+							href="/register"
+							class="text-blue-500 focus:outline-none focus:underline hover:underline"
+							>Κάνε εγγραφή</a
+						>.
+					</p>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 <!-- {/if} -->

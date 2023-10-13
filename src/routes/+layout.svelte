@@ -4,18 +4,21 @@
 	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
 	import { page } from '$app/stores';
-	import { pb } from '$lib/pocketbase';
-	import { currentUser } from '$lib/stores/user'
+	import { pb , currentUser} from '$lib/pocketbase';
+	// import { currentUser } from '$lib/stores/user'
 	import type { PageData } from './$types'
+	import { goto } from '$app/navigation';
 
 export let data: PageData
 
-// Set the current user from the data passed in from the server
-$: currentUser.set(data.user)
+// // Set the current user from the data passed in from the server
+// $: currentUser.set(data.user)
 storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 async function logout(){
 	await pb.authStore.clear()
+	goto("/");
 }
+$:currentUser.set(pb.authStore.model)
 </script>
 
 <!-- App Shell -->
