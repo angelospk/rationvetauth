@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Your Svelte component
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import { normalizeGreek } from '../../greekfuncts';
 	import { Autocomplete } from '@skeletonlabs/skeleton';
 	import { InputChip } from '@skeletonlabs/skeleton';
@@ -9,7 +9,9 @@
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
+
 	import { browser } from '$app/environment';
+	import { currentUser } from '$lib/pocketbase';
 	const popupClick: PopupSettings = {
 		event: 'click',
 		target: 'popupClick',
@@ -19,6 +21,11 @@
 		event: 'click',
 		target: 'optionsClick',
 		placement: 'top'
+	};
+	const loginClick: PopupSettings = {
+		event: 'hover',
+		target: 'loginClick',
+		placement: 'bottom'
 	};
 	// import { pool } from '../db'
 	let rationName = '';
@@ -68,7 +75,7 @@
 		}
 	}
 
-  // Function to load the saved state
+	// Function to load the saved state
 
 	$: columns = setCols(certain);
 	let sum = {};
@@ -81,48 +88,46 @@
 	$: addedMetrics = metrics.filter((x) => inputmlist.includes(x.Title));
 	let autocompleteOptions: AutocompleteOption<string>[];
 	let metricsAutocomplete: AutocompleteOption<string>[];
-	  // Function to save the state
+	// Function to save the state
 
+	// Function to load the saved state
+	function loadState() {
+		const savedState = localStorage.getItem('livestockFeedState');
+		if (savedState) {
+			const state = JSON.parse(savedState);
+			inputChipList = state.inputChipList || [];
+			inputmlist = state.inputmlist || [];
+			if (state.weights) {
+				selected.forEach((item, index) => (item.weight = state.weights[index] || 0));
+			}
+			if (state.toptions) {
+				tableOptions.forEach((item, index) => (item.visible = state.toptions[index] || false));
+			}
+			console.log('loaded', state, selected);
+			// Set other variables from the saved state if needed
+		}
+	}
 
-  // Function to load the saved state
-  function loadState() {
-    
-      const savedState = localStorage.getItem('livestockFeedState');
-      if (savedState) {
-        const state = JSON.parse(savedState);
-        inputChipList = state.inputChipList || [];
-        inputmlist = state.inputmlist || [];
-		if (state.weights) {
-          selected.forEach((item, index) => (item.weight = state.weights[index] || 0));
-        }
-        if (state.toptions) {
-          tableOptions.forEach((item, index) => (item.visible = state.toptions[index] || false));
-        }
-		console.log("loaded", state, selected)
-        // Set other variables from the saved state if needed
-      }
-    }
-  
-  function saveState() {
-    if (selected.length>0) {
-		const toptions=tableOptions.map(x=>x.visible)
-      const weights=selected.map(x=>x.weight)||[];
-		const state = {
-        inputChipList,
-        inputmlist,
-		weights,
-		toptions
-        // Add other variables to save if needed
-      };
-      localStorage.setItem('livestockFeedState', JSON.stringify(state));
-	  console.log("Saved", state)
-    }
-  }
+	function saveState() {
+		if (selected.length > 0) {
+			const toptions = tableOptions.map((x) => x.visible);
+			const weights = selected.map((x) => x.weight) || [];
+			const state = {
+				inputChipList,
+				inputmlist,
+				weights,
+				toptions
+				// Add other variables to save if needed
+			};
+			localStorage.setItem('livestockFeedState', JSON.stringify(state));
+			console.log('Saved', state);
+		}
+	}
 	//filtrarei ta feeds kathe fora pou allazei to inputChipList dld to koutaki pou pliktrologei o xristis
 	$: selected = feeds.filter((x) => inputChipList.includes(x.Title));
 	$: {
 		sum = { ...emptySum }; // Reset the sum object to emptySum
-		console.log(sum)
+		console.log(sum);
 		if (selected.length > 0) {
 			for (let i = 0; i < selected.length; i++) {
 				sum.weight += selected[i].weight;
@@ -131,18 +136,17 @@
 					if (m != 'weight') {
 						if (selected[i].hasOwnProperty(m)) {
 							sum[m] += selected[i].weight * selected[i][m];
-						}
-						else{
-							console.log(selected[i], m)
+						} else {
+							console.log(selected[i], m);
 						}
 					}
 				}
 			}
 		}
-		saveState()
+		saveState();
 	}
 
-	function tableInfoVisibility() {
+	function userFeedsAppear() {
 		tableInfo = !tableInfo;
 	}
 	function feedAddAppear() {
@@ -225,7 +229,6 @@
 		if (metricsAutocomplete.map((x) => x.label).includes(value)) {
 			return true;
 		}
-
 	}
 </script>
 
@@ -298,7 +301,7 @@
 				</ol>
 				<div class="arrow variant-filled-secondary" />
 			</div>
-			<div class="card p-4 variant-filled-primary" data-popup="popupClick">
+			<div class="card p-4 variant-filled-secondary" data-popup="popupClick">
 				<p class="underline">Διατροφικά στοιχεία πίνακα:</p>
 				<ul>
 					<li>ΞΟ = Ξηρά Ουσία</li>
@@ -328,7 +331,7 @@
 								</li>
 								<li>User_Data: User-provided, laboratory feed analysis.</li>
 							</ul> -->
-				<div class="arrow variant-filled-primary" />
+				<div class="arrow variant-filled-secondary" />
 			</div>
 			<div class="text-sm max-w-lg flex" id="footnotes">
 				{#if tableInfo}
@@ -508,9 +511,20 @@
 				<button class="btn variant-filled w-1/3" on:click|preventDefault={feedAddAppear}
 					>Δημόσιες Τροφές</button
 				>
-				<button class="btn variant-filled w-1/3" on:click|preventDefault={feedAddAppear}
-					>Τροφές Χρήστη</button
-				>
+				{#if $currentUser}
+					<button class="btn variant-filled w-1/3" on:click|preventDefault={userFeedsAppear}
+						>Τροφές Χρήστη</button
+					>
+				{:else}
+					<button class="btn variant-filled w-1/3" on:click|preventDefault use:popup={loginClick}
+						>Τροφές Χρήστη</button
+					>
+
+					<div class="card p-4 variant-filled-primary" data-popup="loginClick">
+						<div class="arrow variant-filled-primary" />
+						Συνδέσου για να αποθηκεύσεις και να χρησιμοποιήσεις δικές σου τροφες.
+					</div>
+				{/if}
 				<button class="btn variant-filled w-1/3" on:click|preventDefault={addMetricsAppear}>
 					Αλλαγή Στηλών</button
 				>

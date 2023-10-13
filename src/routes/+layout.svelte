@@ -18,7 +18,8 @@ async function logout(){
 	await pb.authStore.clear()
 	goto("/");
 }
-$:currentUser.set(pb.authStore.model)
+$:{currentUser.set(pb.authStore.model||null)
+}
 </script>
 
 <!-- App Shell -->
