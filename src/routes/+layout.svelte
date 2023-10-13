@@ -4,9 +4,18 @@
 	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
 	import { page } from '$app/stores';
-	import NoWorkResult from 'postcss/lib/no-work-result';
+	import { pb } from '$lib/pocketbase';
+	import { currentUser } from '$lib/stores/user'
+	import type { PageData } from './$types'
+
+export let data: PageData
+
+// Set the current user from the data passed in from the server
+$: currentUser.set(data.user)
 storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
-			
+async function logout(){
+	await pb.authStore.clear()
+}
 </script>
 
 <!-- App Shell -->
@@ -34,13 +43,18 @@ storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 				>
 					Επίλυση
 				</a>
-				<a
-					class="btn btn-sm variant-ghost-surface hover:underline hover:variant-filled-primary"
-					href="/login"
-					rel="noreferrer"
-				>
-					Σύνδεση
-				</a></div>	
+				{#if $currentUser}
+				<button on:click={logout} class="btn btn-sm variant-ghost-surface hover:underline hover:variant-filled-primary">Αποσύνδεση</button>
+				{:else}
+					<a
+						class="btn btn-sm variant-ghost-surface hover:underline hover:variant-filled-primary"
+						href="/login"
+						rel="noreferrer"
+					>
+						Σύνδεση
+					</a>
+				{/if}
+			</div>	
 			</svelte:fragment>
 		</AppBar>
 	</svelte:fragment>

@@ -1,8 +1,10 @@
-<script>import PocketBase from 'pocketbase';
+<script lang="ts">
 	import { onMount } from 'svelte';
+	import { pb } from '$lib/pocketbase';
 
-const pb = new PocketBase('https://ration.haroldpoi.repl.co');
-let records;
+
+let records:any[];
+
 onMount(async () => {
 	records = await pb.collection('test').getFullList({
     sort: '-created',
