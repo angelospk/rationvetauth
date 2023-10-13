@@ -91,17 +91,28 @@
 	// Function to save the state
 
 	// Function to load the saved state
-	function loadState() {
+	async function loadState() {
 		const savedState = localStorage.getItem('livestockFeedState');
 		if (savedState) {
 			const state = JSON.parse(savedState);
 			inputChipList = state.inputChipList || [];
 			inputmlist = state.inputmlist || [];
-			if (state.weights) {
-				selected.forEach((item, index) => (item.weight = state.weights[index] || 0));
-			}
+
 			if (state.toptions) {
 				tableOptions.forEach((item, index) => (item.visible = state.toptions[index] || false));
+			}
+			if (state.rationName) {
+				rationName = state.rationName;
+			}
+			if (state.producerName) {
+				producerName = state.producerName;
+			}
+			if (state.weights) {
+				setTimeout(() => {
+					selected.forEach((item, index) => {
+						item.weight = state.weights[index] || 0;
+					});
+				}, 500);
 			}
 			console.log('loaded', state, selected);
 			// Set other variables from the saved state if needed
@@ -116,7 +127,9 @@
 				inputChipList,
 				inputmlist,
 				weights,
-				toptions
+				toptions,
+				rationName,
+				producerName
 				// Add other variables to save if needed
 			};
 			localStorage.setItem('livestockFeedState', JSON.stringify(state));
@@ -200,7 +213,7 @@
 					keywords: normalizeGreek(x.labelgr)
 				}));
 		}
-		loadState();
+		await loadState();
 	});
 
 	function onInputChipSelect(event: CustomEvent<AutocompleteOption<string>>): void {
