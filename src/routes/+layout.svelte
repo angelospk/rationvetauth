@@ -81,8 +81,8 @@ $:{currentUser.set(pb.authStore.model||null)
 	<footer class="p-4 text-center text-secondary-700 dark:bg-secondary-700 dark:text-secondary-200 print:text-xs print:text-black">
 		<hr class="border-t-1 mb-2 border-primary-500 mx-auto">
 		<div class="flex-col">
-		<div class="w-24 h-24 mx-auto my-1 print:h-12 print:w-12"><img src="https://www.auth.gr/wp-content/uploads/cropped-LogoAUTHblack300ppi.jpg" alt="logo"/></div>
-		<div class="">Εργαστήριο Διατροφής <a class="hover:underline" href="https://www.vet.auth.gr">Κτηνιατρικής Σχολής ΑΠΘ</a><br>
+		<div class="w-16 h-16 sm:w-24 sm:h-24 mx-auto my-1 print:h-12 print:w-12"><img class="rounded-full" src="https://www.auth.gr/wp-content/uploads/cropped-LogoAUTHblack300ppi.jpg" alt="logo"/></div>
+		<div class="text-xs sm:text-base">Εργαστήριο Διατροφής <a class="hover:underline" href="https://www.vet.auth.gr">Κτηνιατρικής Σχολής ΑΠΘ</a><br>
 			<div class="text-slate-600 dark:text-secondary-300 print:hidden">
 				© {new Date().getFullYear()} | Powered by
 			  <a class="text-primary-500 hover:underline" href="https://kit.svelte.dev/">SvelteKit</a> and
