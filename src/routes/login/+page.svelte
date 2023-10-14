@@ -1,13 +1,19 @@
 <script lang="ts">
-	import { currentUser, pb } from '$lib/pocketbase';
-	import { applyAction, enhance } from '$app/forms';
-	import { redirect } from '@sveltejs/kit';
+	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
+	import { pb } from '$lib/pocketbase';
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	import type { ToastSettings } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
 	let username: String;
 	let password: String;
 	export let form;
     let text="loading";
 	let loading = false;
+	let te: ToastSettings = {
+	message: 'This message will auto-hide after 3 seconds.',
+	timeout: 3000
+};
 	// $: if (form?.logged) {
 	// 	console.log(form);
 	// 	pb.authStore.loadFromCookie(form.st);
@@ -69,12 +75,16 @@
 								try{
 									// console.log(form);
 									pb.authStore.loadFromCookie(result.data.st);
+									te.message="Επιτυχής είσοδος!"
+									toastStore.trigger(te)
 								    goto('/');
                                 }
                                 catch(e){
                                 console.log(e)
                                 text="Δεν μπόρεσε να πραγματοποιηθεί είσοδος."
-                                loading=true
+								te.message=text
+								toastStore.trigger(te);
+                                // loading=true
                                 }
 								
 							};

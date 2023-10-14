@@ -391,7 +391,7 @@
 					<thead>
 						<tr class="bg-stone-400 text-gray-700">
 							{#each columns as column}
-								<th class="text-primary w-min">{column.gr}</th>
+								<th class="text-primary w-min table-sort-asc">{column.gr}</th>
 							{/each}
 							{#each addedMetrics as column}
 								<th class="text-primary bg w-min">{column.gr}</th>

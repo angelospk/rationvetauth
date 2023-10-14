@@ -8,7 +8,9 @@
 	// import { currentUser } from '$lib/stores/user'
 	import type { PageData } from './$types'
 	import { goto } from '$app/navigation';
-
+import { initializeStores } from '@skeletonlabs/skeleton';
+import {Toast} from '@skeletonlabs/skeleton';
+initializeStores();
 export let data: PageData
 
 // // Set the current user from the data passed in from the server
@@ -21,7 +23,7 @@ async function logout(){
 $:{currentUser.set(pb.authStore.model||null)
 }
 </script>
-
+<Toast />
 <!-- App Shell -->
 <AppShell>
 	<title>Διαδυκτιακή Εφαρμογή Επίλυσης Σιτηρεσιών</title>
