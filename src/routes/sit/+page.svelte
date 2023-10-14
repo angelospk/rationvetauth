@@ -258,18 +258,23 @@
 		<div class="info">This section is optional but recommended if outputs are emailed below.</div>
 
 		<div class="text-lg my-4">
-			<p>
+			<p class="print:flex">
 				<label for="ration_name" class="print:underline">Τίτλος: </label>
-				<input id="ration_name" class="print:text-center" type="text" bind:value={rationName} />
+				<input id="ration_name" class="print:font-bold print:ml-2" type="text" bind:value={rationName} />
 			</p>
 
-			<p>
+			<p class="print:flex">
 				<label for="producer_name" class="print:underline">Δημιουργός: </label>
-				<input id="producer_name" type="text" class="print:text-center" bind:value={producerName} />
+				
+				{#if !$currentUser}
+					<input id="producer_name" type="text" class="" bind:value={producerName} />
+					{:else}
+					<span class="text-center bg-primary-hover-token print:font-bold print:ml-2" id="entry_date">{$currentUser.name}</span>
+				{/if}
 			</p>
-			<p>
+			<p class="print:flex">
 				<label for="entry_date" class="print:underline">Ημερομηνία: </label>
-				<span class="text-center bg-primary-hover-token" id="entry_date">{currentDate}</span>
+				<span class="text-center bg-primary-hover-token print:ml-2" id="entry_date">{currentDate}</span>
 			</p>
 		</div>
 
@@ -391,7 +396,7 @@
 					<thead>
 						<tr class="bg-stone-400 text-gray-700">
 							{#each columns as column}
-								<th class="text-primary w-min table-sort-asc">{column.gr}</th>
+								<th class="text-primary w-min">{column.gr}</th>
 							{/each}
 							{#each addedMetrics as column}
 								<th class="text-primary bg w-min">{column.gr}</th>

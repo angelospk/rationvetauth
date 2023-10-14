@@ -1,23 +1,21 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { pb } from '$lib/pocketbase';
+	// import { pb } from '$lib/pocketbase';
+	import PocketBase from 'pocketbase';
+	import Error from '../+error.svelte';
+	const pb=new PocketBase("https://asf.haroldpoi.repl.co/")
 
 
-let records:any[];
-
-onMount(async () => {
-	records = await pb.collection('test').getFullList({
+let records:any[]=pb.collection('posts').getFullList({
     sort: '-created',
-})
 })
 
 </script>
 
-{#if records}
-<div>{JSON.stringify(records)}</div>
-
-{:else } 
+{#await records}
 <p>loading data</p>
 
-	
-{/if}
+{:then data } 
+<div>{JSON.stringify(data)}</div>
+{:catch error}
+<p>{error}</p>
+{/await}
