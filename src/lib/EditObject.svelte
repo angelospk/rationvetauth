@@ -1,18 +1,32 @@
-<script>
-	export let objectData; // The JSON object retrieved from your database
+<script lang="ts">
+	export let objectData:any; // The JSON object retrieved from your database
 	// let editedData = JSON.parse(JSON.stringify(objectData)); // Create a copy to track edits
-
-	const saveChanges = () => {
-		// Implement the logic to save changes to your database
-		// You can use the 'editedData' object to send updates
-		// Don't forget to validate the data and handle errors
-		console.log('Saving changes...', objectData);
+import { pb } from "./pocketbase";
+import { getToastStore } from '@skeletonlabs/skeleton';
+import type { ToastSettings } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
+	let te: ToastSettings = {
+	message: 'This message will auto-hide after 3 seconds.',
+	timeout: 1000
+};
+	const saveChanges = async () => {
+    
+    try{
+    const record=await pb.collection('feeds').update(objectData.id, objectData);
+    te.message="Αποθηκεύτηκε επιτυχώς!"
+    toastStore.trigger(te)
+    }
+    catch (err){
+      te.message="Η αποθήκευση απέτυχε!"
+      toastStore.trigger(te)
+      console.log(err)
+    }
 	};
 </script>
 
 <!-- {JSON.stringify(objectData)} -->
 
-<form>
+<form class="card p-1" on:submit|preventDefault>
     <div class="flex-container">
         <div class="form-item">
             <label>Τίτλος:</label>
@@ -27,7 +41,7 @@
         {/if}
       {/each}
     </div>
-    <button class="mt-3 btn variant-filled" on:click={saveChanges}>Αποθήκευση</button>
+    <button class="mt-3 btn variant-filled" on:click|preventDefault={saveChanges}>Αποθήκευση</button>
   </form>
   
   <style>
@@ -40,7 +54,6 @@
     .form-item {
       display: flex;
       align-items: center;
-      margin-bottom: 1rem;
     }
   
     input[type='number'] {
