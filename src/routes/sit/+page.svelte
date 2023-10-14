@@ -112,7 +112,7 @@
 					selected.forEach((item, index) => {
 						item.weight = state.weights[index] || 0;
 					});
-				}, 500);
+				}, 200);
 			}
 			console.log('loaded', state, selected);
 			// Set other variables from the saved state if needed

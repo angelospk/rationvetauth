@@ -70,15 +70,17 @@ $:{currentUser.set(pb.authStore.model||null)
 	<slot > </slot>
 </div></div>
 <svelte:fragment slot="pageFooter">
-	<footer class="p-4 text-center text-secondary-700 dark:bg-secondary-700 dark:text-secondary-200">
+	<footer class="p-4 text-center text-secondary-700 dark:bg-secondary-700 dark:text-secondary-200 print:text-xs">
 		<hr class="border-t-1 mb-2 border-primary-500 mx-auto">
-		Εργαστήριο Διατροφής <a class="text-base hover:underline" href="https://www.vet.auth.gr">Κτηνιατρικής Σχολής ΑΠΘ</a><br>
-		<div class="text-slate-600 dark:text-secondary-300 print:hidden">
-			© {new Date().getFullYear()} | Powered by
-		  <a class="text-primary-500 hover:underline" href="https://kit.svelte.dev/">SvelteKit</a> and
-		  <a class="text-primary-500 hover:underline" href="https://pocketbase.io">PocketBase</a>
-		</div>
-		<div class="hidden text-sm italic print:block">Δημιουργήθηκε με χρήση της ιστοσελίδας: <a href={$page.url.toString()}>{$page.url}</a></div>
+		<div class="flex-col">
+		<div class="w-24 h-24 mx-auto my-1 print:h-12 print:w-12"><img src="https://www.auth.gr/wp-content/uploads/cropped-LogoAUTHblack300ppi.jpg" alt="logo"/></div>
+		<div class="">Εργαστήριο Διατροφής <a class="hover:underline" href="https://www.vet.auth.gr">Κτηνιατρικής Σχολής ΑΠΘ</a><br>
+			<div class="text-slate-600 dark:text-secondary-300 print:hidden">
+				© {new Date().getFullYear()} | Powered by
+			  <a class="text-primary-500 hover:underline" href="https://kit.svelte.dev/">SvelteKit</a> and
+			  <a class="text-primary-500 hover:underline" href="https://pocketbase.io">PocketBase</a>
+			</div>
+			<div class="hidden italic print:block">	© {new Date().getFullYear()} | Δημιουργήθηκε με χρήση της ιστοσελίδας: <a href={$page.url.toString()}>{$page.url}</a></div></div></div>
 	  </footer>
 		  
 </svelte:fragment>
