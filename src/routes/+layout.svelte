@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.postcss';
-	import { storePopup } from '@skeletonlabs/skeleton';
+	import { TabAnchor, TabGroup, storePopup } from '@skeletonlabs/skeleton';
 	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
 	import { page } from '$app/stores';
@@ -24,6 +24,7 @@ $:{currentUser.set(pb.authStore.model||null)
 
 <!-- App Shell -->
 <AppShell>
+	<title>Διαδυκτιακή Εφαρμογή Επίλυσης Σιτηρεσιών</title>
 	<svelte:fragment slot="header">
 		<!-- App Bar -->
 		<AppBar>
@@ -32,8 +33,13 @@ $:{currentUser.set(pb.authStore.model||null)
 				<a href="/" class="text-xl uppercase">ΣΙΤ</a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-			<div class="print:hidden">
-			<a
+			<div class="print:hidden flex text-xs sm:text-base sm:space-x-10">
+				<TabGroup>
+					<TabAnchor href="/" selected={$page.url.pathname === '/'}>Αρχική</TabAnchor>
+					<TabAnchor href="/sit" selected={$page.url.pathname === '/sit'}>Επίλυση</TabAnchor>
+					<TabAnchor href="/test" selected={$page.url.pathname === '/test'}>Τεστ</TabAnchor>
+				</TabGroup>
+				<!-- <a
 					class="btn btn-sm variant-ghost-surface"
 					href="/test"
 					rel="noreferrer"
@@ -46,7 +52,7 @@ $:{currentUser.set(pb.authStore.model||null)
 					rel="noreferrer"
 				>
 					Επίλυση
-				</a>
+				</a> -->
 				{#if $currentUser}
 				<button on:click={logout} class="btn btn-sm variant-ghost-surface hover:underline hover:variant-filled-primary">Αποσύνδεση</button>
 				{:else}
@@ -70,7 +76,7 @@ $:{currentUser.set(pb.authStore.model||null)
 	<slot > </slot>
 </div></div>
 <svelte:fragment slot="pageFooter">
-	<footer class="p-4 text-center text-secondary-700 dark:bg-secondary-700 dark:text-secondary-200 print:text-xs">
+	<footer class="p-4 text-center text-secondary-700 dark:bg-secondary-700 dark:text-secondary-200 print:text-xs print:text-black">
 		<hr class="border-t-1 mb-2 border-primary-500 mx-auto">
 		<div class="flex-col">
 		<div class="w-24 h-24 mx-auto my-1 print:h-12 print:w-12"><img src="https://www.auth.gr/wp-content/uploads/cropped-LogoAUTHblack300ppi.jpg" alt="logo"/></div>
