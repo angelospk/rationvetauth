@@ -29,7 +29,7 @@ $:{currentUser.set(pb.authStore.model||null)
 		<AppBar>
 			
 			<svelte:fragment slot="lead">
-				<strong class="text-xl uppercase">ΣΙΤ</strong>
+				<a href="/" class="text-xl uppercase">ΣΙΤ</a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 			<div class="print:hidden">
