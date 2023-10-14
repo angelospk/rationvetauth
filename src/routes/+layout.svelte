@@ -10,9 +10,19 @@
 	import { goto } from '$app/navigation';
 import { initializeStores } from '@skeletonlabs/skeleton';
 import {Toast} from '@skeletonlabs/skeleton';
+import {feeds, metrics} from "$lib/stores/data"
+	import { onMount } from 'svelte';
 initializeStores();
 export let data: PageData
 
+onMount(async () => {
+	const res = await fetch('/api/data');
+	if (res.ok) {
+			let dat = await res.json();
+			feeds.set( dat.d[0].data);
+			metrics.set( dat.d[1].data);
+		}
+})
 // // Set the current user from the data passed in from the server
 // $: currentUser.set(data.user)
 storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
@@ -20,6 +30,7 @@ async function logout(){
 	await pb.authStore.clear()
 	goto("/");
 }
+console.log(data);
 $:{currentUser.set(pb.authStore.model||null)
 }
 </script>
