@@ -11,6 +11,7 @@
 Δεν είσαι συνδεδεμένος!
 
 {:else}
+{$currentUser.id}
 <h1>Οι Τροφές μου</h1>
 
 {#await records}

@@ -5,15 +5,16 @@
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
+	let te: ToastSettings = {
+	message: 'This message will auto-hide after 3 seconds.',
+	timeout: 3000
+};
 	let username: String;
 	let password: String;
 	export let form;
     let text="loading";
 	let loading = false;
-	let te: ToastSettings = {
-	message: 'This message will auto-hide after 3 seconds.',
-	timeout: 3000
-};
+
 	// $: if (form?.logged) {
 	// 	console.log(form);
 	// 	pb.authStore.loadFromCookie(form.st);

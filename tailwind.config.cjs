@@ -8,7 +8,6 @@ module.exports = {
 	// 2. Opt for dark mode to be handled via the class method
 	darkMode: 'class',
 	content: [
-		"./node_modules/flowbite-svelte-icons/**/*.{html,js,svelte,ts}",
 		'./src/**/*.{html,js,svelte,ts}',
 		require('path').join(require.resolve(
 			'@skeletonlabs/skeleton'),
