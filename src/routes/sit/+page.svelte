@@ -11,7 +11,7 @@
 	import { SlideToggle } from '@skeletonlabs/skeleton';
 
 	import { browser } from '$app/environment';
-	import { currentUser } from '$lib/pocketbase';
+	import { currentUser, pb } from '$lib/pocketbase';
 	const popupClick: PopupSettings = {
 		event: 'click',
 		target: 'popupClick',
@@ -34,11 +34,11 @@
 	let tableInfo = false;
 	let addFoodVisible = false;
 	let addMetrics = false;
+	let addUserFoodVisible = false;
 	let feeds = [];
 	let names = {};
 
 	let selected = [];
-	let out = writable([]);
 	// out.subscribe()
 	let certain = [
 		'Title',
@@ -79,15 +79,19 @@
 
 	$: columns = setCols(certain);
 	let sum = {};
+	let userFeeds = [];
+	let userFeedsdb = [];
 	let emptySum;
 	let addedMetrics = [];
 	let inputChip = '';
 	let inputChipList: string[] = [];
+	let inputChipListUser: string[]=[];
 	let inputMetric = '';
 	let inputmlist: string[] = [];
 	$: addedMetrics = metrics.filter((x) => inputmlist.includes(x.Title));
 	let autocompleteOptions: AutocompleteOption<string>[];
 	let metricsAutocomplete: AutocompleteOption<string>[];
+	let userFoodAutocomplete: AutocompleteOption<string>[];
 	// Function to save the state
 
 	// Function to load the saved state
@@ -137,7 +141,7 @@
 		}
 	}
 	//filtrarei ta feeds kathe fora pou allazei to inputChipList dld to koutaki pou pliktrologei o xristis
-	$: selected = feeds.filter((x) => inputChipList.includes(x.Title));
+	$: selected = [...feeds.filter((x) => inputChipList.includes(x.Title)),...userFeeds.filter((x)=>inputChipListUser.includes(x.Title))]
 	$: {
 		sum = { ...emptySum }; // Reset the sum object to emptySum
 		console.log(sum);
@@ -160,14 +164,19 @@
 	}
 
 	function userFeedsAppear() {
-		tableInfo = !tableInfo;
+		addMetrics = false;
+		addFoodVisible = false;
+		addUserFoodVisible = !addUserFoodVisible;
 	}
 	function feedAddAppear() {
 		addMetrics = false;
+		addUserFoodVisible = false;
+		addUserFoodVisible;
 		addFoodVisible = !addFoodVisible;
 	}
 	function addMetricsAppear() {
 		addFoodVisible = false;
+		addUserFoodVisible = false;
 		addMetrics = !addMetrics;
 	}
 
@@ -197,7 +206,32 @@
 			for (const item of temp) {
 				names[item.Title] = item;
 			}
-
+			if ($currentUser) {
+				const r: any =
+					(await pb.collection('feeds').getFullList({
+						sort: '-created'
+					})) || [];
+				userFeedsdb = r;
+				
+				userFeeds = userFeedsdb.map((feed) => {
+					const {
+						collectionId,
+						collectionName,
+						created,
+						id,
+						updated,
+						user,
+						...rest // Get the rest of the properties
+					} = feed;
+					return rest;
+				});
+				
+				for (let i of userFeeds) {
+				i.weight = 0;
+				}
+				console.log('user feeds', userFeeds);
+				// console.log(sanitizedUserFeeds);
+			}
 			autocompleteOptions = feeds.map((feed) => ({
 				label: feed.Title,
 				value: feed.Title,
@@ -212,6 +246,13 @@
 					value: x.Title,
 					keywords: normalizeGreek(x.labelgr)
 				}));
+				userFoodAutocomplete = userFeeds
+				.map((x) => ({
+					label: x.Title,
+					value: x.Title,
+					keywords: normalizeGreek(x.Title)
+				}));
+			// userFoodAutocomplete = 0;
 		}
 		await loadState();
 	});
@@ -228,10 +269,23 @@
 			inputMetric = '';
 		}
 	}
+	function onInputUserFeedSelect(event: CustomEvent<AutocompleteOption<string>>): void {
+		if (inputChipListUser.includes(event.detail.value) === false) {
+			inputChipListUser = [...inputChipListUser, event.detail.value];
+			inputChip = '';
+		}
+	}
 	function validateFoodInput(value: string): boolean {
 		if (!autocompleteOptions.map((x) => x.label).includes(value)) return false;
 		if (inputChipList.includes(value)) return false;
 		if (feeds.filter((x) => x.keywords.includes(value))) {
+			return true;
+		}
+	}
+	function validateUserFoodInput(value: string): boolean {
+		if (!userFoodAutocomplete.map((x)=>x.label).includes(value)) return false;
+		if (inputChipListUser.includes(value)) return false;
+		if (userFoodAutocomplete.filter((x) => x.keywords.includes(value))) {
 			return true;
 		}
 	}
@@ -260,21 +314,31 @@
 		<div class="text-lg my-4">
 			<p class="print:flex">
 				<label for="ration_name" class="print:underline">Τίτλος: </label>
-				<input id="ration_name" class="print:font-bold print:ml-2" type="text" bind:value={rationName} />
+				<input
+					id="ration_name"
+					class="print:font-bold print:ml-2"
+					type="text"
+					bind:value={rationName}
+				/>
 			</p>
 
 			<p class="print:flex">
 				<label for="producer_name" class="print:underline">Δημιουργός: </label>
-				
+
 				{#if !$currentUser}
 					<input id="producer_name" type="text" class="" bind:value={producerName} />
-					{:else}
-					<span class="text-center bg-primary-hover-token print:font-bold print:ml-2" id="entry_date">{$currentUser.name}</span>
+				{:else}
+					<span
+						class="text-center bg-primary-hover-token print:font-bold print:ml-2"
+						id="entry_date">{$currentUser.name}</span
+					>
 				{/if}
 			</p>
 			<p class="print:flex">
 				<label for="entry_date" class="print:underline">Ημερομηνία: </label>
-				<span class="text-center bg-primary-hover-token print:ml-2" id="entry_date">{currentDate}</span>
+				<span class="text-center bg-primary-hover-token print:ml-2" id="entry_date"
+					>{currentDate}</span
+				>
 			</p>
 		</div>
 
@@ -335,20 +399,6 @@
 				<p class="text-xs my-2">
 					Στη γραμμή "Σύνολο" οι μονάδες εκτός τη στήλης "Βάρος" είναι g ή kcal αντίστοιχα.
 				</p>
-				<!-- <u>Feedstuff nutritional data sources:</u>
-							<ul>
-								<li>
-									BeefMag_2018: Beef Magazine. (2018, August 9). 2018 Feed Composition Tables: Use
-									this to mix your cattle feed rations.
-									https://www.beefmagazine.com/nutrition/2018-feed-composition-tables-use-mix-your-cattle-feed-rations
-								</li>
-								<li>
-									OSU_2013: OSU Beef Extension. (2018, November 15).
-									OSU_Ration_Calculator_2013.xlsx.
-									http://beef.okstate.edu/files/OSU_Ration_Calculator_2013.xlsx/view
-								</li>
-								<li>User_Data: User-provided, laboratory feed analysis.</li>
-							</ul> -->
 				<div class="arrow variant-filled-secondary" />
 			</div>
 			<div class="text-sm max-w-lg flex" id="footnotes">
@@ -431,10 +481,10 @@
 					<tbody>
 						{#each selected as feed, i}
 							<tr class="">
-								<th>
+								<td>
 									<!-- <input type="text" readonly class="text-center" value={feed.Title} /> -->
 									<span class="w-min text-gray-500 text-sm">{feed.Title}</span>
-								</th>
+								</td>
 								{#each columns as column}
 									{#if column.Title != 'Title'}
 										<!-- <p>{column}</p> -->
@@ -457,7 +507,7 @@
 					</tbody>
 					<tfoot>
 						<tr class="bg-gray-300 text-gray-700 text-lg">
-							<th class="text-purple-500 w-min">Σύνολο</th>
+							<td class="text-purple-500 w-min">Σύνολο</td>
 							{#each columns as column}
 								{#if column.Title != 'Title'}
 									<td class="font-bold text-left pl-2">{formatNumber(sum[column.Title])}</td>
@@ -470,7 +520,7 @@
 
 						{#if tableOptions[1].visible}
 							<tr class="bg-gray-200 text-gray-700">
-								<th class="text-purple-500 w-min text-sm">Ποσοστό</th>
+								<td class="text-purple-500 w-min text-sm">Ποσοστό</td>
 								<td />
 								{#each columns as column}
 									{#if column.Title != 'Title' && column.Title != 'weight'}
@@ -495,7 +545,7 @@
 						{/if}
 						{#if tableOptions[2].visible}
 							<tr class="bg-gray-200 text-gray-700">
-								<th class="text-purple-500 w-min text-sm">Ποσοστό / ΞΟ </th>
+								<td class="text-purple-500 w-min text-sm">Ποσοστό / ΞΟ </td>
 								<td />
 								{#each columns as column}
 									{#if column.Title != 'Title' && column.Title != 'weight'}
@@ -563,6 +613,26 @@
 							options={metricsAutocomplete}
 							denylist={inputmlist}
 							on:selection={onInputMetricSelect}
+						/>
+					</div>
+				{/if}
+			</div>
+			<div class="my-3 max-w-lg flex justify-start print:hidden">
+				{#if addUserFoodVisible}
+					<div class="card max-w-md max-h-60 p-4 overflow-y-auto" tabindex="-1">
+						<InputChip
+							bind:input={inputChip}
+							bind:value={inputChipListUser}
+							name="στήλη"
+							validation={validateUserFoodInput}
+							allowUpperCase
+							placeholder="Εισάγετε τροφή..."
+						/>
+						<Autocomplete
+							bind:input={inputChip}
+							options={userFoodAutocomplete}
+							denylist={inputChipListUser}
+							on:selection={onInputUserFeedSelect}
 						/>
 					</div>
 				{/if}
