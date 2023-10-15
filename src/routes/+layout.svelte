@@ -11,7 +11,8 @@
 import { initializeStores } from '@skeletonlabs/skeleton';
 import {Toast} from '@skeletonlabs/skeleton';
 import {feeds, metrics} from "$lib/stores/data"
-	import { onMount } from 'svelte';
+import { onMount } from 'svelte';
+import {Modal} from '@skeletonlabs/skeleton';
 initializeStores();
 export let data: PageData
 
@@ -34,6 +35,7 @@ console.log(data);
 $:{currentUser.set(pb.authStore.model||null)
 }
 </script>
+<Modal />
 <Toast />
 <!-- App Shell -->
 <AppShell>

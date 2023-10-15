@@ -55,8 +55,7 @@
 {#if !$currentUser}
 	Δεν είσαι συνδεδεμένος!
 {:else}
-	{$currentUser.id}
-	<h1>Οι Τροφές μου</h1>
+	<h1 class="font-bold mb-3">Οι Τροφές μου</h1>
 
 	{#if !records}
 		<p>loading data</p>
@@ -84,11 +83,12 @@
 					<svelte:fragment slot="summary"
 						><div class="flex justify-between">
 							{da.Title}
-							<div class="">{da.updated}</div>
+							<div class="text-xs">{da.updated} </div>
+                            
 						</div></svelte:fragment
 					>
 					<svelte:fragment slot="content"
-						><EditObject objectData={da} metrics={m} /></svelte:fragment
+						><EditObject bind:objectData={da} metrics={m} bind:records={$records} /></svelte:fragment
 					>
 				</AccordionItem>
 			{/each}

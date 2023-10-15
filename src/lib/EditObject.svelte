@@ -6,15 +6,53 @@
 	import { pb } from './pocketbase';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
+  import { getModalStore } from '@skeletonlabs/skeleton';
+  import type { ModalSettings } from '@skeletonlabs/skeleton';
+			
+const modalStore = getModalStore();
+const modal: ModalSettings = {
+	type: 'confirm',
+	// Data
+	title: 'Παρακαλώ Επιβεβαιώστε',
+	body: 'Θέλετε σίγουρα να διαγράψετε την τροφή;',
+  buttonTextConfirm:'Επιβεβαίωση',
+  buttonTextCancel:'Ακύρωση',
+	// TRUE if confirm pressed, FALSE if cancel pressed
+	response: async (r: boolean) =>{
+    if (r){
+    try{
+    const record= await pb.collection('feeds').delete(objectData.id)
+    records=records.filter(x=>x.id!=objectData.id)
+    te.message = 'Διαγράφτηκε!';
+		toastStore.trigger(te);
+  }
+  catch (err) {
+			te.message = 'Η διαγραφή απέτυχε!';
+			toastStore.trigger(te);
+			console.log(err);
+		}}
+  },
+};
+  export let records;
+  let record=objectData
+  $:objectData=record
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'This message will auto-hide after 3 seconds.',
-		timeout: 1000
-	};
+		timeout: 1000,
 
+	};
+async function del(){
+  console.log(modal)
+modalStore.trigger(modal);
+
+}
+  async function test(){
+  
+  }
 	const saveChanges = async () => {
 		try {
-			const record = await pb.collection('feeds').update(objectData.id, objectData);
+			record = await pb.collection('feeds').update(objectData.id, objectData);
 			te.message = 'Αποθηκεύτηκε επιτυχώς!';
 			toastStore.trigger(te);
 		} catch (err) {
@@ -28,10 +66,17 @@
 
 <div class="card p-1">
 	<div class="flex-container">
-		<div class="form-item  mx-auto">
-			<p>Τίτλος:</p>
-			<input class="rounded-lg" type="text" bind:value={objectData.Title} />
-		</div>
+		<div class="form-item mx-auto flex justify-between">
+      <div class="flex w-">
+          <p>Τίτλος:</p>
+          <input class="rounded-lg" type="text" bind:value={objectData.Title} />
+      </div>
+      <button class="sm:ml-3" on:click={del}>
+          <svg class="w-6 h-6 text-red-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
+          </svg>
+        </button>
+  </div>
 				<p class="underline w-full">Βασικοί Δείκτες Χημικής Σύστασης:</p>
 				{#each metrics.filter((x) => x.cat == 'Βασικοί Δείκτες Χημικής Σύστασης') as metric}
 					<div class="form-item">
