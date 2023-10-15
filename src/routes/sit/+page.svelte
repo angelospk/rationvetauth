@@ -617,7 +617,7 @@
 					</div>
 				{/if}
 			</div>
-			<div class="my-3 max-w-lg flex justify-start print:hidden">
+			<div class="my-3 max-w-lg flex mx-auto print:hidden">
 				{#if addUserFoodVisible}
 					<div class="card max-w-md max-h-60 p-4 overflow-y-auto" tabindex="-1">
 						<InputChip
