@@ -25,20 +25,17 @@
 	};
 </script>
 
-<!-- {JSON.stringify(objectData)} -->
 
-<form class="card p-1" on:submit|preventDefault>
+<div class="card p-1">
 	<div class="flex-container">
 		<div class="form-item  mx-auto">
-			<label>Τίτλος:</label>
+			<p>Τίτλος:</p>
 			<input class="rounded-lg" type="text" bind:value={objectData.Title} />
 		</div>
 				<p class="underline w-full">Βασικοί Δείκτες Χημικής Σύστασης:</p>
 				{#each metrics.filter((x) => x.cat == 'Βασικοί Δείκτες Χημικής Σύστασης') as metric}
-					<!-- {#each Object.keys(objectData) as key (key)} -->
-					<!-- {#if key != 'user' && key != 'updated' && key != 'created' && key != 'Title' && key != 'id' && key != 'collectionId' && key != 'collectionName'} -->
 					<div class="form-item">
-						<label>{metric.labelgr}:</label>
+						<p>{metric.labelgr}:</p>
 						<input
 							class="rounded-lg"
 							type="number"
@@ -52,10 +49,9 @@
         <br/>
         <p class="underline w-full">Μέταλλα:</p>
 				{#each metrics.filter((x) => x.cat == 'Μέταλλα') as metric}
-					<!-- {#each Object.keys(objectData) as key (key)} -->
-					<!-- {#if key != 'user' && key != 'updated' && key != 'created' && key != 'Title' && key != 'id' && key != 'collectionId' && key != 'collectionName'} -->
+					<!-- {#if key != 'user' && key != 'updated' && ke != 'created' && key != 'Title' && key != 'id' && key != 'collectionId' && key != 'collectionName'} -->
 					<div class="form-item">
-						<label>{metric.labelgr}:</label>
+						<p>{metric.labelgr}:</p>
 						<input
 							class="rounded-lg"
 							type="number"
@@ -68,10 +64,8 @@
 				{/each}
         <p class="underline w-full">Δείκτες Ενέργειας:</p>
 				{#each metrics.filter((x) => x.cat == 'Δείκτες Ενέργειας') as metric}
-					<!-- {#each Object.keys(objectData) as key (key)} -->
-					<!-- {#if key != 'user' && key != 'updated' && key != 'created' && key != 'Title' && key != 'id' && key != 'collectionId' && key != 'collectionName'} -->
 					<div class="form-item">
-						<label>{metric.labelgr}:</label>
+						<p>{metric.labelgr}:</p>
 						<input
 							class="rounded-lg"
 							type="number"
@@ -84,10 +78,8 @@
 				{/each}
         <p class="underline w-full">Αμινοξέα:</p>
 				{#each metrics.filter((x) => x.cat == 'Αμινοξέα') as metric}
-					<!-- {#each Object.keys(objectData) as key (key)} -->
-					<!-- {#if key != 'user' && key != 'updated' && key != 'created' && key != 'Title' && key != 'id' && key != 'collectionId' && key != 'collectionName'} -->
 					<div class="form-item">
-						<label>{metric.labelgr}:</label>
+						<p>{metric.labelgr}:</p>
 						<input
 							class="rounded-lg"
 							type="number"
@@ -100,7 +92,7 @@
 				{/each}
 	</div>
 	<button class="mt-3 btn variant-filled" on:click|preventDefault={saveChanges}>Αποθήκευση</button>
-</form>
+</div>
 
 <style>
 	.flex-container {
