@@ -8,10 +8,8 @@
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
-	import { metrics as metrstore, feeds as fstore }  from '$lib/stores/data';
+	import { metrics, feeds } from '$lib/stores/data';
 	import { currentUser, pb } from '$lib/pocketbase';
-    import { getContext } from 'svelte';
-    import { beforeUpdate } from 'svelte';
 	const popupClick: PopupSettings = {
 		event: 'click',
 		target: 'popupClick',
@@ -22,15 +20,10 @@
 		target: 'optionsClick',
 		placement: 'top'
 	};
-    beforeUpdate(() => {
-		console.log('the component is about to update');
-	});
-    let metrics=$metrstore
-let feeds=$fstore
 	let names = {};
-let userFeeds=[];
-	export let rationName:string;
-	export let producerName:string;
+	let userFeeds = [];
+	export let rationName: string;
+	export let producerName: string;
 
 	let selected = [];
 	let certain = [
@@ -49,32 +42,33 @@ let userFeeds=[];
 		{ label: 'Εμφάνιση Ποσοστού', visible: true },
 		{ label: 'Εμφάνιση Ποσοστού ανά ΞΟ', visible: false }
 	];
-	let temp = {};
-	for (let c of certain) {
-		temp[c] = 0;
-	}
-	temp['Title'] = '';
-
-	let columns = metrics.filter((x) => certain.includes(x.Title));
-	for (const item of metrics) {
+	let columns=[];
+    $: columns=$metrics.filter((x) => certain.includes(x.Title) || inputmlist.includes(x.Title));
+	for (const item of $metrics) {
 		names[item.Title] = item;
 	}
 
 	let sum = {};
 	let emptySum;
-	let tmp = feeds[0];
-	for (let f in tmp) {
-		if (typeof tmp[f] != 'string') {
-			sum[f] = 0;
+$:{
+    let tmp = $feeds[0] || {};
+    if (tmp.length==0){
+certain.forEach(x=>{sum[x]=0})
+    }
+    else{
+		for (let f in tmp) {
+			if (typeof tmp[f] != 'string') {
+				sum[f] = 0;
+			}
 		}
-	}
-	emptySum = { ...sum };
+    }
+		emptySum = { ...sum };
+}
+
 	console.log('sums', sum, emptySum);
-	let addedMetrics = [];
 	let inputChipList: string[] = [];
 	let inputChipListUser: string[] = [];
 	let inputmlist: string[] = [];
-	$: addedMetrics = metrics.filter((x) => inputmlist.includes(x.Title));
 	let autocompleteOptions: AutocompleteOption<string>[];
 	let metricsAutocomplete: AutocompleteOption<string>[];
 	let userFoodAutocomplete: AutocompleteOption<string>[];
@@ -109,37 +103,37 @@ let userFeeds=[];
 
 	onMount(async () => {
 		if ($currentUser) {
-				const r: any =
-					(await pb.collection('feeds').getFullList({
-						sort: '-created'
-					})) || [];
-				const userFeedsdb = r;
-				
-				userFeeds = userFeedsdb.map((feed) => {
-					const {
-						collectionId,
-						collectionName,
-						created,
-						id,
-						updated,
-						user,
-						...rest // Get the rest of the properties
-					} = feed;
-					return rest;
-				});
-				
-				for (let i of userFeeds) {
-				i.weight = 0;
-				}
-				console.log('user feeds', userFeeds);
-                userFoodAutocomplete = userFeeds.map((x) => ({
-		label: x.Title,
-		value: x.Title,
-		keywords: normalizeGreek(x.Title)
-	}));
-			}
+			const r: any =
+				(await pb.collection('feeds').getFullList({
+					sort: '-created'
+				})) || [];
+			const userFeedsdb = r;
 
-        await loadState();
+			userFeeds = userFeedsdb.map((feed) => {
+				const {
+					collectionId,
+					collectionName,
+					created,
+					id,
+					updated,
+					user,
+					...rest // Get the rest of the properties
+				} = feed;
+				return rest;
+			});
+
+			for (let i of userFeeds) {
+				i.weight = 0;
+			}
+			console.log('user feeds', userFeeds);
+			userFoodAutocomplete = userFeeds.map((x) => ({
+				label: x.Title,
+				value: x.Title,
+				keywords: normalizeGreek(x.Title)
+			}));
+		}
+
+		await loadState();
 	});
 	function saveState() {
 		if (selected.length > 0) {
@@ -152,7 +146,6 @@ let userFeeds=[];
 				toptions,
 				rationName,
 				producerName
-				// Add other variables to save if needed
 			};
 			localStorage.setItem('livestockFeedState', JSON.stringify(state));
 			console.log('Saved', state);
@@ -160,7 +153,7 @@ let userFeeds=[];
 	}
 	//filtrarei ta feeds kathe fora pou allazei to inputChipList dld to koutaki pou pliktrologei o xristis
 	$: selected = [
-		...feeds.filter((x) => inputChipList.includes(x.Title)),
+		...$feeds.filter((x) => inputChipList.includes(x.Title)),
 		...userFeeds.filter((x) => inputChipListUser.includes(x.Title))
 	];
 	$: {
@@ -185,24 +178,24 @@ let userFeeds=[];
 	}
 
 	function formatNumber(number: Number) {
+		if (number == undefined) return null;
 		return Number.isInteger(number) ? number.toString() : number.toFixed(2);
 	}
 
-	autocompleteOptions = feeds.map((feed) => ({
+	autocompleteOptions = $feeds.map((feed) => ({
 		label: feed.Title,
 		value: feed.Title,
 		keywords: feed.keywords
 			? feed.keywords.split(', ').concat(normalizeGreek(feed.Title))
 			: normalizeGreek(feed.Title)
 	}));
-	metricsAutocomplete = metrics
+	$: metricsAutocomplete = $metrics
 		.filter((x) => !certain.includes(x.Title))
 		.map((x) => ({
 			label: x.labelgr,
 			value: x.Title,
 			keywords: normalizeGreek(x.labelgr)
 		}));
-
 </script>
 
 <div class="heading print:hidden">
@@ -214,7 +207,7 @@ let userFeeds=[];
 </div>
 
 <!-- Table for feedstuff entry -->
-{#if feeds.length > 0}
+{#if $feeds.length > 0 && $metrics.length > 0}
 	<div class="flex space-x-5 md:space-x-10 justify-center print:hidden">
 		<button
 			class="btn-sm my-3 variant-ghost-secondary hover:scale-110"
@@ -251,9 +244,6 @@ let userFeeds=[];
 			<li>ΟΛΟ = Ολικές Λιπαρές Ουσίες</li>
 			<li>ΟΚ = Ολικές Κυταρρίνες</li>
 			<li>Ca = Ασβέστιο</li>
-			<!-- <li>NE<sub>m</sub> = Net Energy for Maintenance</li> -->
-			<!-- <li>NE<sub>g</sub> = Net Energy for Gain</li> -->
-			<!-- <li>NE<sub>l</sub> = Net Energy for Lactation</li> -->
 			<li>P = Φωσφόρος</li>
 			<li>ΟΑΟ = Ολικές Αζωτούχες Ουσίες</li>
 		</ul>
@@ -264,17 +254,14 @@ let userFeeds=[];
 	</div>
 
 	<div class="relative overflow-x-auto">
-		<table class="bg-white w-full">
+		<table class="bg-white w-full table-hover">
 			<!-- Table headers -->
 			<thead>
 				<tr class="bg-stone-400 text-gray-700">
 					{#each columns as column}
 						<th class="text-primary w-min">{column.gr}</th>
 					{/each}
-					{#each addedMetrics as column}
-						<th class="text-primary bg w-min">{column.gr}</th>
-					{/each}
-					<!-- Add other table headers here -->
+
 				</tr>
 				{#if tableOptions[0].visible}
 					<tr class="text-gray-700 bg-green-100 text-sm">
@@ -287,15 +274,7 @@ let userFeeds=[];
 								<td />
 							{/if}
 						{/each}
-						{#each addedMetrics as column}
-							{#if column.Title == 'Title'}
-								<th class="text-purple-500 w-min">Μονάδες</th>
-							{:else if column.units !== undefined}
-								<td>{column.units}</td>
-							{:else}
-								<td />
-							{/if}
-						{/each}</tr
+</tr
 					>
 				{/if}
 			</thead>
@@ -308,15 +287,17 @@ let userFeeds=[];
 							<!-- <input type="text" readonly class="text-center" value={feed.Title} /> -->
 							<span class="w-min text-gray-500 text-sm">{feed.Title}</span>
 						</td>
+                        <td><input type="number" bind:value={feed.weight} min="0" step="1" style="width: 3rem;"/></td>
 						{#each columns as column}
-							{#if column.Title != 'Title'}
-								<!-- <p>{column}</p> -->
-								<td><input type="number" bind:value={feed[column.Title]} min="0" step="0.3" /></td>
+							{#if column.Title != 'Title' && column.Title!="weight"}
+								<!-- <td><input type="number" bind:value={feed[column.Title]} min="0" step="0.3" /></td> -->
+                                <!-- <td>{feed[column.Title]}</td> -->
+                                <td>
+                                    <p>{feed[column.Title]}</p>
+                                </td>
 							{/if}
 						{/each}
-						{#each addedMetrics as column}
-							<td><input type="number" bind:value={feed[column.Title]} min="0" step="0.3" /></td>
-						{/each}
+
 					</tr>
 				{/each}
 			</tbody>
@@ -328,9 +309,7 @@ let userFeeds=[];
 							<td class="font-bold text-left pl-2">{formatNumber(sum[column.Title])}</td>
 						{/if}
 					{/each}
-					{#each addedMetrics as column}
-						<td class="font-bold text-left pl-2">{formatNumber(sum[column.Title])}</td>
-					{/each}
+
 				</tr>
 
 				{#if tableOptions[1].visible}
@@ -341,17 +320,12 @@ let userFeeds=[];
 							{#if column.Title != 'Title' && column.Title != 'weight'}
 								{#if column.units == 'g/kg'}
 									<td class="font-bold">{formatNumber(sum[column.Title] / sum['weight'] / 10)}</td>
+                                    {:else}
+                                    <td></td>
 								{/if}
 							{/if}
 						{/each}
-						{#each addedMetrics as column}
-							{#if column.Title != 'Title' && column.Title != 'weight'}
-								{#if column.units == 'g/kg'}
-									<td class="font-bold">{formatNumber(sum[column.Title] / sum['weight'] / 10)}</td>
-								{:else}<td />
-								{/if}
-							{/if}
-						{/each}
+
 					</tr>
 				{/if}
 				{#if tableOptions[2].visible}
@@ -364,16 +338,8 @@ let userFeeds=[];
 									<td class="font-bold"
 										>{formatNumber((100 * sum[column.Title]) / sum.DryMatter)}</td
 									>
-								{/if}
-							{/if}
-						{/each}
-						{#each addedMetrics as column}
-							{#if column.Title != 'Title' && column.Title != 'weight'}
-								{#if column.units == 'g/kg'}
-									<td class="font-bold"
-										>{formatNumber((100 * sum[column.Title]) / sum.DryMatter)}</td
-									>
-								{:else}<td />
+                                    {:else}
+                                    <td></td>
 								{/if}
 							{/if}
 						{/each}
@@ -391,8 +357,8 @@ let userFeeds=[];
 		bind:inputChipList
 		bind:inputChipListUser
 		bind:inputmlist
-		{autocompleteOptions}
-		{metricsAutocomplete}
+		bind:autocompleteOptions
+		bind:metricsAutocomplete
 		{userFoodAutocomplete}
 	/>
 {:else}
@@ -425,9 +391,7 @@ let userFeeds=[];
 		font-size: x-large;
 		margin-top: 1rem;
 	}
-	input[type='number'] {
-		width: 3.5rem;
-	}
+
 	th,
 	td {
 		border: 1px dotted black;
