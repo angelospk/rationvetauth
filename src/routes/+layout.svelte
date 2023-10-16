@@ -10,12 +10,12 @@
 	import { goto } from '$app/navigation';
 import { initializeStores } from '@skeletonlabs/skeleton';
 import {Toast} from '@skeletonlabs/skeleton';
-import {feeds, metrics} from "$lib/stores/data"
+import {feeds, metrics} from '$lib/stores/data'
 import { onMount } from 'svelte';
 import {Modal} from '@skeletonlabs/skeleton';
+import { setContext } from 'svelte';
 initializeStores();
 export let data: PageData
-
 onMount(async () => {
 	const res = await fetch('/api/data');
 	if (res.ok) {
@@ -23,6 +23,7 @@ onMount(async () => {
 			feeds.set( dat.d[0].data);
 			metrics.set( dat.d[1].data);
 		}
+		
 })
 // // Set the current user from the data passed in from the server
 // $: currentUser.set(data.user)
@@ -31,7 +32,7 @@ async function logout(){
 	await pb.authStore.clear()
 	goto("/");
 }
-console.log(data);
+console.log(data, $metrics, $feeds);
 $:{currentUser.set(pb.authStore.model||null)
 }
 </script>
