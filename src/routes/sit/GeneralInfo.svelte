@@ -4,7 +4,7 @@
     export let rationName = '';
     export let producerName="";
     $:{
-        if ($currentUser){
+        if ($currentUser && producerName==""){
             producerName=$currentUser.name;
         }
     }

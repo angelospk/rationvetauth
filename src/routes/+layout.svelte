@@ -46,7 +46,7 @@ async function logout(){
 	userFeeds.set([]);
 	goto("/");
 }
-console.log(data, $metrics, $feeds);
+// console.log(data, $metrics, $feeds);
 $:{currentUser.set(pb.authStore.model||null)
 
 }

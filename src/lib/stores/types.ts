@@ -1,7 +1,7 @@
 export interface State{
    ts:TableState
-    rationName?:string,
-    producerName?: string,
+    rationName:string,
+    producerName: string,
     options?:Option[]
 }
 export interface Feed {
