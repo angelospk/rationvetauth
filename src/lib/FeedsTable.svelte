@@ -74,7 +74,7 @@ export let userFeeds:Feed[]=[];
 						if (selected[i].hasOwnProperty(m)) {
 							sum[m] += selected[i].weight * selected[i][m];
 						} else {
-							console.log(selected[i], m);
+							// console.log(selected[i], m);
 						}
 					}
 				}

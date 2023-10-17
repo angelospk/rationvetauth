@@ -1,8 +1,10 @@
 export interface State{
-   ts:TableState
+   tableState:TableState
     rationName:string,
     producerName: string,
-    options?:Option[]
+    options?:Option[],
+	date?:string,
+	user?:string
 }
 export interface Feed {
 	id?: string;

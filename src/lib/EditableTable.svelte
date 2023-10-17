@@ -31,7 +31,7 @@
 		'Calcium',
 		'Phosphorus'
 	];
-    export let stage2Read:State={rationName, producerName, ts:{selfeeds:[],extraCols:[]}}
+    export let stage2Read:State={rationName, producerName, tableState:{selfeeds:[],extraCols:[]}}
 	let selected:Feed[]=[];
 	let columns:Column[]=[];
 	let minimalSelected:Feed[]=[];
@@ -41,8 +41,8 @@
 	let autocompleteOptions: AutocompleteOption<string>[];
 	let metricsAutocomplete: AutocompleteOption<string>[];
 	let userFoodAutocomplete: AutocompleteOption<string>[];
-	export let currentState:State={rationName, producerName, ts:{selfeeds:[],extraCols:[]}}
-	$: {currentState= {rationName:rationName, producerName: producerName, ts:{selfeeds:minimalSelected, extraCols:inputmlist}};}
+	export let currentState:State={rationName, producerName, tableState:{selfeeds:[],extraCols:[]}}
+	$: {currentState= {rationName:rationName, producerName: producerName, tableState:{selfeeds:minimalSelected, extraCols:inputmlist}};}
 // if (!waitingtoLoadState)saveState();
 
 	// reactive states updating table
@@ -158,7 +158,7 @@ $: { if($loadedTables){
 	// 	rationName=loaded?.rationName
 	// 	if (t) readState(t).then((r)=>{inputChipList=r.inputChipList;inputChipListUser=r.inputChipListUser; inputmlist=r.inputmlist; waitingtoLoadState=false;})}
 	// }
-    let t=stage2Read?.ts
+    let t=stage2Read?.tableState
     producerName=stage2Read?.producerName;
     rationName=stage2Read?.rationName;
     readState(t).then((r)=>{inputChipList=r.inputChipList;inputChipListUser=r.inputChipListUser; inputmlist=r.inputmlist; waitingtoLoadState=false;})}
