@@ -11,7 +11,8 @@
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'Δεν μπόρεσε να αποθηκευτεί το σιτηρέσιο.',
-		timeout: 3000
+		timeout: 3000,
+		background: "bg-green-600"
 	};
 	let currentState:State;
 	let rationName = '';
@@ -21,14 +22,17 @@
 	let ration2save={...currentState}
 	ration2save.date=currentDate
 	ration2save.user=$currentUser?.id
+	if (ration2save.producerName=="") ration2save.producerName=$currentUser?.name
 	console.log(ration2save)
 	try {
 		const record= await pb.collection('rations').create(ration2save)
 		te.message="Ο πίνακας σιτηρεσίου αποθηκεύτηκε επιτυχώς!"
+		te.background="bg-green-600"
 		toastStore.trigger(te)
 	} catch (error) {
 		console.log(error)
-		te.message.concat("Πληροφορίες: "+error)
+		// te.message=+"Πληροφορίες: ".concat(error)
+		te.background="bg-red-600"
 		toastStore.trigger(te);
 	}
 

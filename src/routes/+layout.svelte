@@ -52,7 +52,7 @@ $:{currentUser.set(pb.authStore.model||null)
 }
 
 </script>
-<Modal />
+<Modal/>
 <Toast />
 <!-- App Shell -->
 <AppShell>
