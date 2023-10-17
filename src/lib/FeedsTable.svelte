@@ -4,7 +4,8 @@
 	import { SlideToggle } from '@skeletonlabs/skeleton';
 	// import { metrics, feeds, userFeeds, type State } from '$lib/stores/data';
 	import { currentUser, pb } from '$lib/pocketbase';
-    	import type { Feed, TableState, Column } from './stores/types';
+    import type { Feed, TableState, Column } from './stores/types';
+	
 	const popupClick: PopupSettings = {
 		event: 'click',
 		target: 'popupClick',

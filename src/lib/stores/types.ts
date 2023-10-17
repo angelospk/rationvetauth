@@ -1,12 +1,12 @@
 export interface State{
-    feeds:any[],
-    options:any[],
-    rationName:string,
-    producerName: string
+   ts:TableState
+    rationName?:string,
+    producerName?: string,
+    options?:Option[]
 }
 export interface Feed {
-	id?: number;
-	Title: string;
+	id?: string;
+	Title?: string;
 	weight?: number;
 	// Add more fields as necessary
 };
@@ -21,3 +21,7 @@ export interface Column {
 	units?: string;
 	// Add more fields as necessary
 };
+export interface Option{
+    label:string,
+    visible:true
+}
