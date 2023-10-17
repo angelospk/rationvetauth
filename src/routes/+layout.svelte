@@ -10,19 +10,28 @@
 	import { goto } from '$app/navigation';
 import { initializeStores } from '@skeletonlabs/skeleton';
 import {Toast} from '@skeletonlabs/skeleton';
-import {feeds, metrics} from '$lib/stores/data'
+import {feeds, metrics, userFeeds} from '$lib/stores/data'
 import { onMount } from 'svelte';
 import {Modal} from '@skeletonlabs/skeleton';
 import { setContext } from 'svelte';
 initializeStores();
 export let data: PageData
 onMount(async () => {
+	pb.autoCancellation(false);
 	const res = await fetch('/api/data');
 	if (res.ok) {
 			let dat = await res.json();
 			feeds.set( dat.d[0].data);
 			metrics.set( dat.d[1].data);
 		}
+	if ($currentUser){
+		let d=await pb.collection('feeds').getFullList({
+				sort: '-created'
+		}) || [];
+		userFeeds.set(d)
+		console.log("added userfeeds ffrom layout", $userFeeds)
+	}
+
 		
 })
 // // Set the current user from the data passed in from the server
@@ -30,11 +39,14 @@ onMount(async () => {
 storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 async function logout(){
 	await pb.authStore.clear()
+	userFeeds.set([]);
 	goto("/");
 }
 console.log(data, $metrics, $feeds);
 $:{currentUser.set(pb.authStore.model||null)
+
 }
+
 </script>
 <Modal />
 <Toast />

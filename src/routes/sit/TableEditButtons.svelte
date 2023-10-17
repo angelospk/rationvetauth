@@ -1,18 +1,18 @@
 <script lang="ts">
-	import { Accordion, Autocomplete, AccordionItem } from '@skeletonlabs/skeleton';
+	import { Autocomplete } from '@skeletonlabs/skeleton';
 	import { InputChip } from '@skeletonlabs/skeleton';
 	import type { AutocompleteOption } from '@skeletonlabs/skeleton';
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
-
+	import { feeds, metrics, userFeeds } from '$lib/stores/data';
+	import { normalizeGreek } from '../../greekfuncts';
 	export let currentUser: any | null;
-
+//  import {certain} from './AddFoods.svelte'
 	const loginClick: PopupSettings = {
 		event: 'hover',
 		target: 'loginClick',
 		placement: 'bottom'
 	};
-
 	let addFoodVisible = false;
 	let addMetrics = false;
 	let addUserFoodVisible = false;
@@ -64,7 +64,7 @@
 	function validateFoodInput(value: string): boolean {
 		if (!autocompleteOptions.map((x) => x.label).includes(value)) return false;
 		if (inputChipList.includes(value)) return false;
-		if (feeds.filter((x) => x.keywords.includes(value))) {
+		if (autocompleteOptions.filter((x) => x.keywords.includes(value))) {
 			return true;
 		}
 	}
@@ -83,6 +83,25 @@
 			return true;
 		}
 	}
+	// $: autocompleteOptions = $feeds.map((feed) => ({
+	// 	label: feed.Title,
+	// 	value: feed.Title,
+	// 	keywords: feed.keywords
+	// 		? feed.keywords.split(', ').concat(normalizeGreek(feed.Title))
+	// 		: normalizeGreek(feed.Title)
+	// }));
+	// $: metricsAutocomplete = $metrics
+	// 	.filter((x) => !certain.includes(x.Title))
+	// 	.map((x) => ({
+	// 		label: x.labelgr,
+	// 		value: x.Title,
+	// 		keywords: normalizeGreek(x.labelgr)
+	// 	}));
+	// $:	userFoodAutocomplete = $userFeeds.map((x) => ({
+	// 		label: x.Title,
+	// 		value: x.Title,
+	// 		keywords: normalizeGreek(x.Title)
+	// 	}));
 </script>
 
 <div class="my-3 flex justify-between space-x-1 md:space-x-5">
@@ -172,32 +191,11 @@
 </div>
 
 <style lang="postcss">
-	.info {
-		@apply my-2 bg-secondary-400 rounded-lg print:hidden;
-	}
-	.heading {
-		font-size: x-large;
-		margin-top: 1rem;
-	}
-	input[type='number'] {
-		width: 3.5rem;
-	}
-	th,
-	td {
-		border: 1px dotted black;
-	}
+
 	@media print {
 		/* Hide buttons and explanatory text */
 		.btn {
 			display: none;
 		}
-		th,
-		td {
-			border: 1px solid black;
-		}
-		.info {
-			display: none;
-		}
-		/* Adjust table layout for printing */
 	}
 </style>

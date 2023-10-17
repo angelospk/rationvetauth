@@ -1,14 +1,15 @@
 <script lang="ts">
+	import FeedsTable from '../../lib/FeedsTable.svelte';
+
 	import TableEditButtons from './TableEditButtons.svelte';
 
-	// Your Svelte component
 	import { onMount } from 'svelte';
 	import { normalizeGreek } from '../../greekfuncts';
 	import type { AutocompleteOption } from '@skeletonlabs/skeleton';
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
-	import { metrics, feeds } from '$lib/stores/data';
+	import { metrics, feeds, userFeeds, type State } from '$lib/stores/data';
 	import { currentUser, pb } from '$lib/pocketbase';
 	const popupClick: PopupSettings = {
 		event: 'click',
@@ -20,12 +21,51 @@
 		target: 'optionsClick',
 		placement: 'top'
 	};
-	let names = {};
-	let userFeeds = [];
+
 	export let rationName: string;
 	export let producerName: string;
 
-	let selected = [];
+	let 		selected=[{
+    "Title": "Καλαμπόκι",
+    "DryMatter": 870,
+    "Fat": 42,
+    "CrudeFiber": 22,
+    "Starch": 605,
+    "Ash": 13.5,
+    "Calcium": 0.1,
+    "Phosphorus": 2.7,
+    "Potassium": 3.3,
+    "Sodium": 0.1,
+    "DE": 3860,
+    "DEruminants": 3431,
+    "MEruminants": 2898,
+    "NElactose": 1.1,
+    "NEmeat": 1.11,
+    "NMLruminants": 1.15,
+    "DEswine": 3400,
+    "MEswine": 3315,
+    "CEswine": 2525,
+    "MEpoultry": 3300,
+    "CrudeProtein": 85,
+    "DCPruminants": 59,
+    "DCPswine": 69,
+    "Lysine": 2.5,
+    "Methionine": 1.7,
+    "MethiCystine": 3.9,
+    "Threonine": 3.2,
+    "Tryptophan": 0.6,
+    "Isoleucine": 3.5,
+    "Leucine": 11.3,
+    "Valine": 4.6,
+    "Phenylalanine": 4.5,
+    "Histidine": 2.5,
+    "Arginine": 4.3,
+    "Glycine": 3.7,
+    "Category": "cat",
+    "EngTitle": "corn",
+    "keywords": "καλαμποκι",
+    "weight": 3
+}]
 	let certain = [
 		'Title',
 		'weight',
@@ -42,36 +82,60 @@
 		{ label: 'Εμφάνιση Ποσοστού', visible: true },
 		{ label: 'Εμφάνιση Ποσοστού ανά ΞΟ', visible: false }
 	];
-	let columns=[];
-    $: columns=$metrics.filter((x) => certain.includes(x.Title) || inputmlist.includes(x.Title));
-	for (const item of $metrics) {
-		names[item.Title] = item;
-	}
-
-	let sum = {};
-	let emptySum;
-$:{
-    let tmp = $feeds[0] || {};
-    if (tmp.length==0){
-certain.forEach(x=>{sum[x]=0})
-    }
-    else{
-		for (let f in tmp) {
-			if (typeof tmp[f] != 'string') {
-				sum[f] = 0;
-			}
-		}
-    }
-		emptySum = { ...sum };
-}
-
-	console.log('sums', sum, emptySum);
+	let columns = [];
+	let minimalSelected=[];
 	let inputChipList: string[] = [];
 	let inputChipListUser: string[] = [];
 	let inputmlist: string[] = [];
 	let autocompleteOptions: AutocompleteOption<string>[];
 	let metricsAutocomplete: AutocompleteOption<string>[];
 	let userFoodAutocomplete: AutocompleteOption<string>[];
+
+	// reactive states updating table
+	$: columns = $metrics.filter((x) => certain.includes(x.Title) || inputmlist.includes(x.Title));
+	$: selected = [
+		...$feeds.filter((x) => inputChipList.includes(x.Title)),
+		...$userFeeds.filter((x) => inputChipListUser.includes(x.Title))
+	];
+	$: minimalSelected = selected.map((item) => {
+		if (item.id) {
+			return { id: item.id, weight: item.weight };
+		} else {
+			return { Title: item.Title, weight: item.weight };
+		}
+	});
+//onmount function to initialise
+	onMount(async () => {
+		// if ($currentUser) {
+		// 	const r: any =
+		// 		(await pb.collection('feeds').getFullList({
+		// 			sort: '-created'
+		// 		})) || [];
+		// 	const userFeedsdb = r;
+
+		// 	userFeeds = userFeedsdb.map((feed) => {
+		// 		const {
+		// 			collectionId,
+		// 			collectionName,
+		// 			created,
+		// 			id,
+		// 			updated,
+		// 			user,
+		// 			...rest // Get the rest of the properties
+		// 		} = feed;
+		// 		return rest;
+		// 	});
+
+		// 	for (let i of userFeeds) {
+		// 		i.weight = 0;
+		// 	}
+		// 	console.log('user feeds', userFeeds);
+
+		// }
+
+		// await loadState();
+
+	});
 
 	async function loadState() {
 		const savedState = localStorage.getItem('livestockFeedState');
@@ -101,40 +165,7 @@ certain.forEach(x=>{sum[x]=0})
 		}
 	}
 
-	onMount(async () => {
-		if ($currentUser) {
-			const r: any =
-				(await pb.collection('feeds').getFullList({
-					sort: '-created'
-				})) || [];
-			const userFeedsdb = r;
 
-			userFeeds = userFeedsdb.map((feed) => {
-				const {
-					collectionId,
-					collectionName,
-					created,
-					id,
-					updated,
-					user,
-					...rest // Get the rest of the properties
-				} = feed;
-				return rest;
-			});
-
-			for (let i of userFeeds) {
-				i.weight = 0;
-			}
-			console.log('user feeds', userFeeds);
-			userFoodAutocomplete = userFeeds.map((x) => ({
-				label: x.Title,
-				value: x.Title,
-				keywords: normalizeGreek(x.Title)
-			}));
-		}
-
-		await loadState();
-	});
 	function saveState() {
 		if (selected.length > 0) {
 			const toptions = tableOptions.map((x) => x.visible);
@@ -152,37 +183,65 @@ certain.forEach(x=>{sum[x]=0})
 		}
 	}
 	//filtrarei ta feeds kathe fora pou allazei to inputChipList dld to koutaki pou pliktrologei o xristis
-	$: selected = [
-		...$feeds.filter((x) => inputChipList.includes(x.Title)),
-		...userFeeds.filter((x) => inputChipListUser.includes(x.Title))
-	];
-	$: {
-		sum = { ...emptySum }; // Reset the sum object to emptySum
-		console.log(sum);
-		if (selected.length > 0) {
-			for (let i = 0; i < selected.length; i++) {
-				sum.weight += selected[i].weight;
 
-				for (let m in sum) {
-					if (m != 'weight') {
-						if (selected[i].hasOwnProperty(m)) {
-							sum[m] += selected[i].weight * selected[i][m];
-						} else {
-							console.log(selected[i], m);
-						}
-					}
+	const s = {
+		selfeeds: [{ Title: 'Καλαμπόκι', weight: 3 }],
+		options: tableOptions,
+		rationName: rationName,
+		producerName: producerName
+	};
+	const t= {selfeeds: [{ Title: 'Καλαμπόκι', weight: 3 }],
+extraCols: []}
+async function readState(tableState) {
+		// This will hold the final list of items from both userFeeds and feeds
+		// let combined = [];
+
+		// Iterate through the given stateTable
+		for (const item of tableState.selfeeds) {
+			console.log('here', item, $feeds, $userFeeds);
+			if (item.id && item.weight) {
+				// If the item has an "id" and "weight", then find the matching item in userFeeds
+				let userFeedItem = $userFeeds.find((feed) => feed.id === item.id);
+
+				// If not found in userFeeds, fetch from pocketbase
+				if (!userFeedItem) {
+					userFeedItem = await pb.collection('feeds').getOne(item.id, {
+						expand: 'user'
+					});
+				}
+
+				// If the item is found (either in userFeeds or in pocketbase), push to the result
+				if (userFeedItem) {
+					selected.push({
+						...userFeedItem, // Spread all properties of the userFeedItem
+						weight: item.weight // Override with the weight from the stateTable
+					});
+				}
+			} else if (item.Title && item.weight) {
+				// If the item has a "Title" and "weight", then find the matching item in feeds
+				const feedItem = $feeds.find((feed) => feed.Title === item.Title);
+
+				if (feedItem) {
+					selected.push({
+						...feedItem, // Spread all properties of the feedItem
+						weight: item.weight // Override with the weight from the stateTable
+					});
 				}
 			}
 		}
-		saveState();
+        if (tableState.extraCols && tableState.extraCols.length>0)
+        {certain.push(...tableState.extraCols)}
+		// if (state.rationName) {
+		// 	rationName = state.rationName;
+		// }
+		// if (state.producerName) {
+		// 	producerName = state.producerName;
+		// }
+		console.log(selected, certain);
+		// return combined;
 	}
-
-	function formatNumber(number: Number) {
-		if (number == undefined) return null;
-		return Number.isInteger(number) ? number.toString() : number.toFixed(2);
-	}
-
-	autocompleteOptions = $feeds.map((feed) => ({
+// reactive statements to change the autocomplete buttons
+	$: autocompleteOptions = $feeds.map((feed) => ({
 		label: feed.Title,
 		value: feed.Title,
 		keywords: feed.keywords
@@ -196,6 +255,11 @@ certain.forEach(x=>{sum[x]=0})
 			value: x.Title,
 			keywords: normalizeGreek(x.labelgr)
 		}));
+	$:	userFoodAutocomplete = $userFeeds.map((x) => ({
+			label: x.Title,
+			value: x.Title,
+			keywords: normalizeGreek(x.Title)
+		}));
 </script>
 
 <div class="heading print:hidden">
@@ -206,182 +270,16 @@ certain.forEach(x=>{sum[x]=0})
 	Σημείωση: Προσθέστε τροφές πατώντας στο "Αλλαγή Τροφών.<br />
 </div>
 
-<!-- Table for feedstuff entry -->
-{#if $feeds.length > 0 && $metrics.length > 0}
-	<div class="flex space-x-5 md:space-x-10 justify-center print:hidden">
-		<button
-			class="btn-sm my-3 variant-ghost-secondary hover:scale-110"
-			on:click|preventDefault
-			use:popup={popupClick}>Επεξήγηση Πίνακα</button
-		>
-		<button
-			class="btn-sm my-3 variant-ghost-secondary hover:scale-110"
-			on:click|preventDefault
-			use:popup={optionsClick}>Επιλογές Πίνακα</button
-		>
-	</div>
-	<div class="card p-4 variant-filled-secondary" data-popup="optionsClick">
-		<ol>
-			{#each tableOptions as option}
-				<li>
-					<SlideToggle
-						name="slider-large"
-						active="bg-primary-500"
-						size="sm"
-						bind:checked={option.visible}
-					>
-						{option.label}</SlideToggle
-					>
-				</li>
-			{/each}
-		</ol>
-		<div class="arrow variant-filled-secondary" />
-	</div>
-	<div class="card p-4 variant-filled-secondary" data-popup="popupClick">
-		<p class="underline">Διατροφικά στοιχεία πίνακα:</p>
-		<ul>
-			<li>ΞΟ = Ξηρά Ουσία</li>
-			<li>ΟΛΟ = Ολικές Λιπαρές Ουσίες</li>
-			<li>ΟΚ = Ολικές Κυταρρίνες</li>
-			<li>Ca = Ασβέστιο</li>
-			<li>P = Φωσφόρος</li>
-			<li>ΟΑΟ = Ολικές Αζωτούχες Ουσίες</li>
-		</ul>
-		<p class="text-xs my-2">
-			Στη γραμμή "Σύνολο" οι μονάδες εκτός τη στήλης "Βάρος" είναι g ή kcal αντίστοιχα.
-		</p>
-		<div class="arrow variant-filled-secondary" />
-	</div>
-
-	<div class="relative overflow-x-auto">
-		<table class="bg-white w-full table-hover">
-			<!-- Table headers -->
-			<thead>
-				<tr class="bg-stone-400 text-gray-700">
-					{#each columns as column}
-						<th class="text-primary w-min">{column.gr}</th>
-					{/each}
-
-				</tr>
-				{#if tableOptions[0].visible}
-					<tr class="text-gray-700 bg-green-100 text-sm">
-						{#each columns as column}
-							{#if column.Title == 'Title'}
-								<th class="text-black-700 w-min">Μονάδες</th>
-							{:else if column.units !== undefined}
-								<td>{column.units}</td>
-							{:else}
-								<td />
-							{/if}
-						{/each}
-</tr
-					>
-				{/if}
-			</thead>
-
-			<!-- Table body -->
-			<tbody>
-				{#each selected as feed, i}
-					<tr class="">
-						<td>
-							<!-- <input type="text" readonly class="text-center" value={feed.Title} /> -->
-							<span class="w-min text-gray-500 text-sm">{feed.Title}</span>
-						</td>
-                        <td><input type="number" bind:value={feed.weight} min="0" step="1" style="width: 3rem;"/></td>
-						{#each columns as column}
-							{#if column.Title != 'Title' && column.Title!="weight"}
-								<!-- <td><input type="number" bind:value={feed[column.Title]} min="0" step="0.3" /></td> -->
-                                <!-- <td>{feed[column.Title]}</td> -->
-                                <td>
-                                    <p>{feed[column.Title]}</p>
-                                </td>
-							{/if}
-						{/each}
-
-					</tr>
-				{/each}
-			</tbody>
-			<tfoot>
-				<tr class="bg-gray-300 text-gray-700 text-lg">
-					<td class="text-purple-500 w-min">Σύνολο</td>
-					{#each columns as column}
-						{#if column.Title != 'Title'}
-							<td class="font-bold text-left pl-2">{formatNumber(sum[column.Title])}</td>
-						{/if}
-					{/each}
-
-				</tr>
-
-				{#if tableOptions[1].visible}
-					<tr class="bg-gray-200 text-gray-700">
-						<td class="text-purple-500 w-min text-sm">Ποσοστό</td>
-						<td />
-						{#each columns as column}
-							{#if column.Title != 'Title' && column.Title != 'weight'}
-								{#if column.units == 'g/kg'}
-									<td class="font-bold">{formatNumber(sum[column.Title] / sum['weight'] / 10)}</td>
-                                    {:else}
-                                    <td></td>
-								{/if}
-							{/if}
-						{/each}
-
-					</tr>
-				{/if}
-				{#if tableOptions[2].visible}
-					<tr class="bg-gray-200 text-gray-700">
-						<td class="text-purple-500 w-min text-sm">Ποσοστό / ΞΟ </td>
-						<td />
-						{#each columns as column}
-							{#if column.Title != 'Title' && column.Title != 'weight'}
-								{#if column.units == 'g/kg'}
-									<td class="font-bold"
-										>{formatNumber((100 * sum[column.Title]) / sum.DryMatter)}</td
-									>
-                                    {:else}
-                                    <td></td>
-								{/if}
-							{/if}
-						{/each}
-					</tr>
-				{/if}
-			</tfoot>
-		</table>
-	</div>
-	<div class="secondary" style="margin-top: 5px;">
-		<br />
-	</div>
-
-	<TableEditButtons
-		currentUser={$currentUser}
-		bind:inputChipList
-		bind:inputChipListUser
-		bind:inputmlist
-		bind:autocompleteOptions
-		bind:metricsAutocomplete
-		{userFoodAutocomplete}
-	/>
-{:else}
-	<p class="my-3">
-		Οι διαθέσιμες τροφές φορτώνονται...<br />Σε περίπτωση καθυστέρησης, ξαναφορτώστε τη σελίδα.
-	</p>
-	<section class="card w-full">
-		<div class="p-4 space-y-4">
-			<div class="placeholder" />
-			<div class="grid grid-cols-3 gap-8">
-				<div class="placeholder" />
-				<div class="placeholder" />
-				<div class="placeholder" />
-			</div>
-			<div class="grid grid-cols-4 gap-4">
-				<div class="placeholder" />
-				<div class="placeholder" />
-				<div class="placeholder" />
-				<div class="placeholder" />
-			</div>
-		</div>
-	</section>
-{/if}
+<FeedsTable tableState={t} bind:selected bind:columns edit={true} />
+<TableEditButtons
+	currentUser={$currentUser}
+	bind:inputChipList
+	bind:inputChipListUser
+	bind:inputmlist
+	bind:autocompleteOptions
+	bind:metricsAutocomplete
+	{userFoodAutocomplete}
+/>
 
 <style lang="postcss">
 	.info {

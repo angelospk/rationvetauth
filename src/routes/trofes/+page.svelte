@@ -2,25 +2,20 @@
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
 	import EditObject from '$lib/EditObject.svelte';
-	import { feeds, metrics } from '$lib/stores/data';
+	import { metrics, userFeeds as records } from '$lib/stores/data';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
-	import { writable } from 'svelte/store';
-	writable;
-	let records = writable([]);
+	// writable;
+	// let records = writable([]);
 	onMount(async () => {
+		if ($records.length==0){
 		const r:any=await pb.collection('feeds').getFullList({
-			sort: '-created'
+				sort: '-created'
 		}) || [];
-        records.set(r)
+		console.log(r)
+        records.set(r)}
 	});
-	let m: any = $metrics.filter((x) => x.cat) || [];
-	const toastStore = getToastStore();
-	let te: ToastSettings = {
-		message: 'This message will auto-hide after 3 seconds.',
-		timeout: 1000
-	};
 	function createEmpty() {
 		let empty = {};
 		for (let x of m) {
@@ -29,8 +24,17 @@
 		empty.Title = '';
 		return empty;
 	}
-	let empty = createEmpty();
-	console.log(empty);
+	let m: any =[]
+	let empty ;
+	$: {m=$metrics.filter((x) => x.cat);
+	empty=createEmpty()}
+	
+	const toastStore = getToastStore();
+	let te: ToastSettings = {
+		message: 'This message will auto-hide after 3 seconds.',
+		timeout: 1000
+	};
+
 	const saveChanges = async () => {
 		try {
 			empty.user = $currentUser.id;
@@ -83,12 +87,15 @@
 					<svelte:fragment slot="summary"
 						><div class="flex justify-between">
 							{da.Title}
-							<div class="text-xs">{da.updated} </div>
-                            
+							<div class="text-xs">{da.updated}</div>
 						</div></svelte:fragment
 					>
 					<svelte:fragment slot="content"
-						><EditObject bind:objectData={da} metrics={m} bind:records={$records} /></svelte:fragment
+						><EditObject
+							bind:objectData={da}
+							metrics={m}
+							bind:records={$records}
+						/></svelte:fragment
 					>
 				</AccordionItem>
 			{/each}

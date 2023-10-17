@@ -8,13 +8,13 @@
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
   import { getModalStore } from '@skeletonlabs/skeleton';
   import type { ModalSettings } from '@skeletonlabs/skeleton';
-			
+
 const modalStore = getModalStore();
 const modal: ModalSettings = {
 	type: 'confirm',
 	// Data
-	title: 'Παρακαλώ Επιβεβαιώστε',
-	body: 'Θέλετε σίγουρα να διαγράψετε την τροφή;',
+	title: 'Παρακαλώ Επιβεβαιώστε για Διαγραφή',
+	body: 'Αφού διαγραφεί η τροφή, δεν θα μπορούν να εμφανίζονται σωστά οι πίνακες διαμόρφωση σιτηρεσίων που τη χρησιμοποιούν. Είστε σίγουροι ότι θέλετε να τη διαγράψετε;',
   buttonTextConfirm:'Επιβεβαίωση',
   buttonTextCancel:'Ακύρωση',
 	// TRUE if confirm pressed, FALSE if cancel pressed

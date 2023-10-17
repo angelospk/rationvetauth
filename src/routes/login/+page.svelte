@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { pb } from '$lib/pocketbase';
+	import { userFeeds } from '$lib/stores/data.js';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
@@ -78,6 +79,10 @@
 									pb.authStore.loadFromCookie(result.data.st);
 									te.message="Επιτυχής είσοδος!"
 									toastStore.trigger(te)
+									let d=await pb.collection('feeds').getFullList({
+				sort: '-created'
+									}) || [];
+									if (d.length>0) userFeeds.set(d)
 								    goto('/');
                                 }
                                 catch(e){

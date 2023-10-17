@@ -1,21 +1,25 @@
 <script lang="ts">
-	// import { pb } from '$lib/pocketbase';
-	import PocketBase from 'pocketbase';
-	import Error from '../+error.svelte';
-	const pb=new PocketBase("https://asf.haroldpoi.repl.co/")
+  import TablePlaceHolder from '../../lib/TablePlaceHolder.svelte';
+
+	import FeedsTable from '../../lib/FeedsTable.svelte';
+
+	import { metrics, feeds, userFeeds, type State } from '$lib/stores/data';
+import { type } from 'os';
 
 
-let records:any[]=pb.collection('posts').getFullList({
-    sort: '-created',
-})
+
+
+	// reactive states updating table
+	const t = { selfeeds: [{ Title: 'Καλαμπόκι', weight: 3 },{id: "ntw7z3mfbc5j61x", weight: 5}], extraCols: ["Starch"] };
+
+
+
 
 </script>
 
-{#await records}
-<p>loading data</p>
-
-{:then data } 
-<div>{JSON.stringify(data)}</div>
-{:catch error}
-<p>{error}</p>
-{/await}
+{#if $feeds.length > 0 && $metrics.length > 0}
+<!-- selected={selected} columns={columns} -->
+<FeedsTable tableState={t}  userFeeds={$userFeeds} feeds={$feeds} metrics={$metrics} edit={false} />
+{:else}
+<TablePlaceHolder></TablePlaceHolder>
+{/if}
