@@ -2,7 +2,12 @@
     import { currentUser } from '$lib/pocketbase';
     
     export let rationName = '';
-    export let producerName = '';
+    export let producerName="";
+    $:{
+        if ($currentUser){
+            producerName=$currentUser.name;
+        }
+    }
     export let currentDate = new Date().toISOString().split('T')[0];
     
 </script>
@@ -23,11 +28,11 @@
 
     <p class="print:flex">
         <label for="producer_name" class="print:underline">Δημιουργός: </label>
-        {#if !$currentUser}
+        <!-- {#if !$currentUser} -->
             <input id="producer_name" type="text" class="" bind:value={producerName} />
-        {:else}
+        <!-- {:else}
             <span class="text-center bg-primary-hover-token print:font-bold print:ml-2" id="entry_date">{$currentUser.name}</span>
-        {/if}
+        {/if} -->
     </p>
     <p class="print:flex">
         <label for="entry_date" class="print:underline">Ημερομηνία: </label>

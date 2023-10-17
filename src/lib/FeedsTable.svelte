@@ -41,7 +41,7 @@ export let metrics:Column[]=[];
 export let feeds:Feed[]=[];
 export let userFeeds:Feed[]=[];
 
-$: columns = metrics.filter((x) => certain.includes(x.Title));
+// $: columns = metrics.filter((x) => certain.includes(x.Title));
 	let sum = {};
 	let emptySum;
 	$: {
@@ -120,13 +120,13 @@ $: columns = metrics.filter((x) => certain.includes(x.Title));
 		if (tableState.extraCols && tableState.extraCols.length > 0) {
 			certain.push(...tableState.extraCols);
 		}
-
-		return {selected, certain}
+		columns = metrics.filter((x) => certain.includes(x.Title));
+		return {selected, columns}
 ;
 	}
 
 $: {
-	readState(tableState).then((r)=>{certain=r.certain;selected=r.selected})
+	readState(tableState).then((r)=>{columns=r.columns;selected=r.selected})
 }
 
 	function formatNumber(number: Number) {

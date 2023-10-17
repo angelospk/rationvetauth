@@ -3,7 +3,7 @@
 
 	import FeedsTable from '../../lib/FeedsTable.svelte';
 
-	import { metrics, feeds, userFeeds } from '$lib/stores/data';
+	import { metrics, feeds, userFeeds, loadedTables } from '$lib/stores/data';
 	import type { TableState } from '$lib/stores/types';
 
 
@@ -17,15 +17,10 @@
 
 </script>
 
-{#if $feeds.length > 0 && $metrics.length > 0}
+{#if $loadedTables}
 <!-- selected={selected} columns={columns} -->
 <FeedsTable tableState={t}  userFeeds={$userFeeds} feeds={$feeds} metrics={$metrics} edit={false} />
 {:else}
 <TablePlaceHolder></TablePlaceHolder>
 {/if}
-{#if $feeds.length > 0 && $metrics.length > 0}
-<!-- selected={selected} columns={columns} -->
-<FeedsTable tableState={t}  userFeeds={$userFeeds} feeds={$feeds} metrics={$metrics} edit={false} />
-{:else}
-<TablePlaceHolder></TablePlaceHolder>
-{/if}
+

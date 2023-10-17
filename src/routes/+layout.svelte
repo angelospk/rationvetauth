@@ -10,7 +10,7 @@
 	import { goto } from '$app/navigation';
 import { initializeStores } from '@skeletonlabs/skeleton';
 import {Toast} from '@skeletonlabs/skeleton';
-import {feeds, metrics, userFeeds} from '$lib/stores/data'
+import {feeds, metrics, userFeeds, loadedTables} from '$lib/stores/data'
 import { onMount } from 'svelte';
 import {Modal} from '@skeletonlabs/skeleton';
 import { setContext } from 'svelte';
@@ -25,11 +25,15 @@ onMount(async () => {
 			metrics.set( dat.d[1].data);
 		}
 	if ($currentUser){
-		let d=await pb.collection('feeds').getFullList({
+		let d;
+		try{d=await pb.collection('feeds').getFullList({
 				sort: '-created'
 		}) || [];
-		userFeeds.set(d)
-		console.log("added userfeeds ffrom layout", $userFeeds)
+		userFeeds.set(d)}
+		catch(err){console.log(err)}
+		
+		// console.log("added userfeeds ffrom layout", $userFeeds)
+		loadedTables.set(true)
 	}
 
 		

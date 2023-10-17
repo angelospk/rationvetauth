@@ -9,63 +9,20 @@
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
-	import { metrics, feeds, userFeeds, type State } from '$lib/stores/data';
+	import { metrics, feeds, userFeeds, loadedTables } from '$lib/stores/data';
 	import { currentUser, pb } from '$lib/pocketbase';
-	const popupClick: PopupSettings = {
-		event: 'click',
-		target: 'popupClick',
-		placement: 'top'
-	};
-	const optionsClick: PopupSettings = {
-		event: 'click',
-		target: 'optionsClick',
-		placement: 'top'
-	};
-
+	import type { Column, Feed, State, TableState } from '$lib/stores/types';
+	import TablePlaceHolder from '$lib/TablePlaceHolder.svelte';
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	import type { ToastSettings } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
+	let te: ToastSettings = {
+	message: 'Δεν μπόρεσε να φορτωθεί μια τροφή (ήταν τροφή κάποιου χρήστη).',
+	timeout: 3000
+};
 	export let rationName: string;
 	export let producerName: string;
 
-	let 		selected=[{
-    "Title": "Καλαμπόκι",
-    "DryMatter": 870,
-    "Fat": 42,
-    "CrudeFiber": 22,
-    "Starch": 605,
-    "Ash": 13.5,
-    "Calcium": 0.1,
-    "Phosphorus": 2.7,
-    "Potassium": 3.3,
-    "Sodium": 0.1,
-    "DE": 3860,
-    "DEruminants": 3431,
-    "MEruminants": 2898,
-    "NElactose": 1.1,
-    "NEmeat": 1.11,
-    "NMLruminants": 1.15,
-    "DEswine": 3400,
-    "MEswine": 3315,
-    "CEswine": 2525,
-    "MEpoultry": 3300,
-    "CrudeProtein": 85,
-    "DCPruminants": 59,
-    "DCPswine": 69,
-    "Lysine": 2.5,
-    "Methionine": 1.7,
-    "MethiCystine": 3.9,
-    "Threonine": 3.2,
-    "Tryptophan": 0.6,
-    "Isoleucine": 3.5,
-    "Leucine": 11.3,
-    "Valine": 4.6,
-    "Phenylalanine": 4.5,
-    "Histidine": 2.5,
-    "Arginine": 4.3,
-    "Glycine": 3.7,
-    "Category": "cat",
-    "EngTitle": "corn",
-    "keywords": "καλαμποκι",
-    "weight": 3
-}]
 	let certain = [
 		'Title',
 		'weight',
@@ -82,15 +39,17 @@
 		{ label: 'Εμφάνιση Ποσοστού', visible: true },
 		{ label: 'Εμφάνιση Ποσοστού ανά ΞΟ', visible: false }
 	];
-	let columns = [];
-	let minimalSelected=[];
+	export let selected:Feed[]=[];
+	export let columns:Column[]=[];
+	let minimalSelected:Feed[]=[];
 	let inputChipList: string[] = [];
 	let inputChipListUser: string[] = [];
 	let inputmlist: string[] = [];
 	let autocompleteOptions: AutocompleteOption<string>[];
 	let metricsAutocomplete: AutocompleteOption<string>[];
 	let userFoodAutocomplete: AutocompleteOption<string>[];
-
+	let currentState:State
+	$: currentState= {rationName:rationName, producerName: producerName, ts:{selfeeds:minimalSelected, extraCols:inputmlist}}
 	// reactive states updating table
 	$: columns = $metrics.filter((x) => certain.includes(x.Title) || inputmlist.includes(x.Title));
 	$: selected = [
@@ -190,56 +149,67 @@
 		rationName: rationName,
 		producerName: producerName
 	};
-	const t= {selfeeds: [{ Title: 'Καλαμπόκι', weight: 3 }],
-extraCols: []}
-async function readState(tableState) {
-		// This will hold the final list of items from both userFeeds and feeds
-		// let combined = [];
+const t:TableState = { selfeeds: [{ Title: 'Καλαμπόκι', weight: 3 },{id: "ntw7z3mfbc5j61x", weight: 5}], extraCols: ["Starch"] };
+async function readState(tableState: TableState) {
 
-		// Iterate through the given stateTable
-		for (const item of tableState.selfeeds) {
-			console.log('here', item, $feeds, $userFeeds);
-			if (item.id && item.weight) {
-				// If the item has an "id" and "weight", then find the matching item in userFeeds
-				let userFeedItem = $userFeeds.find((feed) => feed.id === item.id);
-
-				// If not found in userFeeds, fetch from pocketbase
-				if (!userFeedItem) {
+    for (const item of tableState.selfeeds) {
+        console.log(item)
+		if (item.id && item.weight) {
+            let userFeedItem = $userFeeds.find((feed) => feed.id === item.id);
+			let itemIsByUser=true;
+			console.log(userFeedItem, $userFeeds)
+            if (!userFeedItem) {
+				itemIsByUser=false;
+                try{
 					userFeedItem = await pb.collection('feeds').getOne(item.id, {
-						expand: 'user'
-					});
-				}
-
-				// If the item is found (either in userFeeds or in pocketbase), push to the result
-				if (userFeedItem) {
-					selected.push({
-						...userFeedItem, // Spread all properties of the userFeedItem
-						weight: item.weight // Override with the weight from the stateTable
-					});
-				}
-			} else if (item.Title && item.weight) {
-				// If the item has a "Title" and "weight", then find the matching item in feeds
-				const feedItem = $feeds.find((feed) => feed.Title === item.Title);
-
-				if (feedItem) {
-					selected.push({
-						...feedItem, // Spread all properties of the feedItem
-						weight: item.weight // Override with the weight from the stateTable
-					});
+                    expand: 'user'
+                });
+            	}
+				catch(err){
+					console.log(err)
+					toastStore.trigger(te);
+					
 				}
 			}
-		}
-        if (tableState.extraCols && tableState.extraCols.length>0)
-        {certain.push(...tableState.extraCols)}
-		// if (state.rationName) {
-		// 	rationName = state.rationName;
-		// }
-		// if (state.producerName) {
-		// 	producerName = state.producerName;
-		// }
-		console.log(selected, certain);
-		// return combined;
-	}
+            if (userFeedItem) {
+                userFeedItem.weight = item.weight; // Update the weight
+				console.log($currentUser , itemIsByUser)
+				if (!$currentUser || !itemIsByUser) { // Assuming you have a variable `currentUser` to check if the user is signed in
+                    if (!$feeds.some(x=>x.id==userFeedItem.id)){
+					$feeds = [...$feeds, userFeedItem];} 
+					if (!inputChipList.includes(userFeedItem.Title)){
+					inputChipList.push(userFeedItem.Title);
+					}
+                }
+				else{
+				if (!inputChipListUser.includes(userFeedItem.Title)){
+					inputChipListUser.push(userFeedItem.Title);}
+
+				}
+
+
+            }
+        } else if (item.Title && item.weight) {
+            const feedItem = $feeds.find((feed) => feed.Title === item.Title);
+
+            if (feedItem) {
+                feedItem.weight = item.weight; // Update the weight
+                inputChipList.push(item.Title); // Add to inputChipList
+            }
+        }
+    }
+
+    if (tableState.extraCols && tableState.extraCols.length > 0) {
+        // certain.push(...tableState.extraCols);
+		inputmlist.push(...tableState.extraCols)
+    }
+	console.log(inputmlist, inputChipList, inputChipListUser);
+    return { inputChipListUser, inputChipList, inputmlist };
+}
+
+$: { if($loadedTables){
+	readState(t).then((r)=>{inputChipList=r.inputChipList;inputChipListUser=r.inputChipListUser; inputmlist=r.inputmlist})}
+}
 // reactive statements to change the autocomplete buttons
 	$: autocompleteOptions = $feeds.map((feed) => ({
 		label: feed.Title,
@@ -267,10 +237,16 @@ async function readState(tableState) {
 </div>
 <div class="hidden print:block text-center text-lg my-3">Πίνακας Σιτηρεσίου</div>
 <div class="info" style="">
-	Σημείωση: Προσθέστε τροφές πατώντας στο "Αλλαγή Τροφών.<br />
+	Σημείωση: Προσθέστε τροφές πατώντας στο "Δημόσιες Τροφές".<br />
 </div>
 
-<FeedsTable tableState={t} bind:selected bind:columns edit={true} />
+{#if $feeds.length > 0 && $metrics.length > 0}
+<!-- selected={selected} columns={columns} -->
+<FeedsTable bind:selected={selected} bind:columns={columns} userFeeds={$userFeeds} feeds={$feeds} metrics={$metrics} edit={true} />
+{:else}
+<TablePlaceHolder></TablePlaceHolder>
+{/if}
+
 <TableEditButtons
 	currentUser={$currentUser}
 	bind:inputChipList
@@ -278,9 +254,9 @@ async function readState(tableState) {
 	bind:inputmlist
 	bind:autocompleteOptions
 	bind:metricsAutocomplete
-	{userFoodAutocomplete}
+	bind:userFoodAutocomplete
 />
-
+{JSON.stringify(currentState)}
 <style lang="postcss">
 	.info {
 		@apply my-2 bg-secondary-400 rounded-lg print:hidden;
@@ -290,19 +266,8 @@ async function readState(tableState) {
 		margin-top: 1rem;
 	}
 
-	th,
-	td {
-		border: 1px dotted black;
-	}
 	@media print {
 		/* Hide buttons and explanatory text */
-		.btn {
-			display: none;
-		}
-		th,
-		td {
-			border: 1px solid black;
-		}
 		.info {
 			display: none;
 		}
