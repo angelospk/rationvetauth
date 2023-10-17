@@ -30,11 +30,13 @@ onMount(async () => {
 				sort: '-created'
 		}) || [];
 		userFeeds.set(d)}
-		catch(err){console.log(err)}
+		catch(err){console.log(err)
+		userFeeds.set([])}
 		
 		// console.log("added userfeeds ffrom layout", $userFeeds)
-		loadedTables.set(true)
+		
 	}
+	loadedTables.set(true)
 
 		
 })
