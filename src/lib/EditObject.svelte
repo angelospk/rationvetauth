@@ -1,5 +1,4 @@
 <script lang="ts">
-  import FoodDetails from './FoodDetails.svelte';
 
 	// The JSON object retrieved from your database
 	// let editedData = JSON.parse(JSON.stringify(objectData)); // Create a copy to track edits
@@ -9,6 +8,7 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import type { ModalSettings } from '@skeletonlabs/skeleton';
 	import type { Column, Feed } from './stores/types';
+	import FeedDetails from './FeedDetails.svelte';
 	const modalStore = getModalStore();
 	const modal: ModalSettings = {
 		type: 'confirm',
@@ -86,7 +86,7 @@
 				</svg>
 			</button>
 		</div>
-<FoodDetails detailed={detailed} metrics={metrics} bind:objectData={objectData} />
+<FeedDetails detailed={detailed} metrics={metrics} bind:objectData={objectData} />
 	</div>
 	<button class="mt-3 btn variant-filled" on:click|preventDefault={saveChanges}>Αποθήκευση</button>
 </div>

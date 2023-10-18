@@ -14,7 +14,7 @@
 	import type { ModalSettings, ToastSettings } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import type { Feed } from '$lib/stores/types';
-	import FoodDetails from '$lib/FoodDetails.svelte';
+	import FeedDetails from '$lib/FeedDetails.svelte';
 	// writable;
 	// let records = writable([]);
 	const modalStore = getModalStore();
@@ -85,12 +85,13 @@
 {#if !$currentUser}
 	Δεν είσαι συνδεδεμένος!
 {:else}
-	<div class="flex justify-evenly">
-		<h1 class="font-bold mb-3">Οι Τροφές μου</h1>
-		<label class="flex items-center space-x-2 card p-2 text-xs">
+	<div class="flex justify-between mb-4">
+		<h1 class="font-bold mb-3 mx-auto ">Οι Τροφές μου</h1>
+		<div class=""><label class="flex items-center space-x-2 card p-2 text-xs">
 			<input class="checkbox" type="checkbox" bind:checked={detailed} />
 			<p>Αναλυτική Σύσταση</p>
-		</label>
+		</label></div>
+		
 	</div>
 	{#if !records}
 		<p>loading data</p>
@@ -155,18 +156,35 @@
 				<svelte:fragment slot="content"
 					><div class="card p-3">
 						<div class="flex-container">
-							<button
-								class="btn btn-sm variant-filled mt-2 mx-auto sm:ml-10 sm:mx-9"
+							<div class="flex justify-center w-full"> <button
+								class="btn variant-filled mt-2 "
 								on:click={() => {
 									modalStore.trigger(modal);
 								}}>Πρότυπο τροφής</button
 							>
-
+							<button class="sm:ml-3" on:click={()=>{empty=createEmpty()}}>
+								<svg
+									class="w-6 h-6 text-red-800 dark:text-white"
+									aria-hidden="true"
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 18 20"
+								>
+									<path
+										stroke="currentColor"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"
+									/>
+								</svg>
+							</button></div>
+							
 							<div class="form-item mx-auto sm:mx-0 sm:mr-3">
 								<p>Τίτλος:</p>
 								<input class="rounded-lg ml-1" type="text" bind:value={empty.Title} />
 							</div>
-						<FoodDetails detailed={detailed} metrics={m} bind:objectData={empty}/>
+						<FeedDetails detailed={detailed} metrics={m} bind:objectData={empty}/>
 						<button class="my-3 btn variant-filled" on:click|preventDefault={saveChanges}
 							>Αποθήκευση</button
 						>
@@ -195,7 +213,4 @@
 		align-items: center;
 	}
 
-	input[type='number'] {
-		width: 3.5rem;
-	}
 </style>

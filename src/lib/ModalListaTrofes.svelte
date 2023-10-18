@@ -21,7 +21,7 @@ totalfeeds=[...$userFeeds, ...$feeds]
 	}
 
 	// Base Classes
-	const cBase = 'card p-4 w-modal-slim shadow-xl space-y-4';
+	const cBase = 'card p-4 w-modal shadow-xl space-y-4';
 	const cHeader = 'text-2xl font-bold';
 </script>
 
@@ -34,7 +34,7 @@ totalfeeds=[...$userFeeds, ...$feeds]
 		
 		<select class="select border border-surface-500 p-4 hide-scrollbar" size="6" bind:value={feed}>
 			{#each totalfeeds as ufeed}
-			<option class="hover:bg-secondary-300 hover:shadow-lg select:scale-110" value="{ufeed}">{ufeed?.Title}</option>
+			<option class="hover:bg-primary-300 hover:shadow-lg hover:underline" value="{ufeed}">{ufeed?.Title}</option>
 			{/each}
 
 		</select>

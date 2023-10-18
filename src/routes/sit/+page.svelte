@@ -50,7 +50,7 @@
 		</div>
 		
 		<div class="info">
-			This section is optional but recommended if outputs are emailed below.
+			Προεραιτικό. Συμπληρώστε μόνο αν έχετε σκοπό να αποθηκεύσετε ή να αποστείλετε το σιτηρέσιο.
 		</div>
 		<RationInfo bind:rationName={rationName} bind:producerName={producerName} bind:currentDate editable={true}/>
 		<!-- <GeneralInfo bind:rationName={rationName} bind:producerName={producerName} bind:currentDate /> -->

@@ -7,7 +7,7 @@
 
 </script>
 		{#if detailed}
-			<p class="underline w-full">Βασικοί Δείκτες Χημικής Σύστασης:</p>
+			<p class="underline w-full">Βασικοί Δείκτες Χημικής Σύστασης: <small >(g/kg)</small></p>
 		{/if}
 		{#each metrics.filter((x) => x.cat == 'Βασικοί Δείκτες Χημικής Σύστασης') as metric}
 			<div class="form-item">
@@ -24,7 +24,7 @@
 		{/each}
 		<br />
 		{#if detailed}
-			<p class="underline w-full">Μέταλλα:</p>
+			<p class="underline w-full">Μέταλλα: <small>(g/kg)</small></p> 
 		{/if}
 		{#each metrics.filter((x) => x.cat == 'Μέταλλα') as metric}
 			<!-- {#if key != 'user' && key != 'updated' && ke != 'created' && key != 'Title' && key != 'id' && key != 'collectionId' && key != 'collectionName'} -->
@@ -41,7 +41,7 @@
 			<!-- {/if} -->
 		{/each}
 		{#if detailed}
-			<p class="underline w-full">Δείκτες Ενέργειας:</p>
+			<p class="underline w-full">Δείκτες Ενέργειας: <small >(kcal/kg)</small></p>
 		{/if}
 		{#each metrics.filter((x) => x.cat == 'Δείκτες Ενέργειας') as metric}
 			<div class="form-item">
@@ -57,7 +57,7 @@
 			<!-- {/if} -->
 		{/each}
 		{#if detailed}
-			<p class="underline w-full">Αμινοξέα:</p>
+			<p class="underline w-full">Αμινοξέα: <small >(g/kg)</small></p>
 		{/if}
 		{#each metrics.filter((x) => x.cat == 'Αμινοξέα') as metric}
 			<div class="form-item">
@@ -81,7 +81,7 @@
 	}
 
 	input[type='number'] {
-		width: 3.5rem;
+		width: 5rem;
 	}
 </style>
 
