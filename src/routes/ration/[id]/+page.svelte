@@ -5,29 +5,21 @@
 	import TablePlaceHolder from '$lib/TablePlaceHolder.svelte';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { getToastStore } from '@skeletonlabs/skeleton';
-	import type { ModalSettings, ToastSettings } from '@skeletonlabs/skeleton';
 	import { currentUser, pb } from '$lib/pocketbase';
-	import { getModalStore } from '@skeletonlabs/skeleton';
+
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	import type { ToastSettings } from '@skeletonlabs/skeleton';
+	import RationInfo from '$lib/RationInfo.svelte';
 	const toastStore = getToastStore();
-	const modalStore = getModalStore();
 	let te: ToastSettings = {
 		message: 'This message will auto-hide after 3 seconds.',
 		timeout: 3000
 	};
-	let selc:string;
+	let selc: string;
 	let ration: State;
 	let err = false;
+
 	onMount(async () => {
-		const modal: ModalSettings = {
-			type: 'component',
-			component: 'modalTrofes',
-				response(r) {
-				console.log(r)
-				selc=r
-			},
-		};
-		modalStore.trigger(modal);
 		try {
 			ration = await pb.collection('rations').getOne($page.params.id);
 		} catch (error) {
@@ -46,12 +38,15 @@
 		],
 		extraCols: ['Starch']
 	};
+
+	let showInfoCard = false;
 </script>
 
-{selc?selc:"no"}
+<!-- {selc?selc:"no"} -->
 {#if err}
 	<h1 class="card p-4 bg-error-500">Ουψ! Το σιτηρέσιο δεν μπορεί να φορτωθεί!</h1>
 {:else if $loadedTables && ration}
+<RationInfo producerName={ration?.producerName} rationName={ration?.rationName} currentDate={ration?.date} />
 	<!-- selected={selected} columns={columns} -->
 	<FeedsTable
 		tableState={ration?.tableState}
@@ -60,6 +55,15 @@
 		metrics={$metrics}
 		edit={Boolean($currentUser)}
 	/>
+
+	<div class="flex justify-center space-x-1 sm:space-x-5 text-xs sm:text-base">
+		{#if $currentUser?.id==ration?.user}
+			<button class="btn variant-filled-secondary btn-sm sm:btn-base">Αποθήκευση Βαρών</button>
+			<button class="btn variant-filled-secondary btn-sm sm:btn-base"> Επεξεργασία Σιτηρεσίου</button>
+		{:else}
+		<button class="btn variant-filled-secondary btn-sm sm:btn-base"> Δημιουργία Αντίγραφου και Επεξεργασία</button>
+		{/if}
+	</div>
 {:else}
 	<TablePlaceHolder />
 {/if}

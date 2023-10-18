@@ -12,6 +12,8 @@ export interface Feed {
 	id?: string;
 	Title?: string;
 	weight?: number;
+	user?: string;
+	updated?: string;
 	// Add more fields as necessary
 };
 
@@ -20,9 +22,11 @@ export interface TableState {
 	extraCols: string[];
 };
 export interface Column {
-	Title: string;
-	gr?: string;
-	units?: string;
+	Title: string,
+	gr?: string,
+	units?: string,
+	labelgr?: string,
+	cat?:string
 	// Add more fields as necessary
 };
 export interface Option{

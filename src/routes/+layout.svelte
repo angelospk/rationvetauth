@@ -63,7 +63,7 @@ const modalRegistry: Record<string, ModalComponent> = {
 	// ...
 };
 </script>
-<Modal components={modalRegistry} />
+<Modal components={modalRegistry} height="h-30" class="overflow-y-scroll" />
 <Toast />
 <!-- App Shell -->
 <AppShell>

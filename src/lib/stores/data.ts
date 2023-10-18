@@ -1,5 +1,6 @@
-import { writable } from 'svelte/store';
-export const feeds = writable([]);
-export const metrics = writable([]);
-export let userFeeds= writable([]);
-export let loadedTables=writable(false);
+import { writable, type Writable } from 'svelte/store';
+import type { Feed, Column } from './types';
+export const feeds:Writable<Feed[]> = writable([]);
+export const metrics:Writable<Column[]> = writable([]);
+export let userFeeds:Writable<Feed[]>= writable([]);
+export let loadedTables:Writable<Boolean>=writable(false);

@@ -58,7 +58,7 @@
 		</div>
 
 		<EditableTable bind:rationName={rationName} bind:producerName={producerName} bind:currentState/>
-		{JSON.stringify(currentState)}
+		<!-- {JSON.stringify(currentState)} -->
 		<div class="heading print:hidden">
 			<h2>Βήμα 3: Αποθήκευση / Διαμοιρασμός</h2>
 		</div>

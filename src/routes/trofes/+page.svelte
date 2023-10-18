@@ -1,47 +1,73 @@
 <script lang="ts">
 	import { currentUser, pb } from '$lib/pocketbase';
-	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
+	import {
+		Accordion,
+		AccordionItem,
+		RadioGroup,
+		RadioItem,
+		SlideToggle,
+		getModalStore
+	} from '@skeletonlabs/skeleton';
 	import EditObject from '$lib/EditObject.svelte';
 	import { metrics, userFeeds as records } from '$lib/stores/data';
 	import { getToastStore } from '@skeletonlabs/skeleton';
-	import type { ToastSettings } from '@skeletonlabs/skeleton';
+	import type { ModalSettings, ToastSettings } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
+	import type { Feed } from '$lib/stores/types';
+	import FoodDetails from '$lib/FoodDetails.svelte';
 	// writable;
 	// let records = writable([]);
+	const modalStore = getModalStore();
+	// let selectedFeed:Feed;
+	const modal: ModalSettings = {
+		type: 'component',
+		body: 'Επέλεξε από τη λίστα τροφή για να φορτωθεί ως πρότυπο!',
+		component: 'modalTrofes',
+		response(r) {
+			console.log(r);
+			empty = r;
+		},
+		buttonTextCancel: 'Ακύρωση'
+		// backdropClasses: "!blur-1"
+	};
 	onMount(async () => {
-		if ($records.length==0){
-		const r:any=await pb.collection('feeds').getFullList({
-				sort: '-created'
-		}) || [];
-		console.log(r)
-        records.set(r)}
+		if ($records.length == 0) {
+			const r: any =
+				(await pb.collection('feeds').getFullList({
+					sort: '-created'
+				})) || [];
+			console.log(r);
+			records.set(r);
+		}
 	});
 	function createEmpty() {
-		let empty = {};
+		let empty:Feed = {};
 		for (let x of m) {
 			empty[x.Title] = 0;
 		}
 		empty.Title = '';
 		return empty;
 	}
-	let m: any =[]
-	let empty ;
-	$: {m=$metrics.filter((x) => x.cat);
-	empty=createEmpty()}
-	
+	let m: any = [];
+
+	$: {
+		m = $metrics.filter((x) => x.cat);
+	}
+
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'This message will auto-hide after 3 seconds.',
 		timeout: 1000
 	};
-
+	let detailed:boolean=true;
+	let empty: Feed = createEmpty();
 	const saveChanges = async () => {
 		try {
-			empty.user = $currentUser.id;
+			empty.user = $currentUser?.id;
 			const record = await pb.collection('feeds').create(empty);
 			console.log('epistrofi:', record);
 			try {
-				records.update((arr) => [record,...arr]);
+				records.update((arr) => [record, ...arr]);
 				empty = createEmpty();
 			} catch (err) {
 				console.log(err);
@@ -59,8 +85,13 @@
 {#if !$currentUser}
 	Δεν είσαι συνδεδεμένος!
 {:else}
-	<h1 class="font-bold mb-3">Οι Τροφές μου</h1>
-
+	<div class="flex justify-evenly">
+		<h1 class="font-bold mb-3">Οι Τροφές μου</h1>
+		<label class="flex items-center space-x-2 card p-2 text-xs">
+			<input class="checkbox" type="checkbox" bind:checked={detailed} />
+			<p>Αναλυτική Σύσταση</p>
+		</label>
+	</div>
 	{#if !records}
 		<p>loading data</p>
 	{:else}
@@ -86,29 +117,26 @@
 					>
 					<svelte:fragment slot="summary"
 						><div class="flex justify-between">
-							{da.Title}
+							{da?.Title}
 							<div class="text-xs">{da.updated}</div>
 						</div></svelte:fragment
 					>
 					<svelte:fragment slot="content"
 						><EditObject
+							detailed={detailed}
 							bind:objectData={da}
 							metrics={m}
 							bind:records={$records}
 						/></svelte:fragment
 					>
 				</AccordionItem>
+				
 			{/each}
-
-			<!-- ... -->
-		</Accordion>
-
-		<!-- <div>{JSON.stringify(data)}</div> -->
-		<Accordion
-			><AccordionItem>
+			<hr />
+			<AccordionItem>
 				<svelte:fragment slot="lead"
 					><svg
-						class="w-6 h-6 text-gray-800 dark:text-white"
+						class="w-6 h-6 text-gray-800 dark:text-white "
 						aria-hidden="true"
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -125,78 +153,31 @@
 				>
 				<svelte:fragment slot="summary">Φτιάξε Νέα Τροφή!</svelte:fragment>
 				<svelte:fragment slot="content"
-					><div class="card p-1">
+					><div class="card p-3">
 						<div class="flex-container">
-							<div class="form-item mx-auto">
+							<button
+								class="btn btn-sm variant-filled mt-2 mx-auto sm:ml-10 sm:mx-9"
+								on:click={() => {
+									modalStore.trigger(modal);
+								}}>Πρότυπο τροφής</button
+							>
+
+							<div class="form-item mx-auto sm:mx-0 sm:mr-3">
 								<p>Τίτλος:</p>
-								<input class="rounded-lg" type="text" bind:value={empty.Title} />
+								<input class="rounded-lg ml-1" type="text" bind:value={empty.Title} />
 							</div>
-							<p class="underline w-full">Βασικοί Δείκτες Χημικής Σύστασης:</p>
-							{#each m.filter((x) => x.cat == 'Βασικοί Δείκτες Χημικής Σύστασης') as metric}
-								<div class="form-item">
-									<p>{metric.labelgr}:</p>
-									<input
-										class="rounded-lg"
-										type="number"
-										bind:value={empty[metric.Title]}
-										step="0.3"
-										min="0"
-									/>
-								</div>
-								<!-- {/if} -->
-							{/each}
-							<br />
-							<p class="underline w-full">Μέταλλα:</p>
-							{#each m.filter((x) => x.cat == 'Μέταλλα') as metric}
-								<!-- {#if key != 'user' && key != 'updated' && ke != 'created' && key != 'Title' && key != 'id' && key != 'collectionId' && key != 'collectionName'} -->
-								<div class="form-item">
-									<p>{metric.labelgr}:</p>
-									<input
-										class="rounded-lg"
-										type="number"
-										bind:value={empty[metric.Title]}
-										step="0.3"
-										min="0"
-									/>
-								</div>
-								<!-- {/if} -->
-							{/each}
-							<p class="underline w-full">Δείκτες Ενέργειας:</p>
-							{#each m.filter((x) => x.cat == 'Δείκτες Ενέργειας') as metric}
-								<div class="form-item">
-									<p>{metric.labelgr}:</p>
-									<input
-										class="rounded-lg"
-										type="number"
-										bind:value={empty[metric.Title]}
-										step="0.3"
-										min="0"
-									/>
-								</div>
-								<!-- {/if} -->
-							{/each}
-							<p class="underline w-full">Αμινοξέα:</p>
-							{#each m.filter((x) => x.cat == 'Αμινοξέα') as metric}
-								<div class="form-item">
-									<p>{metric.labelgr}:</p>
-									<input
-										class="rounded-lg"
-										type="number"
-										bind:value={empty[metric.Title]}
-										step="0.3"
-										min="0"
-									/>
-								</div>
-								<!-- {/if} -->
-							{/each}
-						</div>
-						<button class="mt-3 btn variant-filled" on:click|preventDefault={saveChanges}
+						<FoodDetails detailed={detailed} metrics={m} bind:objectData={empty}/>
+						<button class="my-3 btn variant-filled" on:click|preventDefault={saveChanges}
 							>Αποθήκευση</button
 						>
 					</div></svelte:fragment
 				>
-			</AccordionItem></Accordion
-		>
+			</AccordionItem>
+			<!-- ... -->
+		</Accordion>
+
+		<!-- <div>{JSON.stringify(data)}</div> -->
+		
 	{/if}
 
 	<!-- <p class="btn variant-filled"></p> -->

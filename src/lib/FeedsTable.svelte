@@ -6,7 +6,14 @@
 	import { currentUser, pb } from '$lib/pocketbase';
     import type { Feed, TableState, Column } from './stores/types';
 	import { onMount } from 'svelte';
-	
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	import type { ToastSettings } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
+	let te: ToastSettings = {
+		message: 'Προσοχή! Μια τροφή δεν μπόρεσε να φορτωθεί, καθώς έχει διαγραφτεί από τον δημιουργό της.',
+		timeout: 5000,
+		background: "bg-red-500"
+	};
 	const popupClick: PopupSettings = {
 		event: 'click',
 		target: 'popupClick',
@@ -94,9 +101,14 @@ export let userFeeds:Feed[]=[];
 
 				// If not found in userFeeds, fetch from pocketbase
 				if (!userFeedItem) {
-					userFeedItem = await pb.collection('feeds').getOne(item.id, {
-						expand: 'user'
-					});
+				try {
+						userFeedItem = await pb.collection('feeds').getOne(item.id, {
+							expand: 'user'
+						});
+				} catch (error) {
+					toastStore.trigger(te);
+					console.log(error);
+				}
 				}
 				console.log(userFeedItem);
 				// If the item is found (either in userFeeds or in pocketbase), push to the result

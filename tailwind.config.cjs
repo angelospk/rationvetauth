@@ -2,7 +2,7 @@
 
 // 1. Import the Skeleton plugin
 const { skeleton } = require('@skeletonlabs/tw-plugin');
-
+import forms from '@tailwindcss/forms';
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	// 2. Opt for dark mode to be handled via the class method
@@ -18,6 +18,7 @@ module.exports = {
 		extend: {},
 	},
 	plugins: [
+		forms,
 		skeleton({
 			themes: { preset: [ "crimson" ] }
 		})
