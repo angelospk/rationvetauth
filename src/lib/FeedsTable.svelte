@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { popup } from '@skeletonlabs/skeleton';
-	import type { PopupSettings } from '@skeletonlabs/skeleton';
+	import type {PopupSettings } from '@skeletonlabs/skeleton';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
 	// import { metrics, feeds, userFeeds, type State } from '$lib/stores/data';
 	import { currentUser, pb } from '$lib/pocketbase';
     import type { Feed, TableState, Column } from './stores/types';
+	import { onMount } from 'svelte';
 	
 	const popupClick: PopupSettings = {
 		event: 'click',
@@ -125,9 +126,9 @@ export let userFeeds:Feed[]=[];
 ;
 	}
 
-$: {
+onMount(()=>{
 	readState(tableState).then((r)=>{columns=r.columns;selected=r.selected})
-}
+})
 
 	function formatNumber(number: Number) {
 		return Number.isInteger(number) ? number.toString() : number.toFixed(2);
@@ -165,7 +166,7 @@ $: {
 		</ol>
 		<div class="arrow variant-filled-secondary" />
 	</div>
-	<div class="card p-4 variant-filled-secondary z-10" data-popup="popupClick">
+	<button class="card p-4 variant-filled-secondary z-10" data-popup="popupClick" on:click|preventDefault>
 		<p class="underline">Διατροφικά στοιχεία πίνακα:</p>
 		<ul>
 			<li>ΞΟ = Ξηρά Ουσία</li>
@@ -174,15 +175,20 @@ $: {
 			<li>Ca = Ασβέστιο</li>
 			<li>P = Φωσφόρος</li>
 			<li>ΟΑΟ = Ολικές Αζωτούχες Ουσίες</li>
+			<!-- <Accordion>
+			<AccordionItem>
+				<svelte:fragment slot="summary">Περισσότερα</svelte:fragment>
+				<svelte:fragment slot="content">Θες κι άλλα ε; Ατιμούτσικο.</svelte:fragment>
+			</AccordionItem></Accordion> -->
 		</ul>
 		<p class="text-xs my-2">
 			Στη γραμμή "Σύνολο" οι μονάδες εκτός τη στήλης "Βάρος" είναι g ή kcal αντίστοιχα.
 		</p>
 		<div class="arrow variant-filled-secondary" />
-	</div>
+	</button>
 
 	<div class="relative overflow-x-auto">
-		<table class="bg-white w-full table-hover">
+		<table class="bg-white w-full table-hover" title={$currentUser?"Πίνακας Σιτηρεσίου":"Συνδέσου για να τον επεξεργαστείς και να τον αποθηκεύσεις!"}>
 			<!-- Table headers -->
 			<thead>
 				<tr class="bg-stone-400 text-gray-700">

@@ -7,7 +7,7 @@
 	import { onMount } from 'svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
-	import { pb } from '$lib/pocketbase';
+	import { currentUser, pb } from '$lib/pocketbase';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'This message will auto-hide after 3 seconds.',
@@ -45,7 +45,7 @@ let err=false;
 {:else}
 {#if $loadedTables && ration}
 	<!-- selected={selected} columns={columns} -->
-	<FeedsTable tableState={ration?.tableState} userFeeds={$userFeeds} feeds={$feeds} metrics={$metrics} />
+	<FeedsTable tableState={ration?.tableState} userFeeds={$userFeeds} feeds={$feeds} metrics={$metrics} edit={Boolean($currentUser)} />
 {:else}
 	<TablePlaceHolder />
 {/if}
