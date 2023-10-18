@@ -82,9 +82,6 @@
 	};
 </script>
 
-{#if !$currentUser}
-	Δεν είσαι συνδεδεμένος!
-{:else}
 	<div class="flex justify-between mb-4">
 		<h1 class="font-bold mb-3 mx-auto ">Οι Τροφές μου</h1>
 		<div class=""><label class="flex items-center space-x-2 card p-2 text-xs">
@@ -197,9 +194,6 @@
 		<!-- <div>{JSON.stringify(data)}</div> -->
 		
 	{/if}
-
-	<!-- <p class="btn variant-filled"></p> -->
-{/if}
 
 <style>
 	.flex-container {

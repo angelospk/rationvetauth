@@ -35,9 +35,6 @@ function totalWeight(selfeeds) {
         goto("/ration/"+id)
 	}
 </script>
-{#if !$currentUser}
-	Δεν είσαι συνδεδεμένος!
-{:else}
 <h1 class="font-bold text-2xl mb-6">Τα Σιτηρέσιά μου</h1>
 
 {#if !rations}
@@ -51,7 +48,7 @@ function totalWeight(selfeeds) {
                 <p class="text-xs text-gray-500">{ration.updated}</p>
             </div>
             <div class="mb-2">
-                <strong>Δημιουργός:</strong> {ration.producerName || ''}
+                <strong>Από:</strong> {ration.producerName || ''}
             </div>
             <div>
                 <strong>Βάρος Μείγματος:</strong> {totalWeight(ration.tableState.selfeeds)} kg
@@ -59,5 +56,4 @@ function totalWeight(selfeeds) {
         </button>
     {/each}
 </div>
-{/if}
 {/if}

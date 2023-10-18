@@ -8,6 +8,6 @@
 	<div class="flex-shrink space-x-3 justify-center ">
 		<a href="/trofes" class="my-3 btn variant-filled hover:variant-filled-secondary">Οι Τροφές μου</a>
 		<a href="/rations" class="my-3 btn variant-filled hover:variant-filled-secondary">Τα Σιτηρέσιά μου</a>
-        <a href="/rations" class="my-3 btn variant-filled hover:variant-filled-secondary">Το Προφίλ μου</a>
+        <a href="/profile" class="my-3 btn variant-filled hover:variant-filled-secondary">Το Προφίλ μου</a>
 	</div>
 {/if}

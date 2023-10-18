@@ -16,7 +16,7 @@
 
 
 </script>
-
+<h1 class="gradient-heading text-3xl">Hello. Σιτηρέσιο Εδώ.</h1>
 {#if $loadedTables}
 <!-- selected={selected} columns={columns} -->
 <FeedsTable tableState={t}  userFeeds={$userFeeds} feeds={$feeds} metrics={$metrics} />

@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { pb } from '$lib/pocketbase';
 	import { userFeeds } from '$lib/stores/data.js';
+	import SignInGoogle from '$lib/SignInGoogle.svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
@@ -12,10 +14,10 @@
 };
 	let username: String;
 	let password: String;
-	export let form;
+	// export let form;
     let text="loading";
 	let loading = false;
-
+	let comingFrom:string=$page.url.href;
 	// $: if (form?.logged) {
 	// 	console.log(form);
 	// 	pb.authStore.loadFromCookie(form.st);
@@ -38,6 +40,7 @@
 		>Επιστροφή στην Αρχική</a
 	>
 {:else} -->
+{JSON.stringify($page)}
 <div class=" dark:bg-gray-900">
 	<div class="flex justify-center h-[500px]">
 		<div
@@ -83,7 +86,7 @@
 				sort: '-created'
 									}) || [];
 									if (d.length>0) userFeeds.set(d)
-								    goto('/');
+								    goto(comingFrom);
                                 }
                                 catch(e){
                                 console.log(e)
@@ -118,7 +121,7 @@
 									>Κωδικός</label
 								>
 								<a
-									href="#"
+									href="/forgot-password"
 									class="text-sm text-gray-400 focus:text-blue-500 hover:text-blue-500 hover:underline"
 									>Ξέχασες τον κωδικό;</a
 								>
@@ -145,6 +148,8 @@
 							{#if loading}
 								<p class="mt-2 card justify-center">{text}</p>
 							{/if}
+
+							<SignInGoogle></SignInGoogle>
 						</div>
 					</form>
 

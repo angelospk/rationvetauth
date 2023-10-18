@@ -46,9 +46,9 @@ onMount(async () => {
 // $: currentUser.set(data.user)
 storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 async function logout(){
-	await pb.authStore.clear()
+	pb.authStore.clear()
 	userFeeds.set([]);
-	goto("/");
+	goto($page.url.pathname);
 }
 // console.log(data, $metrics, $feeds);
 $:{currentUser.set(pb.authStore.model||null)
@@ -102,7 +102,6 @@ const modalRegistry: Record<string, ModalComponent> = {
 					<a
 						class="btn btn-sm variant-ghost-surface hover:underline hover:variant-filled-primary"
 						href="/login"
-						rel="noreferrer"
 					>
 						Σύνδεση
 					</a>
@@ -129,7 +128,7 @@ const modalRegistry: Record<string, ModalComponent> = {
 			  <a class="text-primary-500 hover:underline" href="https://kit.svelte.dev/">SvelteKit</a> and
 			  <a class="text-primary-500 hover:underline" href="https://pocketbase.io">PocketBase</a>
 			</div>
-			<div class="hidden italic print:block">	© {new Date().getFullYear()} | Δημιουργήθηκε με χρήση της ιστοσελίδας: <a href={$page.url.toString()}>{$page.url}</a></div></div></div>
+			<div class="hidden italic print:block">	© {new Date().getFullYear()} | Δημιουργήθηκε στο: <a href={$page.url.toString()}>{$page.url.origin}</a></div></div></div>
 	  </footer>
 		  
 </svelte:fragment>
