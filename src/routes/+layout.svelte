@@ -1,10 +1,11 @@
 <script lang="ts">
 	import '../app.postcss';
-	import { TabAnchor, TabGroup, storePopup } from '@skeletonlabs/skeleton';
+	import { TabAnchor, TabGroup, storePopup, type ModalComponent } from '@skeletonlabs/skeleton';
 	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
 	import { page } from '$app/stores';
 	import { pb , currentUser} from '$lib/pocketbase';
+	import ModalExampleForm from '$lib/ModalExampleForm.svelte';
 	// import { currentUser } from '$lib/stores/user'
 	import type { PageData } from './$types'
 	import { goto } from '$app/navigation';
@@ -52,9 +53,14 @@ async function logout(){
 $:{currentUser.set(pb.authStore.model||null)
 
 }
-
+const modalRegistry: Record<string, ModalComponent> = {
+	// Set a unique modal ID, then pass the component reference
+	modalComponentOne: { ref: ModalExampleForm },
+	// modalComponentTwo: { ref: ModalComponentTwo },
+	// ...
+};
 </script>
-<Modal/>
+<Modal components={modalRegistry}/>
 <Toast />
 <!-- App Shell -->
 <AppShell>

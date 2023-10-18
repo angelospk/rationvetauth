@@ -4,7 +4,9 @@ export interface State{
     producerName: string,
     options?:Option[],
 	date?:string,
-	user?:string
+	user?:string,
+	updated?:string,
+	id?:string
 }
 export interface Feed {
 	id?: string;

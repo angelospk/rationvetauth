@@ -83,7 +83,7 @@
 				  </svg></svelte:fragment>
 				<svelte:fragment slot="summary">Αποθήκευση</svelte:fragment>
 				<svelte:fragment slot="content">
-                    <div class="card p-4">{#if !currentUser}
+                    <div class="card p-4">{#if !$currentUser}
 Συνδέσου για να μπορείς να αποθηκεύεις σιτηρέσια στο λογαριασμό σου.
                      {:else}
                     Αποθήκευσε το παραπάνω σιτηρέσιο για μελλοντική χρήση ή επεξεργασία. <br>
