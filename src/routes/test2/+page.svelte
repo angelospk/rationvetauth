@@ -3,4 +3,4 @@
 	import RationInfo from "$lib/RationInfo.svelte";
 
 </script>
-<RationInfo/>
+<RationInfo producerName="kostas"/>

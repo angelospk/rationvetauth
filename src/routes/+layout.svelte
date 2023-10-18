@@ -79,7 +79,7 @@ const modalRegistry: Record<string, ModalComponent> = {
 			<div class="print:hidden flex text-xs sm:text-base sm:space-x-10">
 				<TabGroup>
 					<TabAnchor href="/" selected={$page.url.pathname === '/'}>Αρχική</TabAnchor>
-					<TabAnchor href="/sit" selected={$page.url.pathname === '/sit'}>Επίλυση</TabAnchor>
+					<TabAnchor href="/newration" selected={$page.url.pathname === '/newration'}>Επίλυση</TabAnchor>
 					<TabAnchor href="/test" selected={$page.url.pathname === '/test'}>Τεστ</TabAnchor>
 				</TabGroup>
 				<!-- <a

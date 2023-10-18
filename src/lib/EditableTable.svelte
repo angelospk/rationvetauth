@@ -148,7 +148,7 @@ async function readState(tableState:TableState) {
     return { inputChipListUser, inputChipList, inputmlist };
 }
 
-$: { if($loadedTables){
+$: { if($loadedTables && waitingtoLoadState){
 	// console.log(loaded)
 	// let t;
 	// if (loaded){
@@ -158,10 +158,11 @@ $: { if($loadedTables){
 	// 	rationName=loaded?.rationName
 	// 	if (t) readState(t).then((r)=>{inputChipList=r.inputChipList;inputChipListUser=r.inputChipListUser; inputmlist=r.inputmlist; waitingtoLoadState=false;})}
 	// }
+	waitingtoLoadState=false;
     let t=stage2Read?.tableState
     producerName=stage2Read?.producerName;
     rationName=stage2Read?.rationName;
-    readState(t).then((r)=>{inputChipList=r.inputChipList;inputChipListUser=r.inputChipListUser; inputmlist=r.inputmlist; waitingtoLoadState=false;})}
+    readState(t).then((r)=>{inputChipList=r.inputChipList;inputChipListUser=r.inputChipListUser; inputmlist=r.inputmlist;	})}
 	
 }
 

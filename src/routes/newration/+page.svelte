@@ -3,17 +3,21 @@
 	import EditableTable from '$lib/EditableTable.svelte';
 	import { Accordion,  AccordionItem, getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 
-	
+
 	// Your Svelte component
 	import { currentUser, pb } from '$lib/pocketbase';
 	import type { State } from '$lib/stores/types';
 	import RationInfo from '$lib/RationInfo.svelte';
+	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'Δεν μπόρεσε να αποθηκευτεί το σιτηρέσιο.',
 		timeout: 3000,
 		background: "bg-green-600"
 	};
+	let record:State;
+	let loadingTable:boolean=false;
 	let currentState:State;
 	let rationName = '';
 	let producerName = $currentUser?.name||"";
@@ -34,15 +38,35 @@
 		// te.message=+"Πληροφορίες: ".concat(error)
 		te.background="bg-red-600"
 		toastStore.trigger(te);
+	}}
+// onMount(()=>{
+// 	if ($page.data.ration_id){
+// 		console.log($page.data.ration_id)
+// 	}
+// })
+async function loadration(){
+	
+	
+	try {
+		record=await pb.collection('rations').getOne($page.data.ration_id)
+	} catch (error) {
+		console.log(error)
 	}
+	loadingTable=true;
+	rationName=record?.rationName;
+	producerName=record?.producerName;
 
-	}
+}
+$:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
+	}}
+	
 </script>
 
 <div class="hide-scrollbar">
 	<div class="print:hidden">
 		<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-5">Υπολογισμός Σιτηρεσίου</h2>
 		<hr />
+		
 	</div>
 	<form id="FeedRationForm" on:submit|preventDefault>
 		<div class="heading print:hidden">
@@ -64,8 +88,12 @@
 		<div class="info" style="">
 			Σημείωση: Προσθέστε τροφές πατώντας στο "Δημόσιες Τροφές".<br />
 		</div>
-
-		<EditableTable bind:rationName={rationName} bind:producerName={producerName} bind:currentState/>
+		
+	{#if !loadingTable}
+			<EditableTable bind:rationName={rationName} bind:producerName={producerName} bind:currentState/>
+			{:else}
+			<EditableTable stage2Read={record} bind:currentState/>
+	{/if}
 		<!-- {JSON.stringify(currentState)} -->
 		<div class="heading print:hidden">
 			<h2>Βήμα 3: Αποθήκευση / Διαμοιρασμός</h2>

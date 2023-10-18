@@ -10,6 +10,7 @@
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import RationInfo from '$lib/RationInfo.svelte';
+	import { goto } from '$app/navigation';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'This message will auto-hide after 3 seconds.',
@@ -40,6 +41,11 @@
 	};
 
 	let showInfoCard = false;
+
+
+	function navigateWithId(id: string | undefined) {
+		goto(`/newration?id=${id}`);
+	}
 </script>
 
 <!-- {selc?selc:"no"} -->
@@ -61,7 +67,7 @@
 			<button class="btn variant-filled-secondary btn-sm sm:btn-base">Αποθήκευση Βαρών</button>
 			<button class="btn variant-filled-secondary btn-sm sm:btn-base"> Επεξεργασία Σιτηρεσίου</button>
 		{:else}
-		<button class="btn variant-filled-secondary btn-sm sm:btn-base"> Δημιουργία Αντίγραφου και Επεξεργασία</button>
+		<button class="btn variant-filled-secondary btn-sm sm:btn-base" on:click={navigateWithId(ration?.id)}> Δημιουργία Αντίγραφου και Επεξεργασία</button>
 		{/if}
 	</div>
 {:else}
