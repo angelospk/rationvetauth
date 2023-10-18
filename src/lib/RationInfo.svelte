@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let rationName: string = '';
-	export let producerName: string = '';
+	export let producerName: string;
 	export let currentDate = new Date().toISOString().split('T')[0];
 	export let editable: boolean = false;
 </script>
@@ -90,7 +90,6 @@
 	{/if}
 
 
+<br class="my-3">
 
 
-<style>
-</style>

@@ -236,7 +236,6 @@ onMount(()=>{
 									bind:value={feed.weight}
 									min="0"
 									step="1"
-									style="width: 3rem;"
 								/>
 						{:else}
 							<p>{feed.weight}</p>
@@ -302,7 +301,9 @@ onMount(()=>{
 
 
 <style lang="postcss">
-
+	input[type='number'] {
+		width: 4.5rem;
+	}
 	th,
 	td {
 		border: 1px dotted black;

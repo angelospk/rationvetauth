@@ -3,11 +3,11 @@
 	import EditableTable from '$lib/EditableTable.svelte';
 	import { Accordion,  AccordionItem, getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 
-	import GeneralInfo from './GeneralInfo.svelte';
 	
 	// Your Svelte component
 	import { currentUser, pb } from '$lib/pocketbase';
 	import type { State } from '$lib/stores/types';
+	import RationInfo from '$lib/RationInfo.svelte';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'Δεν μπόρεσε να αποθηκευτεί το σιτηρέσιο.',
@@ -16,7 +16,7 @@
 	};
 	let currentState:State;
 	let rationName = '';
-	let producerName = '';
+	let producerName = $currentUser?.name||"";
 	let currentDate: string;
 	async function saveRation() {
 	let ration2save={...currentState}
@@ -45,7 +45,15 @@
 		<hr />
 	</div>
 	<form id="FeedRationForm" on:submit|preventDefault>
-		<GeneralInfo bind:rationName={rationName} bind:producerName={producerName} bind:currentDate />
+		<div class="heading print:hidden">
+			<h2>Βήμα 1: Γενικές Πληροφορίες</h2>
+		</div>
+		
+		<div class="info">
+			This section is optional but recommended if outputs are emailed below.
+		</div>
+		<RationInfo bind:rationName={rationName} bind:producerName={producerName} bind:currentDate editable={true}/>
+		<!-- <GeneralInfo bind:rationName={rationName} bind:producerName={producerName} bind:currentDate /> -->
 
 		<hr />
 
