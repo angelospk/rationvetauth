@@ -6,7 +6,6 @@
 	import { page } from '$app/stores';
 	import { pb , currentUser} from '$lib/pocketbase';
 	import ModalExampleForm from '$lib/ModalExampleForm.svelte';
-	// import { currentUser } from '$lib/stores/user'
 	import type { PageData } from './$types'
 	import { goto } from '$app/navigation';
 import { initializeStores } from '@skeletonlabs/skeleton';
@@ -14,9 +13,11 @@ import {Toast} from '@skeletonlabs/skeleton';
 import {feeds, metrics, userFeeds, loadedTables} from '$lib/stores/data'
 import { onMount } from 'svelte';
 import {Modal} from '@skeletonlabs/skeleton';
+import ModalExampleList from '$lib/ModalListaTrofes.svelte'
+import ModalListaSithresia from '$lib/ModalListaSithresia.svelte';
 import { setContext } from 'svelte';
 initializeStores();
-export let data: PageData
+// export let data: PageData
 onMount(async () => {
 	pb.autoCancellation(false);
 	const res = await fetch('/api/data');
@@ -56,11 +57,13 @@ $:{currentUser.set(pb.authStore.model||null)
 const modalRegistry: Record<string, ModalComponent> = {
 	// Set a unique modal ID, then pass the component reference
 	modalComponentOne: { ref: ModalExampleForm },
+	modalTrofes: {ref: ModalExampleList},
+	modalSithresia: {ref: ModalListaSithresia}
 	// modalComponentTwo: { ref: ModalComponentTwo },
 	// ...
 };
 </script>
-<Modal components={modalRegistry}/>
+<Modal components={modalRegistry} />
 <Toast />
 <!-- App Shell -->
 <AppShell>

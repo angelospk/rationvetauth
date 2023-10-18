@@ -6,27 +6,37 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
-	import type { ToastSettings } from '@skeletonlabs/skeleton';
+	import type { ModalSettings, ToastSettings } from '@skeletonlabs/skeleton';
 	import { currentUser, pb } from '$lib/pocketbase';
+	import { getModalStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
+	const modalStore = getModalStore();
 	let te: ToastSettings = {
 		message: 'This message will auto-hide after 3 seconds.',
 		timeout: 3000
 	};
-let ration:State;
-let err=false;
+	let selc:string;
+	let ration: State;
+	let err = false;
 	onMount(async () => {
-		
+		const modal: ModalSettings = {
+			type: 'component',
+			component: 'modalTrofes',
+				response(r) {
+				console.log(r)
+				selc=r
+			},
+		};
+		modalStore.trigger(modal);
 		try {
-            ration=await pb.collection('rations').getOne($page.params.id)
-        } catch (error) {
-            te.message="Απέτυχε η φόρτωση του σιτηρεσίου!"
-            te.background="bg-red-600"
-            toastStore.trigger(te);
-            console.log(error)
-            err=true;
-        }
-
+			ration = await pb.collection('rations').getOne($page.params.id);
+		} catch (error) {
+			te.message = 'Απέτυχε η φόρτωση του σιτηρεσίου!';
+			te.background = 'bg-red-600';
+			toastStore.trigger(te);
+			console.log(error);
+			err = true;
+		}
 	});
 	// reactive states updating table
 	const t: TableState = {
@@ -36,18 +46,20 @@ let err=false;
 		],
 		extraCols: ['Starch']
 	};
-
 </script>
 
-{JSON.stringify(ration?.tableState)}
+{selc?selc:"no"}
 {#if err}
-<h1 class="card p-4 bg-error-500">Ουψ! Το σιτηρέσιο δεν μπορεί να φορτωθεί!</h1>
-{:else}
-{#if $loadedTables && ration}
+	<h1 class="card p-4 bg-error-500">Ουψ! Το σιτηρέσιο δεν μπορεί να φορτωθεί!</h1>
+{:else if $loadedTables && ration}
 	<!-- selected={selected} columns={columns} -->
-	<FeedsTable tableState={ration?.tableState} userFeeds={$userFeeds} feeds={$feeds} metrics={$metrics} edit={Boolean($currentUser)} />
+	<FeedsTable
+		tableState={ration?.tableState}
+		userFeeds={$userFeeds}
+		feeds={$feeds}
+		metrics={$metrics}
+		edit={Boolean($currentUser)}
+	/>
 {:else}
 	<TablePlaceHolder />
 {/if}
-{/if}
-
