@@ -1,7 +1,7 @@
 <script>
     export let cl="";
 </script>
-<svg version="1.0" xmlns="http://www.w3.org/2000/svg" class="w-1/12 mx-auto transition-colors duration-500 animate-bounce hover:fill-current hover:text-blue-500 "
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" class="w-1/12 mx-auto transition-colors duration-500 animate-pulse hover:fill-current hover:text-blue-500 "
  viewBox="0 0 1024 1024"
  preserveAspectRatio="xMidYMid meet">
 
