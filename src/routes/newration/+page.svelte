@@ -17,7 +17,7 @@
 		background: "bg-green-600"
 	};
 	let record:State;
-	let loadingTable:boolean=false;
+	let loadedTable:boolean=false;
 	let currentState:State;
 	let rationName = '';
 	let producerName = $currentUser?.name||"";
@@ -52,7 +52,7 @@ async function loadration(){
 	} catch (error) {
 		console.log(error)
 	}
-	loadingTable=true;
+	loadedTable=true;
 	rationName=record?.rationName;
 	producerName=record?.producerName;
 
@@ -89,7 +89,7 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 			Σημείωση: Προσθέστε τροφές πατώντας στο "Δημόσιες Τροφές".<br />
 		</div>
 		
-	{#if !loadingTable}
+	{#if !loadedTable}
 			<EditableTable bind:rationName={rationName} bind:producerName={producerName} bind:currentState/>
 			{:else}
 			<EditableTable stage2Read={record} bind:currentState/>

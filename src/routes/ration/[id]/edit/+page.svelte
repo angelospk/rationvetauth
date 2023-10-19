@@ -11,6 +11,7 @@
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import RationInfo from '$lib/RationInfo.svelte';
 	import { goto } from '$app/navigation';
+	import LoadingCircles from '$lib/Loading Circles.svelte';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'This message will auto-hide after 3 seconds.',
@@ -63,5 +64,6 @@
 		{/if}
 	</div>
 {:else}
-	<TablePlaceHolder />
+<LoadingCircles/>	
+<TablePlaceHolder />
 {/if}

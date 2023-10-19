@@ -5,29 +5,29 @@ import { pb } from '$lib/pocketbase'
   
 
 
-export const load = ({ params, url }) => {
-	return {
-		comingFrom:url.href
-	};
-};
 export const actions: Actions = {
-  login: async ({ locals, request }) => {
+  register: async ({ locals, request }) => {
+    console.log(request)
     const data = Object.fromEntries(await request.formData()) as {
       email: string
       password: string
-
+      passwordConfim:string
     }
+    console.log(data)
+    let res;
     try {
         // console.log(locals)
-      await pb
+      res=await pb
         .collection('users')
-        .authWithPassword(data.email, data.password)
+        .listAuthMethods()
     } catch (e) {
       console.error(e)
       throw e
     }
+    console.log(res);
     // console.log(pb.authStore.exportToCookie())
-    return {logged:true, st:pb.authStore.exportToCookie()}
-    throw redirect(303, '/')
+    // return {logged:true, st:pb.authStore.exportToCookie()}
+    return {logged:true, data:data}
+    // throw redirect(303, '/')
   },
 }

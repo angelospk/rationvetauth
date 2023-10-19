@@ -103,15 +103,15 @@
 </script>
 
 <div class="my-3 flex justify-between space-x-1 md:space-x-5">
-	<button class="btn variant-filled w-1/3" on:click|preventDefault={feedAddAppear}
+	<button class="btn bg-secondary-active-token w-1/3 hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:duration-300 duration-300 " on:click|preventDefault={feedAddAppear}
 		>Δημόσιες Τροφές</button
 	>
 	{#if currentUser}
-		<button class="btn variant-filled w-1/3" on:click|preventDefault={userFeedsAppear}
+		<button class="btn bg-secondary-active-token w-1/3 hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:duration-300 duration-300" on:click|preventDefault={userFeedsAppear}
 			>Τροφές Χρήστη</button
 		>
 	{:else}
-		<button class="btn variant-filled w-1/3" on:click|preventDefault use:popup={loginClick}
+		<button class="btn bg-gray-400 w-1/3" on:click|preventDefault use:popup={loginClick}
 			>Τροφές Χρήστη</button
 		>
 
@@ -120,7 +120,7 @@
 			Συνδέσου για να αποθηκεύσεις και να χρησιμοποιήσεις δικές σου τροφες.
 		</div>
 	{/if}
-	<button class="btn variant-filled w-1/3" on:click|preventDefault={addMetricsAppear}>
+	<button class="btn bg-secondary-active-token w-1/3 hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:duration-300 duration-300" on:click|preventDefault={addMetricsAppear}>
 		Αλλαγή Στηλών</button
 	>
 </div>

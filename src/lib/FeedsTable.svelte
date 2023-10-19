@@ -72,15 +72,15 @@ export let userFeeds:Feed[]=[];
 
 		if (selected.length > 0) {
 			for (let i = 0; i < selected.length; i++) {
-				if (selected[i].weight==undefined) {
-                    selected[i].weight=0
-                }
+				// if (selected[i].weight==undefined) {
+                //     selected[i].weight=0
+                // }
                 sum.weight += selected[i].weight;
 
 				for (let m in sum) {
 					if (m != 'weight') {
 						if (selected[i].hasOwnProperty(m)) {
-							sum[m] += selected[i].weight * selected[i][m];
+							sum[m] += selected[i].weight?selected[i].weight*selected[i][m]:0;
 						} else {
 							// console.log(selected[i], m);
 						}
@@ -151,12 +151,12 @@ onMount(()=>{
 
 	<div class="flex space-x-5 md:space-x-10 justify-center print:hidden">
 		<button
-			class="btn-sm my-3 variant-ghost-secondary hover:scale-110"
+			class="btn-sm my-3 variant-ghost-secondary hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:rounded-xl hover:duration-1000 duration-1000 "
 			on:click|preventDefault
 			use:popup={popupClick}>Επεξήγηση Πίνακα</button
 		>
 		<button
-			class="btn-sm my-3 variant-ghost-secondary hover:scale-110"
+			class="btn-sm my-3 variant-ghost-secondary hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:rounded-xl hover:duration-1000 duration-1000 "
 			on:click|preventDefault
 			use:popup={optionsClick}>Επιλογές Πίνακα</button
 		>
@@ -234,8 +234,8 @@ onMount(()=>{
 							<input
 									type="number"
 									bind:value={feed.weight}
-									min="0"
 									step="1"
+									min="0"
 								/>
 						{:else}
 							<p>{feed.weight}</p>

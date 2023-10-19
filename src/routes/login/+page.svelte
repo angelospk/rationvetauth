@@ -7,6 +7,9 @@
 	import SignInGoogle from '$lib/SignInGoogle.svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
+	import LoadingCircles from '$lib/Loading Circles.svelte';
+	import type { PageData } from './$types';
+	import SignInFacebook from '$lib/SignInFacebook.svelte';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 	message: 'This message will auto-hide after 3 seconds.',
@@ -14,7 +17,7 @@
 };
 	let username: String;
 	let password: String;
-	// export let form;
+	export let data:PageData
     let text="loading";
 	let loading = false;
 	let comingFrom:string=$page.url.href;
@@ -81,16 +84,24 @@
 									// console.log(form);
 									pb.authStore.loadFromCookie(result.data.st);
 									te.message="Επιτυχής είσοδος!"
+									te.background="bg-green-600"
 									toastStore.trigger(te)
 									let d=await pb.collection('feeds').getFullList({
 				sort: '-created'
 									}) || [];
 									if (d.length>0) userFeeds.set(d)
-								    goto(comingFrom);
+								    try {
+										window.history.back();
+									} catch (error) {
+										console.log(error)
+										goto("/");
+									}
+									
                                 }
                                 catch(e){
                                 console.log(e)
                                 text="Δεν μπόρεσε να πραγματοποιηθεί είσοδος."
+								te.background="bg-red-500"
 								te.message=text
 								toastStore.trigger(te);
                                 // loading=true
@@ -132,34 +143,41 @@
 								bind:value={password}
 								name="password"
 								id="password"
-								placeholder="Your Password"
+								placeholder="Κωδικός"
 								class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
 							/>
 						</div>
 
 						<div class="mt-6">
 							<!-- <button on:click={login} -->
+								{#if loading}
+							<LoadingCircles/>
+							{:else}
 							<button
 								class="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
 							>
 								Είσοδος
 							</button>
-
-							{#if loading}
-								<p class="mt-2 card justify-center">{text}</p>
 							{/if}
-
-							<SignInGoogle></SignInGoogle>
+							
+						
+							
+							<hr class="my-6" />
+							<p class="mt-6 text-sm text-center text-gray-400">
+								Δεν έχεις λογαριασμό; <a
+									href="/register"
+									class="text-blue-500 focus:outline-none focus:underline hover:underline"
+									>Κάνε εγγραφή</a
+								>
+							</p>
+							<p class="my-3">ή</p>
+							<div class="flex space-x-5"><SignInGoogle text={"Συνδέσου με"}></SignInGoogle>
+								<SignInFacebook text={"Συνδέσου με"}/></div>
+							
 						</div>
 					</form>
 
-					<p class="mt-6 text-sm text-center text-gray-400">
-						Δεν έχεις λογαριασμό; <a
-							href="/register"
-							class="text-blue-500 focus:outline-none focus:underline hover:underline"
-							>Κάνε εγγραφή</a
-						>.
-					</p>
+				
 				</div>
 			</div>
 		</div>

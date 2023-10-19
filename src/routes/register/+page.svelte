@@ -2,17 +2,24 @@
   import SignInGoogle from '../../lib/SignInGoogle.svelte';
 
 	import { currentUser, pb } from '$lib/pocketbase';
+	import SignInFacebook from '$lib/SignInFacebook.svelte';
+	import { enhance } from '$app/forms';
+	import LoadingCircles from '$lib/Loading Circles.svelte';
+
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	import type { ToastSettings } from '@skeletonlabs/skeleton';
+	import { goto } from '$app/navigation';
+	import { userFeeds } from '$lib/stores/data';
+	const toastStore = getToastStore();
+	let te: ToastSettings = {
+	message: 'This message will auto-hide after 3 seconds.',
+	timeout: 3000
+};
 	let username: String;
 	let password: String;
-	async function loginWithGoogle() {
-		// Replace this URL with the endpoint provided by Pocketbase for initiating Google OAuth.
-		const authData = await pb.collection('users').authWithOAuth2({ provider: 'google' });
-
-		// after the above you can also access the auth data from the authStore
-		console.log(pb.authStore.isValid);
-		console.log(pb.authStore.token);
-		console.log(pb.authStore.model?.id);
-	}
+	let loading = false;
+	let passwordConfirm:string;
+	let text:string;
 </script>
 
 {#if $currentUser}
@@ -30,7 +37,39 @@
 			</div>
 
 			<div class="mt-8">
-				<form>
+				<form method="POST"
+				action="?/register"
+				use:enhance={({ formElement, formData, action, cancel }) => {
+					loading = true;
+					// text="loading..."
+					return async ({ result }) => {
+						// `result` is an `ActionResult` object
+						loading = false;
+						console.log(result);
+						try{
+							// console.log(form);
+							pb.authStore.loadFromCookie(result.data.st);
+							te.message="Επιτυχής εγγραφή!"
+							te.background="bg-green-600"
+							toastStore.trigger(te)
+							let d=await pb.collection('feeds').getFullList({
+		sort: '-created'
+							}) || [];
+							if (d.length>0) userFeeds.set(d)
+							goto("/");
+							
+						}
+						catch(e){
+						console.log(e)
+						text="Δεν μπόρεσε να πραγματοποιηθεί εγγραφή."
+						te.background="bg-red-500"
+						te.message=text
+						toastStore.trigger(te);
+						// loading=true
+						}
+						
+					};
+				}}>
 					<div>
 						<label for="email" class="block mb-2 text-sm text-gray-600 dark:text-gray-200 text-left"
 							>Email</label
@@ -41,6 +80,7 @@
 							name="email"
 							id="email"
 							placeholder="example@example.com"
+							autocomplete="email"
 							class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
 						/>
 					</div>
@@ -55,21 +95,40 @@
 							bind:value={password}
 							name="password"
 							id="password"
-							placeholder="Your Password"
+							placeholder="Κωδικός"
 							class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
 						/>
 					</div>
+					<div class="mt-3">
 
+						<input
+							type="password"
+							bind:value={passwordConfirm}
+							name="passwordConfirm"
+							id="passwordConfirm"
+							placeholder="Επαλήθευση κωδικού"
+							class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+						/>
+					</div>
+					
 					<div class="mt-6">
+						{#if !loading}
 						<button
 							class="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-400 rounded-md hover:bg-blue-500 focus:outline-none focus:bg-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
 						>
 							Εγγραφή
 						</button>
+						{:else}
+						<LoadingCircles/>
+						{/if}
 					</div>
-					<SignInGoogle></SignInGoogle>
+					
+				
+					<p class="my-3">ή</p>
+					<div class="flex space-x-5"><SignInGoogle text={"Κάνε έγγραφή με"}></SignInGoogle>
+						<SignInFacebook text={"Κάνε εγγραφή με"}/></div>
 				</form>
-
+				<hr class="my-6" />
 				<p class="mt-6 text-sm text-center text-gray-400">
 					Έχεις λογαριασμό; <a
 						href="/login"

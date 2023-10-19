@@ -15,6 +15,7 @@
 	import { onMount } from 'svelte';
 	import type { Feed } from '$lib/stores/types';
 	import FeedDetails from '$lib/FeedDetails.svelte';
+	import LoadingCircles from '$lib/Loading Circles.svelte';
 	// writable;
 	// let records = writable([]);
 	const modalStore = getModalStore();
@@ -91,7 +92,7 @@
 		
 	</div>
 	{#if !records}
-		<p>loading data</p>
+	<LoadingCircles/>
 	{:else}
 		<Accordion>
 			{#each $records as da}

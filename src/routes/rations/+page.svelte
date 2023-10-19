@@ -6,6 +6,7 @@
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import { goto } from "$app/navigation";
+	import LoadingCircles from "$lib/Loading Circles.svelte";
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'This message will auto-hide after 3 seconds.',
@@ -38,7 +39,7 @@ function totalWeight(selfeeds) {
 <h1 class="font-bold text-2xl mb-6">Τα Σιτηρέσιά μου</h1>
 
 {#if !rations}
-	<p>Τα σιτηρέσια φορτώνουν...</p>
+<LoadingCircles/>
 {:else}
 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
     {#each rations as ration}
