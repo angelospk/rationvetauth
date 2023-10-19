@@ -1,13 +1,16 @@
 <script>
     export let cl="";
 </script>
-<svg version="1.0" xmlns="http://www.w3.org/2000/svg" class={cl}
- width="1024.000000pt" height="1024.000000pt" viewBox="0 0 1024.000000 1024.000000"
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" class="w-1/12 mx-auto transition-colors duration-500 animate-bounce hover:fill-current hover:text-blue-500 "
+ viewBox="0 0 1024 1024"
  preserveAspectRatio="xMidYMid meet">
 
 <g transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none">
-<path d="M4978 9040 c-22 -12 -48 -38 -64 -66 -24 -40 -26 -51 -20 -104 6 -52
+ >
+<path stroke="currentColor"
+stroke-linecap="round"
+stroke-linejoin="round"
+stroke-width="2" d="M4978 9040 c-22 -12 -48 -38 -64 -66 -24 -40 -26 -51 -20 -104 6 -52
 5 -59 -13 -65 -31 -10 -89 -81 -101 -124 -13 -49 0 -116 36 -177 l25 -43 -23
 -12 c-43 -23 -128 -112 -159 -166 l-31 -54 -31 21 c-61 41 -233 119 -312 141
 -93 26 -255 31 -345 10 -129 -30 -274 -96 -395 -181 -199 -138 -323 -215 -400

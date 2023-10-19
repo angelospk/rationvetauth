@@ -15,8 +15,11 @@
 	import { Modal } from '@skeletonlabs/skeleton';
 	import ModalExampleList from '$lib/ModalListaTrofes.svelte';
 	import ModalListaSithresia from '$lib/ModalListaSithresia.svelte';
+	import Logo from '$lib/Logo.svelte';
 	import { setContext } from 'svelte';
 	import type { Feed } from '$lib/stores/types';
+	import { fade } from 'svelte/transition';
+	import LoadingCircles from '$lib/Loading Circles.svelte';
 	initializeStores();
 	export let data: PageData
 
@@ -73,6 +76,7 @@
 <Modal components={modalRegistry} height="h-30" class="overflow-y-scroll" />
 <Toast />
 <!-- App Shell -->
+{#if $loadedTables}
 <AppShell>
 	<title>Διαδυκτιακή Εφαρμογή Επίλυσης Σιτηρεσιών</title>
 	<svelte:fragment slot="header">
@@ -153,3 +157,13 @@
 		</footer>
 	</svelte:fragment>
 </AppShell>
+{:else}
+<div class="mx-auto  flex-col text-center items-center justify-center" >
+<h1 class="text-4xl my-20 mx-auto"> Εφαρμογή Επίλυσης Σιτηρεσιών</h1>
+<Logo />
+<LoadingCircles/>
+<h1 class="text-xl my-20 mx-auto"> Κτηνιατρική Σχολή ΑΠΘ</h1>
+
+</div>
+
+{/if}
