@@ -2,7 +2,7 @@
 
 // 1. Import the Skeleton plugin
 const { skeleton } = require('@skeletonlabs/tw-plugin');
-import forms from '@tailwindcss/forms';
+// import forms from '@tailwindcss/forms';
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	// 2. Opt for dark mode to be handled via the class method
@@ -15,12 +15,31 @@ module.exports = {
 		)
 	],
 	theme: {
-		extend: {},
+		extend: {
+			keyframes: {
+				wiggle: {
+					'0%, 100%': { transform: 'rotate(-9deg)' },
+					'50%': { transform: 'rotate(9deg)' },
+				  },
+				  fadeInOut:{
+					"0%,100%":{
+						opacity: '1'
+					},
+					"50%": {
+						opacity: '0.5'
+					}
+				  }
+			},
+			animation: {
+				wiggle: 'wiggle 800ms ease-in-out infinite',
+				fade: 'fadeInOut 1s ease-in-out infinite'
+			  }
+		},
 	},
 	plugins: [
-		forms,
+		// forms,
 		skeleton({
-			themes: { preset: [ "crimson" ] }
+			themes: { preset: ["crimson"] }
 		})
 	]
 }

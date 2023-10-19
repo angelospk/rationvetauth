@@ -23,7 +23,7 @@
 
 	onMount(async () => {
 		try {
-			ration = await pb.collection('rations').getOne($page.params.id);
+			ration = (await pb.collection('rations').getOne($page.params.id))
 		} catch (error) {
 			te.message = 'Απέτυχε η φόρτωση του σιτηρεσίου!';
 			te.background = 'bg-red-600';
@@ -40,7 +40,7 @@
 		goto(`/newration?id=${id}`);
 	}
 </script>
-
+{JSON.stringify(ration||null)}
 <!-- {selc?selc:"no"} -->
 {#if err}
 	<h1 class="card p-4 bg-error-500">Ουψ! Το σιτηρέσιο δεν μπορεί να φορτωθεί!</h1>

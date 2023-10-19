@@ -15,3 +15,7 @@
 	</strong>
 </h1>
 {/if}
+
+<style>
+	
+</style>

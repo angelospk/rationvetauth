@@ -21,7 +21,7 @@
 	import { fade } from 'svelte/transition';
 	import LoadingCircles from '$lib/Loading Circles.svelte';
 	initializeStores();
-	export let data: PageData
+	// export let data: PageData
 
 	onMount(async () => {
 		pb.autoCancellation(false);
@@ -49,16 +49,14 @@
 
 			// console.log("added userfeeds ffrom layout", $userFeeds)
 		}
-		loadedTables.set(true);
+		setTimeout (() => {
+			loadedTables.set(true);
+		}, 100);
 	});
 	// // Set the current user from the data passed in from the server
 	// $: currentUser.set(data.user)
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
-	async function logout() {
-		pb.authStore.clear();
-		userFeeds.set([]);
-		goto($page.url.pathname);
-	}
+
 	// console.log(data, $metrics, $feeds);
 	$: {
 		currentUser.set(pb.authStore.model || null);
@@ -83,7 +81,7 @@
 		<!-- App Bar -->
 		<AppBar>
 			<svelte:fragment slot="lead">
-				<a href="/" class="text-xl"><img class=" w-[50px] h-[50px] sm:w-[80px] sm:h-[60px] overflow-y-clip" src="https://media.discordapp.net/attachments/1123335980074663936/1164377792868257812/minilogo.webp?ex=6542fe52&is=65308952&hm=2f07892f63b5c8ae0547f6e32b9367c858f877856a65a4baa9aea5fc8e45f2be&=&width=497&height=497" alt="ΣΙΤ"></a>
+				<a href="/" class="text-xl"><img class=" w-[65px] h-[65px] hover:animate-[wiggle_2s_ease-in-out_infinite] hover:scale-125" src="https://media.discordapp.net/attachments/1123335980074663936/1164590657545969784/minilogocr.webp?ex=6543c491&is=65314f91&hm=6b88ad5ea2464b4a6ba0a2c67fb3dcfa1881b8e4a06032080dd1a73d87bbfe30&=&width=530&height=487" alt="ΣΙΤ"></a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<div class="print:hidden flex text-xs sm:text-base sm:space-x-10">
@@ -96,11 +94,7 @@
 					</TabGroup>
 
 					{#if $currentUser}
-						<button
-							on:click={logout}
-							class="btn btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary"
-							>Αποσύνδεση</button
-						>
+					<a href="/profile" class="btn btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary">Προφίλ</a>
 					{:else}
 						<button
 							class="btn btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary"
@@ -131,7 +125,7 @@
 		>
 			<hr class="border-t-1 mb-2 border-primary-500 mx-auto" />
 			<div class="flex-col">
-				<div class="w-16 h-16 sm:w-24 sm:h-24 mx-auto my-1 print:h-12 print:w-12">
+				<div class="w-16 h-16 sm:w-24 sm:h-24 mx-auto my-1 print:h-12 print:w-12 hover:animate-pulse">
 					<img
 						class="rounded-full"
 						src="https://www.auth.gr/wp-content/uploads/cropped-LogoAUTHblack300ppi.jpg"
@@ -161,7 +155,7 @@
 <div class="mx-auto  flex-col text-center items-center justify-center" >
 <h1 class="text-4xl my-20 mx-auto"> Εφαρμογή Επίλυσης Σιτηρεσιών</h1>
 <Logo />
-<LoadingCircles/>
+<!-- <LoadingCircles/> -->
 <h1 class="text-xl my-20 mx-auto"> Κτηνιατρική Σχολή ΑΠΘ</h1>
 
 </div>
