@@ -83,7 +83,7 @@
 		<!-- App Bar -->
 		<AppBar>
 			<svelte:fragment slot="lead">
-				<a href="/" class="text-xl uppercase">ΣΙΤ</a>
+				<a href="/" class="text-xl"><img class=" w-[50px] h-[50px] sm:w-[80px] sm:h-[60px] overflow-y-clip" src="https://media.discordapp.net/attachments/1123335980074663936/1164377792868257812/minilogo.webp?ex=6542fe52&is=65308952&hm=2f07892f63b5c8ae0547f6e32b9367c858f877856a65a4baa9aea5fc8e45f2be&=&width=497&height=497" alt="ΣΙΤ"></a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<div class="print:hidden flex text-xs sm:text-base sm:space-x-10">
