@@ -7,7 +7,7 @@
   async function logout() {
 		pb.authStore.clear();
 		userFeeds.set([]);
-		goto($page.url.pathname);
+		goto("/");
 	}
 </script>
 
@@ -32,7 +32,7 @@
     <input type="text" id="postalCode" name="postalCode" value="{$currentUser?.postalCode||""}" />
 <br>
 
-    <button class="justify-center my-3 btn variant-outline-secondary hover:variant-filled-secondary" type="submit">Αποθήκευση</button>
+    <button class="justify-center my-3 koumpi" type="submit">Αποθήκευση</button>
   </form>
 
 </div>

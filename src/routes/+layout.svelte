@@ -22,7 +22,7 @@
 	import LoadingCircles from '$lib/Loading Circles.svelte';
 	initializeStores();
 	// export let data: PageData
-
+	
 	onMount(async () => {
 		pb.autoCancellation(false);
 		const res = await fetch('/api/data');
@@ -79,10 +79,14 @@
 	<title>Διαδυκτιακή Εφαρμογή Επίλυσης Σιτηρεσιών</title>
 	<svelte:fragment slot="header">
 		<!-- App Bar -->
-		<AppBar>
+		<AppBar padding="0" spacing="0"> 
 			<svelte:fragment slot="lead">
-				<a href="/" class="text-xl"><img class=" w-[65px] h-[65px] hover:animate-[wiggle_2s_ease-in-out_infinite] hover:scale-125" src="https://media.discordapp.net/attachments/1123335980074663936/1164590657545969784/minilogocr.webp?ex=6543c491&is=65314f91&hm=6b88ad5ea2464b4a6ba0a2c67fb3dcfa1881b8e4a06032080dd1a73d87bbfe30&=&width=530&height=487" alt="ΣΙΤ"></a>
+				<a href="/" class="text-xl"><img class="mx-1 content-center w-[65px] h-[65px] hover:animate-[wiggle_2s_ease-in-out_infinite]" src="https://media.discordapp.net/attachments/1123335980074663936/1164590657545969784/minilogocr.webp?ex=6543c491&is=65314f91&hm=6b88ad5ea2464b4a6ba0a2c67fb3dcfa1881b8e4a06032080dd1a73d87bbfe30&=&width=530&height=487" alt="ΣΙΤ"></a>
 			</svelte:fragment>
+			<!-- <svelte:fragment >
+				<div class="content-center hidden sm:{"block flex"}">
+					<a href="/" class="text-xl"><img class="absolute right-1/2 top-0  w-[65px] h-[65px] hover:animate-[wiggle_2s_ease-in-out_infinite] hover:scale-125" src="https://media.discordapp.net/attachments/1123335980074663936/1164590657545969784/minilogocr.webp?ex=6543c491&is=65314f91&hm=6b88ad5ea2464b4a6ba0a2c67fb3dcfa1881b8e4a06032080dd1a73d87bbfe30&=&width=530&height=487" alt="ΣΙΤ"></a>
+				</div></svelte:fragment> -->
 			<svelte:fragment slot="trail">
 				<div class="print:hidden flex text-xs sm:text-base sm:space-x-10">
 					<TabGroup>
@@ -97,7 +101,7 @@
 					<a href="/profile" class="btn btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary">Προφίλ</a>
 					{:else}
 						<button
-							class="btn btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary"
+							class="btn mx-1 btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary"
 							on:click={() => {
 								
 								goto('/login');

@@ -4,6 +4,7 @@
 	import type { AutocompleteOption } from '@skeletonlabs/skeleton';
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
+	import AutocompleteTest from './AutocompleteTest.svelte';
 	export let currentUser: any | null;
 //  import {certain} from './AddFoods.svelte'
 	const loginClick: PopupSettings = {

@@ -199,8 +199,8 @@ onMount(()=>{
 		<div class="arrow variant-filled-secondary" />
 	</button>
 
-	<div class="relative overflow-x-auto">
-		<table class="bg-white w-full table-hover" title={$currentUser?"Πίνακας Σιτηρεσίου":"Συνδέσου για να τον επεξεργαστείς και να τον αποθηκεύσεις!"}>
+	<div class="relative overflow-x-auto rounded-md">
+		<table class="bg-white w-full table-auto" title={$currentUser?"Πίνακας Σιτηρεσίου":"Συνδέσου για να τον επεξεργαστείς και να τον αποθηκεύσεις!"}>
 			<!-- Table headers -->
 			<thead>
 				<tr class="bg-stone-400 text-gray-700">
@@ -253,7 +253,7 @@ onMount(()=>{
 			</tbody>
 			<tfoot>
 				<tr class="bg-gray-300 text-gray-700 text-lg">
-					<td class="text-purple-500 w-min">Σύνολο</td>
+					<td class=" w-min">Σύνολο</td>
 					{#each columns as column}
 						{#if column.Title != 'Title'}
 							<td class="font-bold text-left pl-2">{formatNumber(sum[column.Title])}</td>
@@ -262,7 +262,7 @@ onMount(()=>{
 				</tr>
 				{#if tableOptions[1] && tableOptions[1].visible}
 					<tr class="bg-gray-200 text-gray-700">
-						<td class="text-purple-500 w-min text-sm">Ποσοστό</td>
+						<td class=" w-min text-sm">Ποσοστό</td>
 						<td />
 						{#each columns as column}
 							{#if column.Title != 'Title' && column.Title != 'weight'}
@@ -277,7 +277,7 @@ onMount(()=>{
 				{/if}
 				{#if tableOptions[2] && tableOptions[2].visible}
 					<tr class="bg-gray-200 text-gray-700">
-						<td class="text-purple-500 w-min text-sm">Ποσοστό / ΞΟ </td>
+						<td class=" w-min text-sm">Ποσοστό / ΞΟ </td>
 						<td />
 						{#each columns as column}
 							{#if column.Title != 'Title' && column.Title != 'weight'}

@@ -88,7 +88,7 @@
 		</div>
 <FeedDetails detailed={detailed} metrics={metrics} bind:objectData={objectData} />
 	</div>
-	<button class="mt-3 btn variant-filled" on:click|preventDefault={saveChanges}>Αποθήκευση</button>
+	<button class="mt-3 koumpi" on:click|preventDefault={saveChanges}>Αποθήκευση</button>
 </div>
 
 <style>

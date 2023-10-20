@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { pb } from '$lib/pocketbase';
+	import { currentUser, pb } from '$lib/pocketbase';
 	import { userFeeds } from '$lib/stores/data.js';
 	import SignInGoogle from '$lib/SignInGoogle.svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
@@ -17,52 +17,43 @@
 };
 	let username: String;
 	let password: String;
-	export let data:PageData
+	// export let data:PageData
     let text="loading";
 	let loading = false;
 	let comingFrom:string=$page.url.href;
-	// $: if (form?.logged) {
-	// 	console.log(form);
-	// 	pb.authStore.loadFromCookie(form.st);
-	// 	goto('/');
-	// }
-	// function logging(){
-	//     sf
-	// }
+
 	async function login() {
 		await pb.collection('users').authWithPassword(username, password);
 		goto('/');
 	}
 </script>
 
-<!-- {#if $currentUser}
+{#if $currentUser}
 	<p>Είσαι ήδη εγγεργραμμένος!</p>
 	<a
 		href="/"
 		class="my-3 btn btn-lg w-full variant-ghost-surface hover:underline hover:variant-filled-primary"
 		>Επιστροφή στην Αρχική</a
 	>
-{:else} -->
-{JSON.stringify($page)}
-<div class=" dark:bg-gray-900">
-	<div class="flex justify-center h-[500px]">
+{:else}
+<div class=" dark:bg-gray-900 flex justify-center ">
+	
 		<div
-			class="hidden bg-cover lg:block lg:w-2/3"
-			style="background-image: url(https://images.unsplash.com/photo-1616763355603-9755a640a287?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80)"
+			class="hidden bg-bottom xl:block  xl:w-1/2 shadow-md "
+			style="background-image: url(https://media.discordapp.net/attachments/1123335980074663936/1164675279248167002/banner.webp?ex=65441361&is=65319e61&hm=1a6fbd5f3421bfa106391a7c2545fab6c18baf3132f04582e27f57e34f41a222&=&width=870&height=497)"
 		>
 			<div class="flex items-center h-full px-20 bg-gray-900 bg-opacity-40">
 				<div>
-					<h2 class="text-4xl font-bold text-white">Brand</h2>
+					<h2 class="text-3xl font-bold text-white">Εφαρμογή Επίλυσης Σιτηρεσίων</h2>
 
 					<p class="max-w-xl mt-3 text-gray-300">
-						Lorem ipsum dolor sit, amet consectetur adipisicing elit. In autem ipsa, nulla
-						laboriosam dolores, repellendus perferendis libero suscipit nam temporibus molestiae
+						Με χρήση της διαδυκτιακής εφαρμογής, μπορείτε να λύνετε χειροκίνητα, είτε με χρήση δυναμικού προγραμματισμόυ τα σιτηρέσια των παραγωγικών σας ζώων, καθώς και να τα μοιράζεστε με άλλους χρήστες.
 					</p>
 				</div>
 			</div>
 		</div>
 
-		<div class="flex items-center w-full max-w-lg px-6 mx-auto lg:w-2/6">
+		<div class="flex items-center 	px-6  lg:w-1/4">
 			<div class="flex-1">
 				<div class="text-center">
 					<p class="mt-3 text-gray-500 dark:text-gray-300">Σύνδεση σε λογαριασμό</p>
@@ -181,6 +172,5 @@
 				</div>
 			</div>
 		</div>
-	</div>
 </div>
-<!-- {/if} -->
+{/if}

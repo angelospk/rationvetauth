@@ -3,6 +3,7 @@
 	import {
 		Accordion,
 		AccordionItem,
+		Avatar,
 		RadioGroup,
 		RadioItem,
 		SlideToggle,
@@ -16,6 +17,7 @@
 	import type { Feed } from '$lib/stores/types';
 	import FeedDetails from '$lib/FeedDetails.svelte';
 	import LoadingCircles from '$lib/Loading Circles.svelte';
+	import { Popover, Button } from 'flowbite-svelte';
 	// writable;
 	// let records = writable([]);
 	const modalStore = getModalStore();
@@ -155,12 +157,13 @@
 					><div class="card p-3">
 						<div class="flex-container">
 							<div class="flex justify-center w-full"> <button
-								class="btn variant-filled mt-2 "
+								class="koumpi mt-2 " id="b2"
 								on:click={() => {
 									modalStore.trigger(modal);
 								}}>Πρότυπο τροφής</button
 							>
 							<button class="sm:ml-3" on:click={()=>{empty=createEmpty()}}>
+								
 								<svg
 									class="w-6 h-6 text-red-800 dark:text-white"
 									aria-hidden="true"
@@ -177,13 +180,17 @@
 									/>
 								</svg>
 							</button></div>
-							
+							<Popover triggeredBy="#b2" class="p-2 bg-gradient-to-b from-transparent to-error-300 shadow-lg border-0 ">
+								<div class="">
+									<p class="text-black">Βάλε μια από τις γνωστές τροφές ως πρότυπο!</p>
+								</div>
+							  </Popover>
 							<div class="form-item mx-auto sm:mx-0 sm:mr-3">
 								<p>Τίτλος:</p>
 								<input class="rounded-lg ml-1" type="text" bind:value={empty.Title} />
 							</div>
 						<FeedDetails detailed={detailed} metrics={m} bind:objectData={empty}/>
-						<button class="my-3 btn variant-filled" on:click|preventDefault={saveChanges}
+						<button class="my-3 koumpi" on:click|preventDefault={saveChanges}
 							>Αποθήκευση</button
 						>
 					</div></svelte:fragment
