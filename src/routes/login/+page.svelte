@@ -12,15 +12,15 @@
 	import SignInFacebook from '$lib/SignInFacebook.svelte';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
-	message: 'This message will auto-hide after 3 seconds.',
-	timeout: 3000
-};
+		message: 'This message will auto-hide after 3 seconds.',
+		timeout: 3000
+	};
 	let username: String;
 	let password: String;
 	// export let data:PageData
-    let text="loading";
+	let text = 'loading';
 	let loading = false;
-	let comingFrom:string=$page.url.href;
+	let comingFrom: string = $page.url.href;
 
 	async function login() {
 		await pb.collection('users').authWithPassword(username, password);
@@ -36,25 +36,31 @@
 		>Επιστροφή στην Αρχική</a
 	>
 {:else}
-<div class=" dark:bg-gray-900 flex justify-center ">
-	
+	<img
+		src="https://cdn.discordapp.com/attachments/1123335980074663936/1164725023022522409/descr.avif?ex=654441b5&is=6531ccb5&hm=8c7723dabb776897b7a197d39f3dc847dcc2c2ee56bec96c7a695dc20c5bca5b&"
+		alt="logo"
+		class="w-30 ml-15 rounded-t-3xl shadow-md"
+	/>
+	<div class=" flex justify-center ">
 		<div
-			class="hidden bg-bottom xl:block  xl:w-1/2 shadow-md "
+			class="hidden bg-bottom xl:block xl:w-1/2 shadow-md rounded-bl-3xl"
 			style="background-image: url(https://media.discordapp.net/attachments/1123335980074663936/1164675279248167002/banner.webp?ex=65441361&is=65319e61&hm=1a6fbd5f3421bfa106391a7c2545fab6c18baf3132f04582e27f57e34f41a222&=&width=870&height=497)"
 		>
-			<div class="flex items-center h-full px-20 bg-gray-900 bg-opacity-40">
+			<div class="flex items-center h-full px-20 bg-gradient-to-bl from-gray-500 to-transparent bg-opacity-40">
 				<div>
 					<h2 class="text-3xl font-bold text-white">Εφαρμογή Επίλυσης Σιτηρεσίων</h2>
 
 					<p class="max-w-xl mt-3 text-gray-300">
-						Με χρήση της διαδυκτιακής εφαρμογής, μπορείτε να λύνετε χειροκίνητα, είτε με χρήση δυναμικού προγραμματισμόυ τα σιτηρέσια των παραγωγικών σας ζώων, καθώς και να τα μοιράζεστε με άλλους χρήστες.
+						Με χρήση της διαδυκτιακής εφαρμογής, μπορείτε να λύνετε χειροκίνητα, είτε με χρήση
+						δυναμικού προγραμματισμόυ τα σιτηρέσια των παραγωγικών σας ζώων, καθώς και να τα
+						μοιράζεστε με άλλους χρήστες.
 					</p>
 				</div>
 			</div>
 		</div>
 
-		<div class="flex items-center 	px-6  lg:w-1/4">
-			<div class="flex-1">
+		<div class="flex-col p-6 bg-gradient-to-br from-green-200 to-transparent rounded-br-3xl">
+
 				<div class="text-center">
 					<p class="mt-3 text-gray-500 dark:text-gray-300">Σύνδεση σε λογαριασμό</p>
 				</div>
@@ -62,42 +68,39 @@
 				<div class="mt-8">
 					<form
 						method="POST"
-						
 						action="?/login"
 						use:enhance={({ formElement, formData, action, cancel }) => {
 							loading = true;
-                            text="loading..."
+							text = 'loading...';
 							return async ({ result }) => {
 								// `result` is an `ActionResult` object
 								loading = false;
 								console.log(result);
-								try{
+								try {
 									// console.log(form);
 									pb.authStore.loadFromCookie(result.data.st);
-									te.message="Επιτυχής είσοδος!"
-									te.background="bg-green-600"
-									toastStore.trigger(te)
-									let d=await pb.collection('feeds').getFullList({
-				sort: '-created'
-									}) || [];
-									if (d.length>0) userFeeds.set(d)
-								    try {
+									te.message = 'Επιτυχής είσοδος!';
+									te.background = 'bg-green-600';
+									toastStore.trigger(te);
+									let d =
+										(await pb.collection('feeds').getFullList({
+											sort: '-created'
+										})) || [];
+									if (d.length > 0) userFeeds.set(d);
+									try {
 										window.history.back();
 									} catch (error) {
-										console.log(error)
-										goto("/");
+										console.log(error);
+										goto('/');
 									}
-									
-                                }
-                                catch(e){
-                                console.log(e)
-                                text="Δεν μπόρεσε να πραγματοποιηθεί είσοδος."
-								te.background="bg-red-500"
-								te.message=text
-								toastStore.trigger(te);
-                                // loading=true
-                                }
-								
+								} catch (e) {
+									console.log(e);
+									text = 'Δεν μπόρεσε να πραγματοποιηθεί είσοδος.';
+									te.background = 'bg-red-500';
+									te.message = text;
+									toastStore.trigger(te);
+									// loading=true
+								}
 							};
 						}}
 					>
@@ -141,18 +144,16 @@
 
 						<div class="mt-6">
 							<!-- <button on:click={login} -->
-								{#if loading}
-							<LoadingCircles/>
+							{#if loading}
+								<LoadingCircles />
 							{:else}
-							<button
-								class="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
-							>
-								Είσοδος
-							</button>
+								<button
+									class="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+								>
+									Είσοδος
+								</button>
 							{/if}
-							
-						
-							
+
 							<hr class="my-6" />
 							<p class="mt-6 text-sm text-center text-gray-400">
 								Δεν έχεις λογαριασμό; <a
@@ -162,15 +163,13 @@
 								>
 							</p>
 							<p class="my-3">ή</p>
-							<div class="flex space-x-5"><SignInGoogle text={"Συνδέσου με"}></SignInGoogle>
-								<SignInFacebook text={"Συνδέσου με"}/></div>
-							
+							<div class="flex space-x-5">
+								<SignInGoogle text={'Συνδέσου με'} />
+								<SignInFacebook text={'Συνδέσου με'} />
+							</div>
 						</div>
 					</form>
-
-				
 				</div>
-			</div>
 		</div>
-</div>
+	</div>
 {/if}

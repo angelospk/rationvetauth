@@ -100,16 +100,11 @@
 					{#if $currentUser}
 					<a href="/profile" class="btn btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary">Προφίλ</a>
 					{:else}
-						<button
-							class="btn mx-1 btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary"
-							on:click={() => {
-								
-								goto('/login');
-								
-							}}
+						<a
+							class="btn mx-1 btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary" href="/login"
 						>
 							Σύνδεση
-						</button>
+				</a>
 					{/if}
 				</div>
 			</svelte:fragment>

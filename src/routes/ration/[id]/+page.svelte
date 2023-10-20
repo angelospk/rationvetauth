@@ -62,7 +62,7 @@
 	<div class="flex justify-center space-x-1 sm:space-x-5 text-xs sm:text-base">
 		{#if $currentUser?.id==ration?.user}
 			
-			<button class="koumpi btn-sm sm:btn-base" on:click={editRation(ration?.id)}> Επεξεργασία Σιτηρεσίου</button>
+			<a class="koumpi btn-sm sm:btn-base" href={"/ration/"+ration?.id+"/edit"}> Επεξεργασία Σιτηρεσίου</a>
 
 			<button class="koumpi" on:click={print}><div class="flex space-x-2 mr-2"><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
 				<path d="M5 20h10a1 1 0 0 0 1-1v-5H4v5a1 1 0 0 0 1 1Z"/>
@@ -71,7 +71,7 @@
 				<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 18a.969.969 0 0 0 .933 1h12.134A.97.97 0 0 0 15 18M1 7V5.828a2 2 0 0 1 .586-1.414l2.828-2.828A2 2 0 0 1 5.828 1h8.239A.97.97 0 0 1 15 2v5M6 1v4a1 1 0 0 1-1 1H1m0 9v-5h1.5a1.5 1.5 0 1 1 0 3H1m12 2v-5h2m-2 3h2m-8-3v5h1.375A1.626 1.626 0 0 0 10 13.375v-1.75A1.626 1.626 0 0 0 8.375 10H7Z"/>
 			  </svg></div> Εκτύπωση</button>
 		{:else}
-		<button class="koumpi btn-sm sm:btn-base" on:click={navigateWithId(ration?.id)}> Δημιουργία Αντίγραφου και Επεξεργασία</button>
+		<a class="koumpi btn-sm sm:btn-base" href={"/newration?id=".concat(ration?.id)}> Δημιουργία Αντίγραφου και Επεξεργασία</a>
 		{/if}
 	</div>
 {:else}
