@@ -75,7 +75,7 @@
 <Toast />
 <!-- App Shell -->
 {#if $loadedTables}
-<AppShell regionPage="min-h-[90vh]">
+<AppShell regionPage="min-h-[93vh] print:min-h-0">
 	<title>Διαδυκτιακή Εφαρμογή Επίλυσης Σιτηρεσιών</title>
 	<svelte:fragment slot="header">
 		<!-- App Bar -->
@@ -88,7 +88,7 @@
 					<a href="/" class="text-xl"><img class="absolute right-1/2 top-0  w-[65px] h-[65px] hover:animate-[wiggle_2s_ease-in-out_infinite] hover:scale-125" src="https://media.discordapp.net/attachments/1123335980074663936/1164590657545969784/minilogocr.webp?ex=6543c491&is=65314f91&hm=6b88ad5ea2464b4a6ba0a2c67fb3dcfa1881b8e4a06032080dd1a73d87bbfe30&=&width=530&height=487" alt="ΣΙΤ"></a>
 				</div></svelte:fragment> -->
 			<svelte:fragment slot="trail">
-				<div class="print:hidden flex text-xs sm:text-base sm:space-x-10">
+				<div class="print:hidden flex text-xs sm:text-base sm:space-x-10 sm:pr-2">
 					<TabGroup>
 						<TabAnchor href="/" selected={$page.url.pathname === '/'}>Αρχική</TabAnchor>
 						<TabAnchor href="/newration" selected={$page.url.pathname === '/newration'}
@@ -98,10 +98,10 @@
 					</TabGroup>
 
 					{#if $currentUser}
-					<a href="/profile" class="btn mx-1 btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary">Προφίλ</a>
+					<button class=""><a href="/profile" class="btn btn-sm mx-0 sm:mx-1 variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary">Προφίλ</a></button>
 					{:else}
 						<a
-							class="btn mx-1 btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary" href="/login"
+							class="btn sm:mx-1 btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary" href="/login"
 						>
 							Σύνδεση
 				</a>

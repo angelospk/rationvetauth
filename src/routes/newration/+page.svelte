@@ -149,11 +149,11 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 					<path d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z"/>
 				  </svg></svelte:fragment>
 				<svelte:fragment slot="summary" ><p class={$currentUser?"":"line-through"}>Αποστολή σε E-mail</p></svelte:fragment>
-				<svelte:fragment slot="content"><div class="flex flex-col"><p>Μοιράσου ή στείλε σε κάποιον το σιτηρέσιο μέσω ηλεκτρονικού ταχυδρομείου.</p>
+				<svelte:fragment slot="content"><div class="flex flex-col card p-4"><p>Μοιράσου ή στείλε σε κάποιον το σιτηρέσιο μέσω ηλεκτρονικού ταχυδρομείου.</p>
 					<form action="?/sendemail" method="POST" use:enhance={()=>{return async(r)=>{
 						console.log(r);
 					}}} >
-						<input class="w-1/3 bg-gray-300 bg-opacity-60 rounded-lg shadow-md h-10 text-xs sm:text-base" type="email" name="email" id="send" placeholder="someone@email.com" bind:value={send2Email}>
+						<input class="w-1/2 bg-gray-500 bg-opacity-20 rounded-lg shadow-md h-10 text-xs sm:text-base" type="email" name="email" id="send" placeholder="someone@email.com" bind:value={send2Email}>
 						<button type="submit" class="koumpi ml-3">Αποστολή</button>
 					</form>
 				</div> </svelte:fragment>
