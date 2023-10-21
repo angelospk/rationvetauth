@@ -10,6 +10,7 @@
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
 	import { userFeeds } from '$lib/stores/data';
+	import Error from '../+error.svelte';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 	message: 'This message will auto-hide after 3 seconds.',
@@ -20,6 +21,7 @@
 	let loading = false;
 	let passwordConfirm:string;
 	let text:string;
+
 </script>
 
 {#if $currentUser}
@@ -48,20 +50,23 @@
 						console.log(result);
 						try{
 							// console.log(form);
-							pb.authStore.loadFromCookie(result.data.st);
+							// pb.authStore.loadFromCookie(result.data.st);
 							te.message="Επιτυχής εγγραφή!"
 							te.background="bg-green-600"
 							toastStore.trigger(te)
-							let d=await pb.collection('feeds').getFullList({
-		sort: '-created'
-							}) || [];
-							if (d.length>0) userFeeds.set(d)
-							goto("/");
+							te.background="bg-blue-600"
+							te.message="Συνδέσου αφού επιβεβαιώσεις το email σου!"
+							toastStore.trigger(te);
+		// 					let d=await pb.collection('feeds').getFullList({
+		// sort: '-created'
+		// 					}) || [];
+		// 					if (d.length>0) userFeeds.set(d)
+							goto("/login");
 							
 						}
 						catch(e){
 						console.log(e)
-						text="Δεν μπόρεσε να πραγματοποιηθεί εγγραφή."
+						text="Δεν μπόρεσε να πραγματοποιηθεί εγγραφή.".concat(e)
 						te.background="bg-red-500"
 						te.message=text
 						toastStore.trigger(te);
@@ -81,6 +86,7 @@
 							id="email"
 							placeholder="example@example.com"
 							autocomplete="email"
+							required={true}
 							class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
 						/>
 					</div>
@@ -96,6 +102,7 @@
 							name="password"
 							id="password"
 							placeholder="Κωδικός"
+							required={true}
 							class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
 						/>
 					</div>
@@ -107,6 +114,7 @@
 							name="passwordConfirm"
 							id="passwordConfirm"
 							placeholder="Επαλήθευση κωδικού"
+							required={true}
 							class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
 						/>
 					</div>

@@ -44,10 +44,10 @@
 
 </div>
     
-	<button type="button" class="btn my-6 bg-gradient-to-br variant-gradient-tertiary-primary">
+	<a type="button" href="/profile/changepass" class="btn my-6 bg-gradient-to-br variant-gradient-tertiary-primary">
 		<!-- <span>(icon)</span> -->
-		<span>Αλλαγή κωδικού</span>
-	</button>
+		<p>Αλλαγή κωδικού</p>
+  </a>
 
   <button
 							on:click={logout}

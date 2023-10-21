@@ -2,16 +2,17 @@
 import { redirect } from '@sveltejs/kit'
 import type { Actions } from './$types'
 import { pb } from '$lib/pocketbase'
+import { error } from 'console';
   
 
 
-export const load = ({ params, url }) => {
+export const load = ({  url }) => {
 	return {
 		comingFrom:url.href
 	};
 };
 export const actions: Actions = {
-  login: async ({ locals, request }) => {
+  login: async ({  request }) => {
     const data = Object.fromEntries(await request.formData()) as {
       email: string
       password: string
@@ -24,10 +25,12 @@ export const actions: Actions = {
         .authWithPassword(data.email, data.password)
     } catch (e) {
       console.error(e)
-      throw e
+      throw error (e)
     }
+    if (pb.authStore.model && pb.authStore.model?.verified){return {verified:true, st:pb.authStore.exportToCookie()}}
+    else {return {verified: false, email:data.email}}
     // console.log(pb.authStore.exportToCookie())
-    return {logged:true, st:pb.authStore.exportToCookie()}
+    
     throw redirect(303, '/')
   },
 }

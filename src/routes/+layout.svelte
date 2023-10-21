@@ -79,7 +79,7 @@
 	<title>Διαδυκτιακή Εφαρμογή Επίλυσης Σιτηρεσιών</title>
 	<svelte:fragment slot="header">
 		<!-- App Bar -->
-		<AppBar padding="0" spacing="0"> 
+		<AppBar padding="0" spacing="0" background="transparent"> 
 			<svelte:fragment slot="lead">
 				<a href="/" class="text-xl"><img class="mx-1 content-center w-[65px] h-[65px] hover:animate-[wiggle_2s_ease-in-out_infinite]" src="https://media.discordapp.net/attachments/1123335980074663936/1164590657545969784/minilogocr.webp?ex=6543c491&is=65314f91&hm=6b88ad5ea2464b4a6ba0a2c67fb3dcfa1881b8e4a06032080dd1a73d87bbfe30&=&width=530&height=487" alt="ΣΙΤ"></a>
 			</svelte:fragment>
@@ -109,6 +109,14 @@
 				</div>
 			</svelte:fragment>
 		</AppBar>
+		{#if $currentUser.name==""}
+		<!-- <div class="w-fit text-center mx-auto"><div class=" w-full bg-gradient-to-t from-transparent to-red-500 text-center rounded-t-xl "><div class="w-full p-2"></div></div>
+		<div class="flex"><div class="px-5 bg-gradient-to-l from-transparent to-red-500"></div>
+		<span class="ml-2 mr-2">Άλλαξε το όνομα και τα στοιχεία επικοινωνίας σου <a class="underline" href="/profile">στο Προφίλ σου</a>. </span><div class="px-5 bg-gradient-to-r from-transparent to-red-500"></div></div>
+		<div class=" p-2 w-full bg-gradient-to-t from-red-500 to-transparent rounded-b-xl"></div></div> -->
+		<div class="w-fit text-center mx-auto bg-red-500 bg-opacity-50 rounded-xl shadow-xl mt-2 text-lg print:hidden"><span class="ml-2 mr-2">Άλλαξε το όνομα και τα στοιχεία επικοινωνίας σου <a class="underline" href="/profile">στο Προφίλ σου</a>. </span></div>
+		{/if}
+		
 	</svelte:fragment>
 	<!-- Page Route Content -->
 	<div
@@ -120,7 +128,7 @@
 	</div>
 	<svelte:fragment slot="pageFooter">
 		<footer
-			class="p-4 text-center text-secondary-700 dark:bg-secondary-700 dark:text-secondary-200 print:text-xs print:text-black"
+			class="p-4  text-center text-secondary-700 dark:bg-secondary-700 dark:text-secondary-200 print:text-xs print:text-black"
 		>
 			<hr class="border-t-1 mb-2 border-primary-500 mx-auto" />
 			<div class="flex-col">
@@ -160,3 +168,17 @@
 </div>
 
 {/if}
+
+<style>
+	body {
+    background-color: #c2ff99;
+    background-image:
+      radial-gradient(at 75% 98%, hsla(291,78%,60%,1) 0px, transparent 50%),
+      radial-gradient(at 22% 42%, hsla(28,65%,75%,1) 0px, transparent 50%),
+      radial-gradient(at 96% 67%, hsla(332,61%,75%,1) 0px, transparent 50%),
+      radial-gradient(at 13% 52%, hsla(341,78%,77%,1) 0px, transparent 50%),
+      radial-gradient(at 83% 64%, hsla(255,89%,74%,1) 0px, transparent 50%),
+      radial-gradient(at 16% 88%, hsla(238,83%,62%,1) 0px, transparent 50%),
+      radial-gradient(at 66% 88%, hsla(133,80%,60%,1) 0px, transparent 50%);
+  }
+</style>

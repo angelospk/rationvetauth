@@ -13,11 +13,19 @@
 		message: 'This message will auto-hide after 3 seconds.',
 		timeout: 3000
 	};
+	let formData:FormData;
 	let username: String;
 	let password: String;
 	// export let data:PageData
 	let text = 'loading';
 	let loading = false;
+	let showVerification=false;
+	let emailVerif=""
+	async function sendVerif(){
+	await pb.collection('users').requestVerification(emailVerif);
+	te.message="Στάλθηκε email επιβεβαίωσης. Δες σε λίγο τα εισερχόμενά σου"
+	toastStore.trigger(te)
+	}
     export let cl:string="";
 
 </script>
@@ -40,6 +48,7 @@
 								console.log(result);
 								try {
 									// console.log(form);
+									if (result.status=200 && result?.data.verified){
 									pb.authStore.loadFromCookie(result.data.st);
 									te.message = 'Επιτυχής είσοδος!';
 									te.background = 'bg-green-600';
@@ -54,6 +63,10 @@
 									} catch (error) {
 										console.log(error);
 										goto('/');
+									}}
+									else if (!result?.data.verified){
+									showVerification=true;
+									emailVerif=result?.data?.email;
 									}
 								} catch (e) {
 									console.log(e);
@@ -112,7 +125,10 @@
 									Είσοδος
 								</button>
 							{/if}
-	
+{#if showVerification}
+	<div class="card p-2 mt-4 bg-red-500 w-full flex flex-col "><p class="">Έχει σταλεί μήνυμα επιβεβαίωσης στο mail σου! Επιβεβαίωσε το email σου πριν συνδεθείς!</p>
+	<button class="koumpi text-xs sm:text-base" on:click={sendVerif}>Ζήτα ξανά επιβεβαίωση</button></div>
+{/if}
 							<hr class="my-6" />
 							<p class="mt-6 text-sm text-center text-gray-400">
 								Δεν έχεις λογαριασμό; <a

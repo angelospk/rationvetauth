@@ -10,12 +10,14 @@
 	import RationInfo from '$lib/RationInfo.svelte';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import { enhance } from '$app/forms';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'Δεν μπόρεσε να αποθηκευτεί το σιτηρέσιο.',
 		timeout: 3000,
 		background: "bg-green-600"
 	};
+	let send2Email:string;
 	let record:State;
 	let loadedTable:boolean=false;
 	let currentState:State;
@@ -148,8 +150,10 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 				  </svg></svelte:fragment>
 				<svelte:fragment slot="summary" ><p class={$currentUser?"":"line-through"}>Αποστολή σε E-mail</p></svelte:fragment>
 				<svelte:fragment slot="content"><div class="flex flex-col"><p>Μοιράσου ή στείλε σε κάποιον το σιτηρέσιο μέσω ηλεκτρονικού ταχυδρομείου.</p>
-					<form>
-						<input class="w-1/3 bg-gray-300 bg-opacity-60 rounded-lg shadow-md" type="email" name="email" id="send" placeholder="someone@email.com">
+					<form action="?/sendemail" method="POST" use:enhance={()=>{return async(r)=>{
+						console.log(r);
+					}}} >
+						<input class="w-1/3 bg-gray-300 bg-opacity-60 rounded-lg shadow-md h-10 text-xs sm:text-base" type="email" name="email" id="send" placeholder="someone@email.com" bind:value={send2Email}>
 						<button type="submit" class="koumpi ml-3">Αποστολή</button>
 					</form>
 				</div> </svelte:fragment>

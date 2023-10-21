@@ -1,5 +1,6 @@
 <script>
-  import { currentUser } from '$lib/pocketbase';
+  import { currentUser, pb } from '$lib/pocketbase';
+
 </script>
 
 <h1 class="text-xl">Αρχική Σελίδα</h1>
@@ -12,3 +13,4 @@
     <a href="/profile" class="my-2 koumpi">Το Προφίλ μου</a>
   </div>
 {/if}
+
