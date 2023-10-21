@@ -109,7 +109,7 @@
 				</div>
 			</svelte:fragment>
 		</AppBar>
-		{#if $currentUser.name==""}
+		{#if $currentUser?.name==""}
 		<!-- <div class="w-fit text-center mx-auto"><div class=" w-full bg-gradient-to-t from-transparent to-red-500 text-center rounded-t-xl "><div class="w-full p-2"></div></div>
 		<div class="flex"><div class="px-5 bg-gradient-to-l from-transparent to-red-500"></div>
 		<span class="ml-2 mr-2">Άλλαξε το όνομα και τα στοιχεία επικοινωνίας σου <a class="underline" href="/profile">στο Προφίλ σου</a>. </span><div class="px-5 bg-gradient-to-r from-transparent to-red-500"></div></div>
@@ -169,16 +169,4 @@
 
 {/if}
 
-<style>
-	body {
-    background-color: #c2ff99;
-    background-image:
-      radial-gradient(at 75% 98%, hsla(291,78%,60%,1) 0px, transparent 50%),
-      radial-gradient(at 22% 42%, hsla(28,65%,75%,1) 0px, transparent 50%),
-      radial-gradient(at 96% 67%, hsla(332,61%,75%,1) 0px, transparent 50%),
-      radial-gradient(at 13% 52%, hsla(341,78%,77%,1) 0px, transparent 50%),
-      radial-gradient(at 83% 64%, hsla(255,89%,74%,1) 0px, transparent 50%),
-      radial-gradient(at 16% 88%, hsla(238,83%,62%,1) 0px, transparent 50%),
-      radial-gradient(at 66% 88%, hsla(133,80%,60%,1) 0px, transparent 50%);
-  }
-</style>
+
