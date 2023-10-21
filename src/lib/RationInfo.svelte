@@ -7,7 +7,7 @@
 
 
 	{#if editable}
-    <div class={"flex-grid card p-4 justify-between shadow-lg space-x-2 space-y-2 bg-success-hover-token hover:cursor-text"}>
+    <div class={"flex-grid card p-4 justify-between shadow-lg max-w-3xl mx-auto space-x-2 space-y-2 bg-success-hover-token hover:cursor-text"}>
 		<input
 			class="input text-center w-full print:text-center print:justify-center"
 			title="Input (text)"

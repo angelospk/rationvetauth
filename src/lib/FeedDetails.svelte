@@ -80,8 +80,8 @@
 		align-items: center;
 	}
 
-	input[type='number'] {
+	/* input[type='number'] {
 		width: 5rem;
-	}
+	} */
 </style>
 

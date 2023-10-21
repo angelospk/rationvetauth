@@ -3,10 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root [data-theme='skeleton'] {
-    --theme-font-family-base:  sans-serif;
-    --theme-font-family-heading: sans-serif;
+	--theme-font-family-base: sans-serif;
+	--theme-font-family-heading: sans-serif;
+}
+input[type='number'] {
+	width: 3.5rem;
 }
 .gradient-heading {
 	@apply bg-clip-text text-transparent box-decoration-clone;
@@ -15,6 +17,6 @@
 	/* Color Stops */
 	@apply from-primary-500 via-tertiary-500 to-secondary-500;
 }
-.koumpi{
+.koumpi {
 	@apply btn bg-secondary-active-token hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:duration-300 duration-300 print:hidden;
 }

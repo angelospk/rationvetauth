@@ -84,10 +84,14 @@
 		}
 	};
 </script>
-
+<Popover triggeredBy="#as" class="p-1 text-xs bg-gradient-to-b from-transparent to-error-300 shadow-lg z-10  ">
+	<div class="">
+		<p class="text-black">Εμφάνιση πλήρους ονόματος ή συντομογραφίας των χημικών συστάσεων</p>
+	</div>
+  </Popover>
 	<div class="flex justify-between mb-4">
 		<h1 class="font-bold mb-3 mx-auto ">Οι Τροφές μου</h1>
-		<div class=""><label class="flex items-center space-x-2 card p-2 text-xs">
+		<div class="" id="as"><label class="flex items-center space-x-2 card p-2 text-xs">
 			<input class="checkbox" type="checkbox" bind:checked={detailed} />
 			<p>Αναλυτική Σύσταση</p>
 		</label></div>

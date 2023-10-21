@@ -98,7 +98,7 @@
 					</TabGroup>
 
 					{#if $currentUser}
-					<a href="/profile" class="btn btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary">Προφίλ</a>
+					<a href="/profile" class="btn mx-1 btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary">Προφίλ</a>
 					{:else}
 						<a
 							class="btn mx-1 btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary" href="/login"
@@ -114,7 +114,7 @@
 	<div
 		class="container h-full mx-auto md:w-full flex justify-center text-center items-center my-5 overflow-x-auto"
 	>
-		<div class="w-full md:w-4/5 lg:w-3/4 xl:w-2/3">
+		<div class="w-full md:w-4/5 ">
 			<slot />
 		</div>
 	</div>

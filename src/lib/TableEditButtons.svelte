@@ -102,7 +102,7 @@
 	// 		keywords: normalizeGreek(x.Title)
 	// 	}));
 </script>
-
+<div class="mx-auto max-w-3xl">
 <div class="my-3 flex justify-between space-x-1 md:space-x-5">
 	<button class="btn bg-secondary-active-token w-1/3 hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:duration-300 duration-300 " on:click|preventDefault={feedAddAppear}
 		>Δημόσιες Τροφές</button
@@ -187,7 +187,7 @@
 			/>
 		</div>
 	{/if}
-</div>
+</div></div>
 
 <style lang="postcss">
 
