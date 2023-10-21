@@ -75,7 +75,7 @@
 <Toast />
 <!-- App Shell -->
 {#if $loadedTables}
-<AppShell regionPage="min-h-screen">
+<AppShell regionPage="min-h-[90vh]">
 	<title>Διαδυκτιακή Εφαρμογή Επίλυσης Σιτηρεσιών</title>
 	<svelte:fragment slot="header">
 		<!-- App Bar -->
