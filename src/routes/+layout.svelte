@@ -71,11 +71,11 @@
 	};
 </script>
 
-<Modal components={modalRegistry} height="h-30" class="overflow-y-scroll" />
+<Modal components={modalRegistry} height="h-30" class="overflow-y-scroll " />
 <Toast />
 <!-- App Shell -->
 {#if $loadedTables}
-<AppShell>
+<AppShell regionPage="min-h-screen">
 	<title>Διαδυκτιακή Εφαρμογή Επίλυσης Σιτηρεσιών</title>
 	<svelte:fragment slot="header">
 		<!-- App Bar -->
@@ -159,7 +159,7 @@
 	</svelte:fragment>
 </AppShell>
 {:else}
-<div class="mx-auto  flex-col text-center items-center justify-center" >
+<div class="mx-auto h-screen  flex-col text-center items-center justify-center" >
 <h1 class="text-4xl my-20 mx-auto"> Εφαρμογή Επίλυσης Σιτηρεσιών</h1>
 <Logo />
 <!-- <LoadingCircles/> -->
