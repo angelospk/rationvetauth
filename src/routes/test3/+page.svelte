@@ -1,6 +1,25 @@
+
 <script>
 	import { Dropdown, DropdownItem } from 'flowbite-svelte';
+	import { pb } from '$lib/pocketbase';
+	import { onMount } from 'svelte';
+	import { writable } from 'svelte/store';
+	let d=writable([])
+	onMount(async()=>{
+		pb.collection("test").subscribe('*',(r)=>{
+			if (r) {
+				$d=[...$d,r]
+				// d.set([...$d,r])
+				// $d.push(r)
+			}
+			console.log(r)
+			console.log($d)
+			
+		})
+	})
 </script>
+{JSON.stringify($d)}
+{$d.length}
 
 <div class="koumpi">ase</div>
 
