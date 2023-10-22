@@ -93,7 +93,7 @@
 		>
 		<button class="koumpi" on:click={print}> Εκτύπωση</button>
 	</div>
-	<Accordion class="my-3 print:hidden">
+	<Accordion class="my-3 print:hidden text-center max-w-3xl mx-auto">
 		<AccordionItem>
 			<svelte:fragment slot="lead"
 				><svg

@@ -49,7 +49,7 @@
 		value={currentDate}
 	/></div></div></div>
 	{:else}
-    <div class={"flex-grid card p-4 justify-between shadow-lg space-x-2 space-y-2 bg-error-hover-token"}>
+    <div class={"flex-grid card p-4 justify-between shadow-lg max-w-3xl mx-auto space-x-2 space-y-2 bg-success-hover-token hover:cursor-text"}>
 		<input
 			class="input text-center w-full print:justify-center print:text-center"
 			title="Input (text)"

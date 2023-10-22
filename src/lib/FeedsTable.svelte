@@ -209,8 +209,8 @@ onMount(()=>{
 		<div class="arrow variant-filled-secondary" />
 	</button>
 
-	<div class="relative overflow-x-auto rounded-md">
-		<table class="bg-white w-full table-auto" title={$currentUser?"Πίνακας Σιτηρεσίου":"Συνδέσου για να τον επεξεργαστείς και να τον αποθηκεύσεις!"}>
+	<div class="overflow-x-auto rounded-md">
+		<table class="bg-white w-full table-row-checked" title={$currentUser?"Πίνακας Σιτηρεσίου":"Συνδέσου για να τον επεξεργαστείς και να τον αποθηκεύσεις!"}>
 			<!-- Table headers -->
 			<thead>
 				<tr class="bg-stone-400 text-gray-700">

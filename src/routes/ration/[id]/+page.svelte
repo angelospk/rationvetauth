@@ -62,7 +62,21 @@
 	<div class="flex justify-center space-x-1 sm:space-x-5 text-xs sm:text-base">
 		{#if $currentUser?.id==ration?.user}
 			
-			<a class="koumpi btn-sm sm:btn-base" href={"/ration/"+ration?.id+"/edit"}> Επεξεργασία Σιτηρεσίου</a>
+			<a class="koumpi btn-sm sm:btn-base" href={"/ration/"+ration?.id+"/edit"}><svg
+				class="w-6 h-6 text-gray-800 dark:text-white"
+				aria-hidden="true"
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 20 18"
+			>
+				<path
+					stroke="currentColor"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M4.109 17H1v-2a4 4 0 0 1 4-4h.87M10 4.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm7.95 2.55a2 2 0 0 1 0 2.829l-6.364 6.364-3.536.707.707-3.536 6.364-6.364a2 2 0 0 1 2.829 0Z"
+				/>
+			</svg> Επεξεργασία Σιτηρεσίου</a>
 
 			<button class="koumpi" on:click={print}><div class="flex space-x-2 mr-2"><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
 				<path d="M5 20h10a1 1 0 0 0 1-1v-5H4v5a1 1 0 0 0 1 1Z"/>
