@@ -82,7 +82,7 @@
 			<!-- App Bar -->
 			<AppBar padding="0" spacing="0" background="transparent">
 				<svelte:fragment slot="lead">
-					<a href="/" class="text-xl"
+					<a href="/" class="text-xl sm:hidden"
 						><img
 							class="mx-1 content-center w-[65px] h-[65px] hover:animate-[wiggle_2s_ease-in-out_infinite]"
 							src="https://media.discordapp.net/attachments/1123335980074663936/1164590657545969784/minilogocr.webp?ex=6543c491&is=65314f91&hm=6b88ad5ea2464b4a6ba0a2c67fb3dcfa1881b8e4a06032080dd1a73d87bbfe30&=&width=530&height=487"
@@ -95,7 +95,14 @@
 					<a href="/" class="text-xl"><img class="absolute right-1/2 top-0  w-[65px] h-[65px] hover:animate-[wiggle_2s_ease-in-out_infinite] hover:scale-125" src="https://media.discordapp.net/attachments/1123335980074663936/1164590657545969784/minilogocr.webp?ex=6543c491&is=65314f91&hm=6b88ad5ea2464b4a6ba0a2c67fb3dcfa1881b8e4a06032080dd1a73d87bbfe30&=&width=530&height=487" alt="ΣΙΤ"></a>
 				</div></svelte:fragment> -->
 				<svelte:fragment slot="trail">
-					<div class="print:hidden flex text-xs sm:text-base sm:space-x-10 sm:pr-2">
+					<div class="print:hidden flex justify-between text-xs sm:text-base sm:space-x-10 sm:pr-2">
+						<div><a href="/" class="text-xl absolute left-1/2  hidden: sm:block "
+						><img
+							class="mx-1 content-center w-[65px] h-[65px] hover:animate-[wiggle_2s_ease-in-out_infinite]"
+							src="https://media.discordapp.net/attachments/1123335980074663936/1164590657545969784/minilogocr.webp?ex=6543c491&is=65314f91&hm=6b88ad5ea2464b4a6ba0a2c67fb3dcfa1881b8e4a06032080dd1a73d87bbfe30&=&width=530&height=487"
+							alt="ΣΙΤ"
+						/></a
+					></div>
 						<TabGroup>
 							<TabAnchor href="/" selected={$page.url.pathname === '/'}>Αρχική</TabAnchor>
 							<TabAnchor class="" selected={$page.url.pathname.includes("newration")}
@@ -137,7 +144,7 @@
 		<span class="ml-2 mr-2">Άλλαξε το όνομα και τα στοιχεία επικοινωνίας σου <a class="underline" href="/profile">στο Προφίλ σου</a>. </span><div class="px-5 bg-gradient-to-r from-transparent to-red-500"></div></div>
 		<div class=" p-2 w-full bg-gradient-to-t from-red-500 to-transparent rounded-b-xl"></div></div> -->
 				<div
-					class="w-fit text-center mx-auto bg-red-500 bg-opacity-50 rounded-xl shadow-xl mt-1 text-lg print:hidden"
+					class="w-fit text-center  mx-auto bg-red-500 bg-opacity-50 rounded-xl shadow-xl mt-1 text-lg print:hidden"
 				>
 					<span class="ml-2 mr-2"
 						>Άλλαξε το όνομα και τα στοιχεία επικοινωνίας σου <a class="underline" href="/profile"
