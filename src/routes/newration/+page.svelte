@@ -69,7 +69,8 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 
 <div class="hide-scrollbar">
 	<div class="print:hidden">
-		<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-5">Υπολογισμός Σιτηρεσίου</h2>
+		<h2 class="text-xl md:text-3xl lg:text-4xl font-bold mb-2">Χειροκίνητος Υπολογισμός Σιτηρεσίου</h2>
+		<div class="justify-center inline-flex mb-4"><a href="/newration/linear"><div class="mx-auto rounded-full hover:underline hover:bg-gray-200 hover:bg-opacity-75 hover:ring-2 btn outline-dotted outline-1 "><p class="md:text-lg">Αυτόματη Επίλυση</p> <p class="text-xs -mb-1 ">με χρήση δυναμικού προγραμματισμού</p></div></a></div>
 		<hr />
 		
 	</div>
@@ -79,7 +80,7 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 		</div>
 		
 		<div class="info">
-			Προεραιτικό. Συμπληρώστε μόνο αν έχετε σκοπό να αποθηκεύσετε ή να αποστείλετε το σιτηρέσιο.
+			Συμπληρώστε μόνο αν έχετε σκοπό να αποθηκεύσετε ή να αποστείλετε το σιτηρέσιο.
 		</div>
 		<RationInfo bind:rationName={rationName} bind:producerName={producerName} bind:currentDate editable={true}/>
 		<!-- <GeneralInfo bind:rationName={rationName} bind:producerName={producerName} bind:currentDate /> -->
@@ -179,6 +180,9 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 			display: none;
 		}
 		.info {
+			display: none;
+		}
+		.heading{
 			display: none;
 		}
 		/* Adjust table layout for printing */

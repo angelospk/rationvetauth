@@ -11,6 +11,7 @@
 	import TablePlaceHolder from '$lib/TablePlaceHolder.svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
+	import { onMount } from 'svelte';
 	
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
@@ -19,8 +20,9 @@
 };
 	export let rationName: string="";
 	export let producerName: string="";
+	export let linear=false;
 
-	let certain = [
+	let certain=!linear?[
 		'Title',
 		'weight',
 		'DryMatter',
@@ -30,7 +32,10 @@
 		'Ash',
 		'Calcium',
 		'Phosphorus'
-	];
+	]:["Title","weight",'DryMatter',
+		'Fat',
+		'CrudeFiber',
+		'CrudeProtein'];
     export let stage2Read:State={rationName, producerName, tableState:{selfeeds:[],extraCols:[]}}
 	let selected:Feed[]=[];
 	let columns:Column[]=[];
@@ -64,11 +69,11 @@
 // }
 
 //onmount function to initialise
-// onMount(async () => {
-	
-// 	loaded=loadState()
-// 	// waitingtoLoadState=false;
-// 	});
+onMount(async () => {
+	// certain= 
+	// loaded=loadState()
+	// waitingtoLoadState=false;
+	});
 
 // 	function loadState() {
 // 		const savedState = localStorage.getItem('livestockFeedState');
@@ -190,7 +195,7 @@ $: { if($loadedTables && waitingtoLoadState){
 
 {#if $feeds.length > 0 && $metrics.length > 0}
 <!-- selected={selected} columns={columns} -->
-<FeedsTable bind:selected={selected} bind:columns={columns} userFeeds={$userFeeds} feeds={$feeds} metrics={$metrics} edit={true} />
+<FeedsTable bind:selected={selected} bind:columns={columns} userFeeds={$userFeeds} feeds={$feeds} metrics={$metrics} edit={true} linear={linear} />
 {:else}
 <TablePlaceHolder></TablePlaceHolder>
 {/if}

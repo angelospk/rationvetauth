@@ -14,6 +14,7 @@ export interface Feed {
 	weight?: number;
 	user?: string;
 	updated?: string;
+	price?:number;
 	// Add more fields as necessary
 };
 

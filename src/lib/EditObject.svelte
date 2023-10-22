@@ -61,7 +61,7 @@
 	};
 </script>
 
-<div class="card p-3">
+<div class="card p-3 bg-opacity-10">
 	<div class="flex-container">
 		<div class="form-item mx-auto flex justify-between">
 			<div class="flex w-">

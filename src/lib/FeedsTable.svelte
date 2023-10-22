@@ -24,15 +24,17 @@
 		target: 'optionsClick',
 		placement: 'top'
 	};
+	
 	let tableOptions = [
 		{ label: 'Εμφάνιση Μονάδων', visible: true },
 		{ label: 'Εμφάνιση Ποσοστού', visible: true },
 		{ label: 'Εμφάνιση Ποσοστού ανά ΞΟ', visible: false }
 	];
+	export let linear:boolean=false;
 	export let edit = false;
 	export let selected:Feed[]=[];
 	export let columns:Column[]=[];
-    let certain = [
+    let certain = linear?[
 		'Title',
 		'weight',
 		'DryMatter',
@@ -42,7 +44,10 @@
 		'Ash',
 		'Calcium',
 		'Phosphorus'
-	];
+	]:["Title","weight",'DryMatter',
+		'Fat',
+		'CrudeFiber',
+		'CrudeProtein'];
 	export let tableState:TableState={selfeeds:[], extraCols:[]}
 
 export let metrics:Column[]=[];
@@ -139,6 +144,7 @@ export let userFeeds:Feed[]=[];
 	}
 
 onMount(()=>{
+
 	readState(tableState).then((r)=>{columns=r.columns;selected=r.selected})
 })
 
@@ -208,12 +214,18 @@ onMount(()=>{
 			<!-- Table headers -->
 			<thead>
 				<tr class="bg-stone-400 text-gray-700">
+					{#if linear}
+					<th class="text-primary w-min">Τιμή</th>
+					{/if}
 					{#each columns as column}
 						<th class="text-primary w-min">{column.gr}</th>
 					{/each}
 				</tr>
 				{#if tableOptions[0] && tableOptions[0].visible}
 				<tr class="text-gray-700 bg-green-100 text-sm">
+					{#if linear}
+						<th class="w-min">€/kg</th>
+					{/if}
 					{#each columns as column}
 						{#if column.Title == 'Title'}
 							<th class="text-black-700 w-min">Μονάδες</th>
@@ -231,10 +243,21 @@ onMount(()=>{
 			<tbody>
 				{#each selected as feed, i}
 					<tr class="">
+						{#if linear}
+							<td>
+								<input
+									type="number"
+									bind:value={feed.price}
+									step="0.5"
+									min="0"
+								/>
+								<!-- <span class="w-min text-gray-500 text-sm">{}</span> -->
+							</td>
+						{/if}
 						<td>
 							<span class="w-min text-gray-500 text-sm">{feed.Title}</span>
 						</td>
-						<td>{#if edit}
+						<td>{#if edit && !linear}
 							<input
 									type="number"
 									bind:value={feed.weight}
@@ -257,7 +280,11 @@ onMount(()=>{
 			</tbody>
 			<tfoot>
 				<tr class="bg-gray-300 text-gray-700 text-lg">
+					{#if linear}
+						<td class=" w-min">0</td>
+					{/if}
 					<td class=" w-min">Σύνολο</td>
+
 					{#each columns as column}
 						{#if column.Title != 'Title'}
 							<td class="font-bold">{formatNumber(sum[column.Title])}</td>
@@ -266,6 +293,9 @@ onMount(()=>{
 				</tr>
 				{#if tableOptions[1] && tableOptions[1].visible}
 					<tr class="bg-gray-200 text-gray-700">
+						{#if linear}
+							<td class=" w-min text-sm"></td>
+						{/if}
 						<td class=" w-min text-sm">Ποσοστό</td>
 						<td />
 						{#each columns as column}
@@ -281,6 +311,9 @@ onMount(()=>{
 				{/if}
 				{#if tableOptions[2] && tableOptions[2].visible}
 					<tr class="bg-gray-200 text-gray-700">
+						{#if linear}
+							<td class=" w-min text-sm"></td>
+						{/if}
 						<td class=" w-min text-sm">Ποσοστό / ΞΟ </td>
 						<td />
 						{#each columns as column}
