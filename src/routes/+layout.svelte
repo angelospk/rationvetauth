@@ -96,7 +96,7 @@
 				</div></svelte:fragment> -->
 				<svelte:fragment slot="trail">
 					<div class="print:hidden flex justify-between text-xs sm:text-base sm:space-x-10 sm:pr-2">
-						<div><a href="/" class="text-xl absolute left-1/2  hidden: sm:block "
+						<div><a href="/" class=" hidden: sm:block "
 						><img
 							class="mx-1 content-center w-[65px] h-[65px] hover:animate-[wiggle_2s_ease-in-out_infinite]"
 							src="https://media.discordapp.net/attachments/1123335980074663936/1164590657545969784/minilogocr.webp?ex=6543c491&is=65314f91&hm=6b88ad5ea2464b4a6ba0a2c67fb3dcfa1881b8e4a06032080dd1a73d87bbfe30&=&width=530&height=487"

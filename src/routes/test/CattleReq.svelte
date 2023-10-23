@@ -4,44 +4,6 @@
     let bodyWeight = 0; // This will store the body weight input by the user
 
     // Assuming you have a dictionary similar to previous examples named CATTLE_VALUES
-    const CATTLE_VALUES = {
-    beef: {
-        "maintenance": {
-            "DMI": [2.0, 2.5], "CP%": 8, "ME": 2.3,
-            "Calcium%": 0.3, "Phosphorus%": 0.2, "Magnesium%": 0.12, "VitaminA": 1500, "VitaminD": 200, "VitaminE": 50
-        },
-        "growth_light": {
-            "DMI": [2.5, 3.0], "CP%": 11, "ME": 2.6,
-            "Calcium%": 0.5, "Phosphorus%": 0.3, "Magnesium%": 0.15, "VitaminA": 1800, "VitaminD": 250, "VitaminE": 70
-        },
-        "growth_rapid": {
-            "DMI": [3.0, 3.5], "CP%": 13, "ME": 2.9,
-            "Calcium%": 0.6, "Phosphorus%": 0.35, "Magnesium%": 0.18, "VitaminA": 2000, "VitaminD": 300, "VitaminE": 90
-        },
-        "finishing": {
-            "DMI": [2.5, 3.0], "CP%": 12, "ME": 3.1,
-            "Calcium%": 0.6, "Phosphorus%": 0.32, "Magnesium%": 0.17, "VitaminA": 1900, "VitaminD": 275, "VitaminE": 80
-        }
-    },
-    dairy: {
-        "dry": {
-            "DMI": [2.0, 2.5], "CP%": 13, "ME": 2.5,
-            "Calcium%": 0.6, "Phosphorus%": 0.35, "Magnesium%": 0.25, "VitaminA": 2500, "VitaminD": 400, "VitaminE": 200
-        },
-        "early_lactation": {
-            "DMI": [3.5, 4.5], "CP%": 17, "ME": 3.0,
-            "Calcium%": 0.8, "Phosphorus%": 0.4, "Magnesium%": 0.28, "VitaminA": 3000, "VitaminD": 500, "VitaminE": 500
-        },
-        "mid_late_lactation": {
-            "DMI": [3.0, 4.0], "CP%": 15, "ME": 2.8,
-            "Calcium%": 0.7, "Phosphorus%": 0.38, "Magnesium%": 0.26, "VitaminA": 2700, "VitaminD": 450, "VitaminE": 350
-        },
-        "peak": {
-            "DMI": [4.5, 5.5], "CP%": 18, "ME": 3.3,
-            "Calcium%": 0.9, "Phosphorus%": 0.42, "Magnesium%": 0.30, "VitaminA": 3200, "VitaminD": 550, "VitaminE": 600
-        }
-    }
-};
 
 
 	let requirements = {DMI:0,CP:0,ME:0,Calcium:0,Phosphorus:0,VitaminA:0,VitaminD:0,VitaminE	:0};
@@ -87,7 +49,7 @@
 
 <input type="number" bind:value={bodyWeight} placeholder="Enter body weight (kg)" />
 
-<button on:click={computeRequirements}>Compute Nutritional Requirements</button>
+<button on:click={computeRequirements}>Compute Nutritional Requirements</button>    
 
 <ul>
     {#if stage && bodyWeight}
