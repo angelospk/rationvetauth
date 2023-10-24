@@ -109,7 +109,7 @@
 				</svg></svelte:fragment
 			>
 			<svelte:fragment slot="summary">Αποστολή E-mail</svelte:fragment>
-			<svelte:fragment slot="content" />
+			<svelte:fragment slot="content" ><div class="card p-4 card-hover"></div>  test</svelte:fragment>
 		</AccordionItem></Accordion
 	>
 {:else}

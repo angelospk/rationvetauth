@@ -44,7 +44,7 @@ function totalWeight(selfeeds) {
 {:else}
 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
     {#each rations as ration}
-        <button class="card bg-white shadow-lg rounded-lg p-4 mx-auto hover:variant-outline-secondary focus:animate-ping" on:click={gotoration(ration?.id||null)}>
+        <button class="card card-hover bg-white shadow-lg rounded-lg p-4 mx-auto hover:variant-outline-secondary focus:animate-ping" on:click={gotoration(ration?.id||null)}>
             <div class="flex justify-between space-x-3 sm:space-x-10 items-start">
                 <h2 class="text-lg font-semibold mb-2">{ration.rationName || 'Unnamed Ration'}</h2>
                 <p class="text-xs text-gray-500">{ration.updated}</p>
