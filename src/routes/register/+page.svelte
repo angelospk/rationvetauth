@@ -6,11 +6,12 @@
 	import { enhance } from '$app/forms';
 	import LoadingCircles from '$lib/Loading Circles.svelte';
 
-	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { RadioGroup, RadioItem, getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
 	import { userFeeds } from '$lib/stores/data';
 	import Error from '../+error.svelte';
+	import { P } from 'flowbite-svelte';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 	message: 'This message will auto-hide after 3 seconds.',
@@ -21,7 +22,8 @@
 	let loading = false;
 	let passwordConfirm:string;
 	let text:string;
-
+	let val=0;
+	let name:string;
 </script>
 
 {#if $currentUser}
@@ -34,10 +36,15 @@
 {:else}
 	<div class="flex items-center w-full max-w-lg px-6 mx-auto">
 		<div class="flex-1">
-			<div class="text-center">
-				<h1 class="mt-3 text-gray-500 dark:text-gray-300">Δημιουργία Λογαριασμού</h1>
+			<div class="text-center my-10">
+				<h1 class="mt-3 text-gray-500 dark:text-gray-300 text-3xl">Δημιουργία Λογαριασμού</h1>
 			</div>
-
+			
+			
+			<div class="flex justify-center"><p class="text-xl pt-4 mr-5 ">Είμαι: </p>  <div><RadioGroup  active="variant-filled-success" hover="hover:variant-soft-success">
+				<RadioItem bind:group={val} name="justify" value={0}>Ιδιώτης</RadioItem>
+				<RadioItem bind:group={val} name="justify" value={1}>Φοιτητής</RadioItem>
+			</RadioGroup></div></div>
 			<div class="mt-8">
 				<form method="POST"
 				action="?/register"
@@ -76,7 +83,7 @@
 					};
 				}}>
 					<div>
-						<label for="email" class="block mb-2 text-sm text-gray-600 dark:text-gray-200 text-left"
+						<label for="email" class="block mb-2 text-xl text-gray-600 dark:text-gray-200 text-left"
 							>Email</label
 						>
 						<input
@@ -90,10 +97,42 @@
 							class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
 						/>
 					</div>
+					{#if val==0}
+					<div>
+						<label for="name" class="block my-3 text-xl text-gray-600 dark:text-gray-200 text-left"
+							>Όνοματεπώνυμο (προεραιτικό)</label
+						>
+						<input
+							type="text"
+							bind:value={name}
+							name="name"
+							id="name"
+							placeholder="Βασίλης Λεοντόκαρδος"
+							required={false}
+							class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+						/>
+					</div>
+					{:else}
+					<div>
+						<label for="name" class="block my-3 text-xl text-gray-600 dark:text-gray-200 text-left"
+							>ΑΕΜ</label
+						>
+						<input
+							type="text"
+							bind:value={name}
+							name="name"
+							id="name"
+							placeholder="8392"
+							required={true}
+							class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+						/>
+					</div>
+					{/if}
+				
 
 					<div class="mt-6">
 						<div class="flex justify-between mb-2">
-							<label for="password" class="text-sm text-gray-600 dark:text-gray-200">Κωδικός</label>
+							<label for="password" class=" text-gray-600 text-xl dark:text-gray-200">Κωδικός</label>
 						</div>
 
 						<input
@@ -122,7 +161,7 @@
 					<div class="mt-6">
 						{#if !loading}
 						<button
-							class="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-400 rounded-md hover:bg-blue-500 focus:outline-none focus:bg-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+							class="w-full px-4 py-2 tracking-wide text-xl hover:underline text-white transition-colors duration-200 transform bg-blue-400 rounded-md hover:bg-blue-500 focus:outline-none focus:bg-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
 						>
 							Εγγραφή
 						</button>
@@ -137,7 +176,7 @@
 						<SignInFacebook text={"Κάνε εγγραφή με"}/></div>
 				</form>
 				<hr class="my-6" />
-				<p class="mt-6 text-sm text-center text-gray-400">
+				<p class="mt-6 text-lg rounded-full text-center text-gray-400">
 					Έχεις λογαριασμό; <a
 						href="/login"
 						class="text-blue-500 focus:outline-none focus:underline hover:underline">Κάνε σύνδεση</a

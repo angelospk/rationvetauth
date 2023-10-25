@@ -80,6 +80,7 @@
 		<title>Διαδυκτιακή Εφαρμογή Επίλυσης Σιτηρεσιών</title>
 		<svelte:fragment slot="header">
 			<!-- App Bar -->
+			{#if $currentUser}
 			<AppBar padding="0" spacing="0" background="transparent">
 				<svelte:fragment slot="lead">
 					<a href="/" class="text-xl"
@@ -119,7 +120,6 @@
 							>
 						</TabGroup>
 
-						{#if $currentUser}
 							<button class=""
 								><a
 									href="/profile"
@@ -127,17 +127,17 @@
 									>Προφίλ</a
 								></button
 							>
-						{:else}
-							<a
+							<!-- <a
 								class="btn sm:mx-1 btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary"
 								href="/login"
 							>
 								Σύνδεση
-							</a>
-						{/if}
+							</a> -->
+						
 					</div>
 				</svelte:fragment>
 			</AppBar>
+			{/if}
 			{#if $currentUser?.name == ''}
 				<!-- <div class="w-fit text-center mx-auto"><div class=" w-full bg-gradient-to-t from-transparent to-red-500 text-center rounded-t-xl "><div class="w-full p-2"></div></div>
 		<div class="flex"><div class="px-5 bg-gradient-to-l from-transparent to-red-500"></div>
@@ -166,7 +166,7 @@
 			<footer
 				class="p-4 text-center text-secondary-700 dark:bg-secondary-700 dark:text-secondary-200 print:text-xs print:text-black"
 			>
-				<hr class="border-t-1 mb-2 border-primary-500 mx-auto" />
+				<!-- <hr class="border-t-1 mb-2 border-primary-500 mx-auto" /> -->
 				<div class="flex-col">
 					<div
 						class="w-16 h-16 sm:w-24 sm:h-24 mx-auto my-1 print:h-12 print:w-12 hover:animate-pulse"
