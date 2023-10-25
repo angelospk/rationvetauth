@@ -121,8 +121,8 @@
 			Συνδέσου για να αποθηκεύσεις και να χρησιμοποιήσεις δικές σου τροφες.
 		</div>
 	{/if}
-	<button class="btn bg-secondary-active-token w-1/3 hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:duration-300 duration-300" on:click|preventDefault={addMetricsAppear}>
-		Αλλαγή Στηλών</button
+	<button class="btn text-xs sm:text-base bg-secondary-active-token w-1/3 hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:duration-300 duration-300" on:click|preventDefault={addMetricsAppear}>
+		+/- <div class="p-1	"></div>Θρεπτικών Ουσιών</button
 	>
 </div>
 <div class="my-3 flex justify-end print:hidden">
@@ -195,6 +195,7 @@
 		/* Hide buttons and explanatory text */
 		.btn {
 			display: none;
+			
 		}
 	}
 </style>

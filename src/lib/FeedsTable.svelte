@@ -228,7 +228,7 @@ onMount(()=>{
 					{/if}
 					{#each columns as column}
 						{#if column.Title == 'Title'}
-							<th class="text-black-700 w-min">Μονάδες</th>
+							<td class="text-black-700 w-min">Μονάδες</td>
 						{:else if column.units !== undefined}
 							<td>{column.units}</td>
 						{:else}
@@ -279,18 +279,7 @@ onMount(()=>{
 				{/each}
 			</tbody>
 			<tfoot>
-				<tr class="bg-gray-300 text-gray-700 text-lg">
-					{#if linear}
-						<td class=" w-min">0</td>
-					{/if}
-					<td class=" w-min">Σύνολο</td>
-
-					{#each columns as column}
-						{#if column.Title != 'Title'}
-							<td class="font-bold">{formatNumber(sum[column.Title])}</td>
-						{/if}
-					{/each}
-				</tr>
+				
 				{#if tableOptions[1] && tableOptions[1].visible}
 					<tr class="bg-gray-200 text-gray-700">
 						{#if linear}
@@ -329,6 +318,18 @@ onMount(()=>{
 						{/each}
 					</tr>
 				{/if}
+				<tr class="bg-gray-300 text-gray-700 text-lg">
+					{#if linear}
+						<td class=" w-min">0</td>
+					{/if}
+					<td class=" w-min">Σύνολο</td>
+
+					{#each columns as column}
+						{#if column.Title != 'Title'}
+							<td class="font-bold">{formatNumber(sum[column.Title])}</td>
+						{/if}
+					{/each}
+				</tr>
 			</tfoot>
 		</table>
 	</div>
@@ -341,10 +342,18 @@ onMount(()=>{
 	/* input[type='number'] {
 		width: 4.5rem;
 	} */
-	th,
-	td {
+	th{
+		background-color: aqua;
 		border: 1px dotted black;
 	}
+	td {
+		border: 1px dotted black;
+		background-color: paleturquoise;
+	}
+
+input[type='number'] {
+	background-color:paleturquoise;
+}
 	@media print {
 		/* Hide buttons and explanatory text */
 

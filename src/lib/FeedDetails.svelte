@@ -11,9 +11,9 @@
 		{/if}
 		{#each metrics.filter((x) => x.cat == 'Βασικοί Δείκτες Χημικής Σύστασης') as metric}
 			<div class="form-item">
-				<p>{detailed ? metric?.labelgr : metric?.gr}</p>
+				<p class="">{detailed ? metric?.labelgr : metric?.gr}</p>
 				<input
-					class="rounded-lg"
+					class="rounded-lg ml-2"
 					type="number"
 					bind:value={objectData[metric.Title]}
 					step="0.3"
@@ -31,7 +31,7 @@
 			<div class="form-item">
 				<p>{detailed ? metric?.labelgr : metric?.gr}</p>
 				<input
-					class="rounded-lg"
+					class="rounded-lg ml-2"
 					type="number"
 					bind:value={objectData[metric.Title]}
 					step="0.3"
@@ -47,7 +47,7 @@
 			<div class="form-item">
 				<p>{detailed ? metric?.labelgr : metric?.gr}</p>
 				<input
-					class="rounded-lg"
+					class="rounded-lg ml-2"
 					type="number"
 					bind:value={objectData[metric.Title]}
 					step="0.3"
@@ -63,7 +63,7 @@
 			<div class="form-item">
 				<p>{detailed ? metric?.labelgr : metric?.gr}</p>
 				<input
-					class="rounded-lg"
+					class="rounded-lg ml-2"
 					type="number"
 					bind:value={objectData[metric.Title]}
 					step="0.3"

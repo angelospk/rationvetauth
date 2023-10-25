@@ -59,10 +59,11 @@
 										})) || [];
 									if (d.length > 0) userFeeds.set(d);
 									try {
-										window.history.back();
+										// window.history.back();
+										goto('/');
 									} catch (error) {
 										console.log(error);
-										goto('/');
+										
 									}}
 									else if (!result?.data.verified){
 									showVerification=true;
