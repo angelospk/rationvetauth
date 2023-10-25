@@ -1,4 +1,4 @@
-import type { Actions } from "./$types";
+
 
 // const data={
 //     "Αυγοπαραγωγών / Περίοδος αυγοπαραγωγής (εβδ)": {
@@ -62,11 +62,18 @@ import type { Actions } from "./$types";
 //   "Food Intake (g/day)": ">150"
 //   }}}
 
-export const actions: Actions = {
-    test: async({request})=>{
+export const actions = {
+    new: async({request})=>{
+    console.log(request)
     const d=Object.fromEntries(await request.formData())
     
     console.log(d)
     return {d}
-}
+},
+//     default: async({request})=>{
+//     const d=Object.fromEntries(await request.formData())
+    
+//     console.log(d)
+//     return {d}
+// }
 };

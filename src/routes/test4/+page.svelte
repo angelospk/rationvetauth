@@ -66,11 +66,20 @@
     let subselection = '';
     export let form;
     let formData = {}; // To hold the data to be displayed based on selections
-    function handleChange() {
-      formData = data[selection][subselection];
-    }
+    async function handleSubmit() {
+    const formData = new FormData();
+    formData.append("selection", selection);
+
+    const response = await fetch("/api/handleform", {
+      method: "POST",
+      body: formData
+    });
+
+    const result = await response.json();
+    console.log(result);
+  }
   </script>
-  <form use:enhance method="POST" action="?test">
+  <form on:submit|preventDefault={handleSubmit}>
     <select bind:value={selection}>
       <option value="">-- Select Category --</option>
       {#each Object.keys(data) as category}
