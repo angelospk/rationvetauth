@@ -20,7 +20,3 @@
   <div class="max-w-md card mx-auto"><LoginComponent /></div>
 </div>
 {/if}
-
-
-
-

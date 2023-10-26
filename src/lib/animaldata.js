@@ -111,7 +111,7 @@ export const  SHEEP_VALUES = {
     }
 };
 
-export const poultry={
+const poultry={
     "Αυγοπαραγωγών / Περίοδος αυγοπαραγωγής (εβδ)": {
       "Food Intake (g/day)": "85-120",
       "18 ως 40": {
@@ -172,8 +172,22 @@ export const poultry={
   "Sodium": 1.8,
   "Food Intake (g/day)": ">150"
   }}}
+const swine={
+      "Αναπαραγωγών Χοίρων": {
+        "Εγκύων": {"DE": 2868, "CrudeProtein": 130, "Lysine": 5.5, "CrudeFiber": "<100", "Calcium": 8, "Phosphorus": 4, "Sodium": 2, "Food Intake": "2-2,5"},
+        "Γαλ/γών": {"DE": 3107, "CrudeProtein": 170, "Lysine": 7.5, "CrudeFiber": "<60", "Calcium": 8, "Phosphorus": 6, "Sodium": 2.5, "Food Intake": "3,5-7"}
+      },
+      "Αναπτυσσόμενων - Παχυνόμενων Χοίρων Ηλικία (εβδομάδες)": {
+        "1 ως 4": {"DE": "3227-3465", "CrudeProtein": 220, "Lysine": 14, "CrudeFiber": "<40", "Calcium": 10, "Phosphorus": 7, "Sodium": 2, "Food Intake": null},
+        "5 ως 10": {"DE": 3107, "CrudeProtein": 180, "Lysine": 11, "CrudeFiber": "<50", "Calcium": 10, "Phosphorus": 6, "Sodium": 1.5, "Food Intake": "1,2"},
+        "11 ως 18": {"DE": 3107, "CrudeProtein": 160, "Lysine": 9, "CrudeFiber": "<60", "Calcium": 8, "Phosphorus": 6, "Sodium": 1.5, "Food Intake": "1,2-2,3"},
+        ">19": {"DE": 3107, "CrudeProtein": 140, "Lysine": 7, "CrudeFiber": "<70", "Calcium": 7, "Phosphorus": 4, "Sodium": 1.5, "Food Intake": "2,3-3,5"}
+      }
+  }
 
-export const aigoprov={
+
+
+const aigoprov={
     "Συντήρηση (ημερήσιες ανάγκες)": {
       "30": {"ΞΟ % ΣΒ": "2,1-2,6", "MJ KET": 956, "CrudeProtein": 60, "Calcium": 2.4, "Phosphorus": 1.6, "Magnesium": 0.35, "Sodium": 0.51},
       "40": {"ΞΟ % ΣΒ": "2,0-2,5", "MJ KET": 1195, "CrudeProtein": 75, "Calcium": 3.2, "Phosphorus": 2.2, "Magnesium": 0.46, "Sodium": 0.68},
@@ -212,7 +226,7 @@ export const aigoprov={
     }
   }
   
-export const booeidh={"Συντήρηση (ημερήσιες ανάγκες)": {
+const booeidh={"Συντήρηση (ημερήσιες ανάγκες)": {
     250: {"MJ KET": 4541, "CrudeProtein": 260, "Calcium": 8, "Phosphorus": 7, "Magnesium": 3.8, "Sodium": 4.3},
     300: {"MJ KET": 5067, "CrudeProtein": 300, "Calcium": 10, "Phosphorus": 9, "Magnesium": 4.5, "Sodium": 5.1},
     350: {"MJ KET": 5832, "CrudeProtein": 340, "Calcium": 12, "Phosphorus": 14, "Magnesium": 5.3, "Sodium": 6},
@@ -233,93 +247,93 @@ export const booeidh={"Συντήρηση (ημερήσιες ανάγκες)": 
     500: {"MJ KET": 14699, "CrudeProtein": 600, "Calcium": 37, "Phosphorus": 29, "Magnesium": 8.7, "Sodium": 9.9},
     }
     }
+    export const animals={"poultry":poultry, "swine":swine, "aigoprov": aigoprov, "booeidh":booeidh}
+// export function swine_feed_requirements (swine_stage){
+//     const SWINE_VALUES = {
+//         "nursery": {
+//             "DMI": 0.6, "CP%": 24, "ME": 3.4, "Lysine%": 1.4,
+//             "Calcium%": 0.9, "Phosphorus%": 0.8, "VitaminA": 4500, "VitaminD": 450, "VitaminE": 60
+//         },
+//         "grower": {
+//             "DMI": 2.0, "CP%": 18, "ME": 3.3, "Lysine%": 1.0,
+//             "Calcium%": 0.8, "Phosphorus%": 0.7, "VitaminA": 4000, "VitaminD": 400, "VitaminE": 50
+//         },
+//         "finisher": {
+//             "DMI": 2.7, "CP%": 15, "ME": 3.25, "Lysine%": 0.8,
+//             "Calcium%": 0.65, "Phosphorus%": 0.6, "VitaminA": 3500, "VitaminD": 350, "VitaminE": 40
+//         },
+//         "gestation": {
+//             "DMI": 2.3, "CP%": 12.5, "ME": 3.2, "Lysine%": 0.6,
+//             "Calcium%": 0.75, "Phosphorus%": 0.65, "VitaminA": 3800, "VitaminD": 375, "VitaminE": 45
+//         },
+//         "lactation": {
+//             "DMI": 4.5, "CP%": 16.5, "ME": 3.35, "Lysine%": 1.1,
+//             "Calcium%": 1.0, "Phosphorus%": 0.8, "VitaminA": 4200, "VitaminD": 420, "VitaminE": 55
+//         }
+//     }  
+// let stage_values = SWINE_VALUES[swine_stage]
+//  let    dmi = stage_values["DMI"]
+//  let    cp_percent = stage_values["CP%"]
+//  let    cp = dmi * cp_percent / 100
+//  let    me = dmi * stage_values["ME"]
+//  let    lysine = dmi * stage_values["Lysine%"]
+//  let    calcium = dmi * stage_values["Calcium%"]
+//  let    phosphorus = dmi * stage_values["Phosphorus%"]
+//  let    vitamin_a = stage_values["VitaminA"]
+//  let    vitamin_d = stage_values["VitaminD"]
+//  let    vitamin_e = stage_values["VitaminE"]
+//  return {dmi, cp, me, lysine, calcium, phosphorus, vitamin_a, vitamin_d, vitamin_e}
+// }
 
-export function swine_feed_requirements (swine_stage){
-    const SWINE_VALUES = {
-        "nursery": {
-            "DMI": 0.6, "CP%": 24, "ME": 3.4, "Lysine%": 1.4,
-            "Calcium%": 0.9, "Phosphorus%": 0.8, "VitaminA": 4500, "VitaminD": 450, "VitaminE": 60
-        },
-        "grower": {
-            "DMI": 2.0, "CP%": 18, "ME": 3.3, "Lysine%": 1.0,
-            "Calcium%": 0.8, "Phosphorus%": 0.7, "VitaminA": 4000, "VitaminD": 400, "VitaminE": 50
-        },
-        "finisher": {
-            "DMI": 2.7, "CP%": 15, "ME": 3.25, "Lysine%": 0.8,
-            "Calcium%": 0.65, "Phosphorus%": 0.6, "VitaminA": 3500, "VitaminD": 350, "VitaminE": 40
-        },
-        "gestation": {
-            "DMI": 2.3, "CP%": 12.5, "ME": 3.2, "Lysine%": 0.6,
-            "Calcium%": 0.75, "Phosphorus%": 0.65, "VitaminA": 3800, "VitaminD": 375, "VitaminE": 45
-        },
-        "lactation": {
-            "DMI": 4.5, "CP%": 16.5, "ME": 3.35, "Lysine%": 1.1,
-            "Calcium%": 1.0, "Phosphorus%": 0.8, "VitaminA": 4200, "VitaminD": 420, "VitaminE": 55
-        }
-    }  
-let stage_values = SWINE_VALUES[swine_stage]
- let    dmi = stage_values["DMI"]
- let    cp_percent = stage_values["CP%"]
- let    cp = dmi * cp_percent / 100
- let    me = dmi * stage_values["ME"]
- let    lysine = dmi * stage_values["Lysine%"]
- let    calcium = dmi * stage_values["Calcium%"]
- let    phosphorus = dmi * stage_values["Phosphorus%"]
- let    vitamin_a = stage_values["VitaminA"]
- let    vitamin_d = stage_values["VitaminD"]
- let    vitamin_e = stage_values["VitaminE"]
- return {dmi, cp, me, lysine, calcium, phosphorus, vitamin_a, vitamin_d, vitamin_e}
-}
+// export function poultry_feed_requirements(poultry_type:string, stage:string){
+// // # Constants for DMI, CP, ME, Minerals, and Vitamins based on stage and poultry type
+// const POULTRY_VALUES = {
+//     "broilers": {
+//         "starter": {
+//             "DMI": 50, "CP%": 23, "ME": 3.0,
+//             "Calcium%": 1.0, "Phosphorus%": 0.45, "VitaminA": 1500, "VitaminD": 200, "VitaminE": 30
+//         },
+//         "grower": {
+//             "DMI": 100, "CP%": 21, "ME": 3.15,
+//             "Calcium%": 0.9, "Phosphorus%": 0.4, "VitaminA": 1300, "VitaminD": 180, "VitaminE": 25
+//         },
+//         "finisher": {
+//             "DMI": 150, "CP%": 20, "ME": 3.2,
+//             "Calcium%": 0.85, "Phosphorus%": 0.38, "VitaminA": 1200, "VitaminD": 150, "VitaminE": 20
+//         }
+//     },
+//     "layers": {
+//         "starter": {
+//             "DMI": 50, "CP%": 18, "ME": 2.9,
+//             "Calcium%": 1.1, "Phosphorus%": 0.45, "VitaminA": 1600, "VitaminD": 220, "VitaminE": 35
+//         },
+//         "grower": {
+//             "DMI": 100, "CP%": 16, "ME": 2.85,
+//             "Calcium%": 1.0, "Phosphorus%": 0.4, "VitaminA": 1400, "VitaminD": 200, "VitaminE": 30
+//         },
+//         "layer": {
+//             "DMI": 110, "CP%": 16.5, "ME": 2.8,
+//             "Calcium%": 3.8, "Phosphorus%": 0.38, "VitaminA": 1250, "VitaminD": 180, "VitaminE": 25
+//         }
+//     }
+// }
 
-export function poultry_feed_requirements(poultry_type:string, stage:string){
-// # Constants for DMI, CP, ME, Minerals, and Vitamins based on stage and poultry type
-const POULTRY_VALUES = {
-    "broilers": {
-        "starter": {
-            "DMI": 50, "CP%": 23, "ME": 3.0,
-            "Calcium%": 1.0, "Phosphorus%": 0.45, "VitaminA": 1500, "VitaminD": 200, "VitaminE": 30
-        },
-        "grower": {
-            "DMI": 100, "CP%": 21, "ME": 3.15,
-            "Calcium%": 0.9, "Phosphorus%": 0.4, "VitaminA": 1300, "VitaminD": 180, "VitaminE": 25
-        },
-        "finisher": {
-            "DMI": 150, "CP%": 20, "ME": 3.2,
-            "Calcium%": 0.85, "Phosphorus%": 0.38, "VitaminA": 1200, "VitaminD": 150, "VitaminE": 20
-        }
-    },
-    "layers": {
-        "starter": {
-            "DMI": 50, "CP%": 18, "ME": 2.9,
-            "Calcium%": 1.1, "Phosphorus%": 0.45, "VitaminA": 1600, "VitaminD": 220, "VitaminE": 35
-        },
-        "grower": {
-            "DMI": 100, "CP%": 16, "ME": 2.85,
-            "Calcium%": 1.0, "Phosphorus%": 0.4, "VitaminA": 1400, "VitaminD": 200, "VitaminE": 30
-        },
-        "layer": {
-            "DMI": 110, "CP%": 16.5, "ME": 2.8,
-            "Calcium%": 3.8, "Phosphorus%": 0.38, "VitaminA": 1250, "VitaminD": 180, "VitaminE": 25
-        }
-    }
-}
+// let stage_values = POULTRY_VALUES[poultry_type][stage]
 
-let stage_values = POULTRY_VALUES[poultry_type][stage]
+// // Extract values
+// let dmi = stage_values["DMI"]
+// let cp_percent = stage_values["CP%"]
+// let cp = dmi * cp_percent / 100
+// let me = dmi * stage_values["ME"]
 
-// Extract values
-let dmi = stage_values["DMI"]
-let cp_percent = stage_values["CP%"]
-let cp = dmi * cp_percent / 100
-let me = dmi * stage_values["ME"]
+// // Calculate Minerals and Vitamins
+// let calcium = dmi * stage_values["Calcium%"]
+// let phosphorus = dmi * stage_values["Phosphorus%"]
+// let vitamin_a = stage_values["VitaminA"]
+// let vitamin_d = stage_values["VitaminD"]
+// let vitamin_e = stage_values["VitaminE"]
 
-// Calculate Minerals and Vitamins
-let calcium = dmi * stage_values["Calcium%"]
-let phosphorus = dmi * stage_values["Phosphorus%"]
-let vitamin_a = stage_values["VitaminA"]
-let vitamin_d = stage_values["VitaminD"]
-let vitamin_e = stage_values["VitaminE"]
-
-return {dmi, cp, me, calcium, phosphorus, vitamin_a, vitamin_d, vitamin_e}
+// return {dmi, cp, me, calcium, phosphorus, vitamin_a, vitamin_d, vitamin_e}
 
 
-}
+// }

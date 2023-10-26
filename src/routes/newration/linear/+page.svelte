@@ -4,7 +4,9 @@
 	import { currentUser } from '$lib/pocketbase';
 	import { getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 	import type { State } from '$lib/stores/types';
-
+	import AnimalFeedRequirements from '$lib/AnimalFeedRequirements.svelte';
+	import type { PageData } from "./$types";
+  	let d:PageData ;
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'Δεν μπόρεσε να αποθηκευτεί το σιτηρέσιο.',
@@ -56,6 +58,8 @@
 	<div class="info" style="">
 		Σημείωση: Προσθέστε τροφές πατώντας στο "Δημόσιες Τροφές".<br />
 	</div>
+{JSON.stringify(d)}
+	<AnimalFeedRequirements />
 
 
     <hr class="my-5" />
