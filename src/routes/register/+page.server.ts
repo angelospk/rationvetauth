@@ -12,6 +12,7 @@ export const actions: Actions = {
       email: string
       password: string
       passwordConfim:string
+      name:string
     }
     let res;
     try {

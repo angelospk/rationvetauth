@@ -15,9 +15,9 @@
     <a href="/profile" class="my-2 koumpi">Το Προφίλ μου</a>
   </div>
 {:else}
-<div class="flex">
-  <div class="w-full sm:w-1/2 text-5xl"><p class="gradient-heading">Καλώς ήλθατε!</p><p>Θα φάτε κάτι; Να σας κεράσουμε;</p><p>Κάνα σιτηρέσιο ψήνεστε;</p></div>
-  <div class="w-full sm:w-1/2 card"><LoginComponent /></div>
+<div class="flex-col justify-center space-y-5 lg:space-x-5 lg:flex-row flex  pt-[3vh]">
+  <div class= "text-5xl"><p class="gradient-heading">Καλώς ήλθατε!</p><p>Θα φάτε κάτι; Να σας κεράσουμε;</p><p>Κάνα σιτηρέσιο ψήνεστε;</p></div>
+  <div class="max-w-md card mx-auto"><LoginComponent /></div>
 </div>
 {/if}
 

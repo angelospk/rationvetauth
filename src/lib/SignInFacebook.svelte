@@ -26,7 +26,7 @@
 
 <button
 	on:click|preventDefault={loginWithFacebook}
-	class="facebook-button btn flex items-center justify-center text-white transition-colors duration-200 transform bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:bg-blue-500 focus:ring focus:ring-blue-700 focus:ring-opacity-50 active:bg-blue-700 px-4 py-2"
+	class="facebook-button text-xs sm:text-base btn flex items-center justify-center text-white transition-colors duration-200 transform bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:bg-blue-500 focus:ring focus:ring-blue-700 focus:ring-opacity-50 active:bg-blue-700 px-4 py-2"
 >
 	<img
 		class="w-6 h-6 mr-2"

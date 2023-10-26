@@ -24,7 +24,7 @@
 
 <button
 	on:click|preventDefault={loginWithGoogle}
-	class="google-button btn text-white transition-colors duration-200 transform bg-blue-300 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+	class="google-button btn text-xs sm:text-base text-white transition-colors duration-200 transform bg-blue-300 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
 >
 	<img
 		class="w-6 h-6 mr-2"
