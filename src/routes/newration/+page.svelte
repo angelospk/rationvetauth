@@ -1,8 +1,8 @@
 <script lang="ts">
 
 	import EditableTable from '$lib/EditableTable.svelte';
-	import { Accordion,  AccordionItem, getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
-
+	import { Accordion,  AccordionItem, getToastStore, type PopupSettings, type ToastSettings } from '@skeletonlabs/skeleton';
+	import { popup } from '@skeletonlabs/skeleton';
 
 	// Your Svelte component
 	import { currentUser, pb } from '$lib/pocketbase';
@@ -16,6 +16,11 @@
 		message: 'Δεν μπόρεσε να αποθηκευτεί το σιτηρέσιο.',
 		timeout: 3000,
 		background: "bg-green-600"
+	};
+	const popupHover: PopupSettings = {
+		event: 'hover',
+		target: 'popupHover',
+		placement: 'bottom'
 	};
 	let send2Email:string;
 	let record:State;
@@ -117,9 +122,14 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 18a.969.969 0 0 0 .933 1h12.134A.97.97 0 0 0 15 18M1 7V5.828a2 2 0 0 1 .586-1.414l2.828-2.828A2 2 0 0 1 5.828 1h8.239A.97.97 0 0 1 15 2v5M6 1v4a1 1 0 0 1-1 1H1m0 9v-5h1.5a1.5 1.5 0 1 1 0 3H1m12 2v-5h2m-2 3h2m-8-3v5h1.375A1.626 1.626 0 0 0 10 13.375v-1.75A1.626 1.626 0 0 0 8.375 10H7Z"/>
 				  </svg></div></svelte:fragment>
 				<svelte:fragment slot="summary">Εκτύπωση</svelte:fragment>
-				<svelte:fragment slot="content"> <div class="card p-4">Εκτύπωσε ή αποθήκευσε ως pdf.<br><button class="koumpi" on:click={print}>
+				<svelte:fragment slot="content"> <div class="card p-4">Εκτύπωσε ή αποθήκευσε ως pdf.<br><button class="koumpi" id="ekt" use:popup={popupHover} on:click={print}>
 					Εκτύπωση</button
-				></div>	 </svelte:fragment>
+				><div class="card p-4 variant-filled-primary" data-popup="popupHover">
+					<div class="arrow variant-filled-primary" />
+					Για περισσότερες από οχτώ Θρεπτκές Ουσίες στον πίνακα προτείνεται προσανατολισμός Landscape στην Εκτύπωση.
+				</div>
+			</div>
+			 </svelte:fragment>
 			</AccordionItem>
 			<AccordionItem>
 				<svelte:fragment slot="lead"><svg class="w-6 h-6 ml-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 14 20">

@@ -23,7 +23,11 @@
 	import { Dropdown, DropdownItem } from 'flowbite-svelte';
 	initializeStores();
 	// export let data: PageData
-
+	async function logout() {
+		pb.authStore.clear();
+		userFeeds.set([]);
+		goto("/");
+	}
 	onMount(async () => {
 		pb.autoCancellation(false);
 		const res = await fetch('/api/data');
@@ -120,13 +124,15 @@
 							>
 						</TabGroup>
 
-							<button class=""
-								><a
-									href="/profile"
-									class="btn btn-sm mx-0 sm:mx-1 variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary"
-									>Προφίλ</a
-								></button
+							<button class="  rounded-full"
+								><svg class="w-10 h-8 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+										<path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z"/>
+									  </svg></button
 							>
+							<Dropdown class=""  containerClass="opacity-90 relative pr-10  "
+							><DropdownItem><a href="/profile">Επεξεργασία</a></DropdownItem>
+							<DropdownItem><button on:click={logout} >Αποσύνδεση</button></DropdownItem>
+						</Dropdown>
 							<!-- <a
 								class="btn sm:mx-1 btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary"
 								href="/login"
@@ -207,3 +213,10 @@
 		<h1 class="text-xl my-20 mx-auto">Κτηνιατρική Σχολή ΑΠΘ</h1>
 	</div>
 {/if}
+
+<style>
+	.user-dropdown {
+    right: 0; /* Align the dropdown's right edge with the button's right edge */
+    left: auto; /* Reset the left value, if set */
+}
+</style>
