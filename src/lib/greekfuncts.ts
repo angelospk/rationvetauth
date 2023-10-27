@@ -1,0 +1,59 @@
+import type { AnimalReqs, Req } from "./stores/types";
+
+/**
+ * @param {string} text - Delete accents from greek text
+ */
+export function normalizeGreek(text:string) {
+    text = text.replace(/Ά|Α|ά/g, 'α')
+        .replace(/Έ|Ε|έ/g, 'ε')
+        .replace(/Ή|Η|ή/g, 'η')
+        .replace(/Ί|Ϊ|Ι|ί|ΐ|ϊ/g, 'ι')
+        .replace(/Ό|Ο|ό/g, 'ο')
+        .replace(/Ύ|Ϋ|Υ|ύ|ΰ|ϋ/g, 'υ')
+        .replace(/Ώ|Ω|ώ/g, 'ω')
+        .replace(/Σ|ς/g, 'σ');
+    return text as string;
+}
+/**
+@param {object} inputObj - Input object of requirements to be transformed
+ * @returns {object} - Transformed object
+ */
+export function transformObject(inputObj:object) {
+    const outputObj:AnimalReqs = { reqs: [], fractions: {} };
+  
+    for (const [key, value] of Object.entries(inputObj)) {
+      // Initialize the object to hold 'value' and 'type' for each key
+      let transformedValue:Req = {Title:"", type:"", value:0};
+  
+      // Check if value is a number
+      if (typeof value === 'number') {
+        transformedValue.value = value;
+        transformedValue.type = '=';
+      } 
+      // Check if value is a string
+      else if (typeof value === 'string') {
+        // Check for '<' followed by a number
+        if (value.startsWith('<')) {
+          transformedValue.value = parseFloat(value.substring(1));
+          transformedValue.type = '<';
+        } 
+        // Check for '-' between two numbers
+        else if (value.includes('-')) {
+          const [lower, upper] = value.split('-').map(Number);
+          transformedValue.value = lower;
+          transformedValue.type = '-';
+          transformedValue.topValue = upper;
+        } 
+        // Handle other cases
+        else {
+          // Custom handling for other cases can go here
+        }
+      }
+      transformedValue.Title=key;
+      // Add transformed value to the 'reqs' object
+      outputObj.reqs.push(transformedValue);
+    }
+  
+    return outputObj as AnimalReqs;
+  }
+  
