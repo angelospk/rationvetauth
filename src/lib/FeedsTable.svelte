@@ -257,7 +257,7 @@ onMount(()=>{
 						<td>
 							<span class="w-min text-gray-500 text-sm">{feed.Title}</span>
 						</td>
-						<td>{#if edit && !linear}
+						<td>{#if edit}
 							<input
 									type="number"
 									bind:value={feed.weight}

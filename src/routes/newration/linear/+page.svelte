@@ -3,10 +3,12 @@
 	import RationInfo from '$lib/RationInfo.svelte';
 	import { currentUser } from '$lib/pocketbase';
 	import { getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
-	import type { Form, State } from '$lib/stores/types';
+	import type { AnimalInfo, AnimalReqs, Form, State } from '$lib/stores/types';
 	import AnimalFeedRequirements from '$lib/AnimalFeedRequirements.svelte';
 	import { page } from '$app/stores';
-  	let animals=$page.data;
+	import { metrics } from '$lib/stores/data';
+	let animals = $page.data;
+	let metr = $metrics;
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'Δεν μπόρεσε να αποθηκευτεί το σιτηρέσιο.',
@@ -17,8 +19,9 @@
 	let record: State;
 	let loadedTable: boolean = false;
 	let currentState: State;
+	let info:AnimalInfo;
 	let rationName = '';
-let form:any={};
+	let form: AnimalReqs = { reqs: [], fractions: {} };
 	let producerName = $currentUser?.name || '';
 	let currentDate: string;
 </script>
@@ -52,17 +55,44 @@ let form:any={};
 
 	<hr class="my-2" />
 
-    <div class="heading print:hidden">
+	<div class="heading print:hidden">
 		<h2>Βήμα 2: Επιλογή Ζώου και Διατροφικές Ανάγκες</h2>
 	</div>
 	<div class="info" style="">
 		Σημείωση: Προσθέστε τροφές πατώντας στο "Δημόσιες Τροφές".<br />
 	</div>
 
-	<AnimalFeedRequirements bind:form={form} animals={animals?.animals} />
+	<AnimalFeedRequirements bind:form animals={animals?.animals} bind:animalInfo={info}/>
+	<!-- {JSON.stringify(transformObject(form))} -->
+	{#if form.reqs.length > 0}
+		
+			{#if info}
+				<div class="flex-col">Ζώο: {info.animal}</div>
+				<div class="flex-col">Κατηγορία: {info.type.selection}</div>
+				<div class="flex-col">Υποκατηγορία: {info.type.subselection}</div>
+			{/if}
+			<div class="card p-3 flex space-x-3 overflow-x-auto"></div>
+			{#each form.reqs as req}
+				<div class="flex-col">{metr.find((x) => x.Title == req.Title)?.labelgr || req.Title}
+				{#if req.type != "any"}
+					<input bind:value={req.value} type="number"/>
+				{/if}
+				<select bind:value={req.type}>
+					<option value="any">Οτιδήποτε</option>
+					<option value="=">{"="}</option>
+					<option value=">">{">"}</option>
+					<option value="<">{"<"}</option>
+					<option value="-">Ανάμεσα</option>
+				</select>
+				{#if req.type == "-"}
+					<input bind:value={req.topValue} type="number"/>
+				{/if}
+				</div>
+			{/each}
+		</div>
+	{/if}
 
-
-    <hr class="my-5" />
+	<hr class="my-5" />
 
 	<div class="heading print:hidden">
 		<h2>Βήμα 3: Εισαγωγή Τροφών</h2>
@@ -73,7 +103,7 @@ let form:any={};
 	</div>
 
 	{#if !loadedTable}
-		<EditableTable bind:rationName bind:producerName bind:currentState linear={true} bind:requirements={form} />
+		<EditableTable bind:rationName bind:producerName bind:currentState linear={true} />
 	{:else}
 		<EditableTable stage2Read={record} bind:currentState />
 	{/if}

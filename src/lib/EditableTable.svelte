@@ -3,7 +3,7 @@
 
 	import TableEditButtons from './TableEditButtons.svelte';
 
-	import { normalizeGreek } from '../greekfuncts';
+	import { normalizeGreek } from './greekfuncts';
 	import type { AutocompleteOption } from '@skeletonlabs/skeleton';
 	import { metrics, feeds, userFeeds, loadedTables } from '$lib/stores/data';
 	import { currentUser, pb } from '$lib/pocketbase';

@@ -3,33 +3,39 @@
 	import { page } from "$app/stores";
 	import { TabGroup, TabAnchor, Tab } from "@skeletonlabs/skeleton";
 	import { onMount } from "svelte";
-	import type { Form } from "./stores/types";
-	
+	import type { AnimalInfo, Form } from "./stores/types";
+	import { transformObject } from "./greekfuncts";
 export let form:any;
   let selection = '';
     let subselection = '';
     let animal:string="poultry";
     let formData = {}; // To hold the data to be displayed based on selections
   export let animals;
+  export let animalInfo:AnimalInfo;
+  $:{animalInfo={animal:animal, type:{selection, subselection}}}
   function reset(){
     selection=''
     subselection=''
   }
   async function handleSubmit(event:Event){
     const formEl = event.target as HTMLFormElement
-    const data = new FormData(formEl)
-    if (!data.has("animal")) {
+    const sentFormData = new FormData(formEl)
+    console.log(sentFormData)
+    // animalInfo.type=formEl
+    // animalInfo.animal=animal
+    if (!sentFormData.has("animal")) {
     // Append 'animal' to FormData if it doesn't exist
-    data.append("animal", animal); // Assuming `animal` is defined somewhere in your scope
+    sentFormData.append("animal", animal); // Assuming `animal` is defined somewhere in your scope
   }
 
     const response = await fetch(formEl.action, {
       method: 'POST',
-      body: data
+      body: sentFormData
     })
     const responseData = await response.json()
     // console.log(responseData);
     form=responseData
+    form=transformObject(form)
     formEl.reset()
   }
 

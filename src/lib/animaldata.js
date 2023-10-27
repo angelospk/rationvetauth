@@ -120,7 +120,7 @@ const poultry={
   "CrudeFiber": 70,
   "Calcium": 35,
   "Phosphorus": 3.5,
-  "Food Intake (g/day)": "85-120",
+  "Food Intake": "85-120",
   "Sodium": 1.8
   },
   "41 ως 60": {
@@ -130,7 +130,7 @@ const poultry={
   "CrudeFiber": 70,
   "Calcium": 38,
   "Phosphorus": 3.5,
-  "Food Intake (g/day)": "85-120",
+  "Food Intake": "85-120",
   "Sodium": 1.8
   },
   "61 ως 80": {
@@ -140,7 +140,7 @@ const poultry={
   "CrudeFiber": 70,
   "Calcium": 40,
   "Phosphorus": 3.5,
-  "Food Intake (g/day)": "85-120",
+  "Food Intake": "85-120",
   "Sodium": 1.8
   }},
   "Ανάπτυξη - πάχυνση ορνιθίων / Ηλικία (εβδ)": {
@@ -152,7 +152,7 @@ const poultry={
   "Calcium": 10,
   "Phosphorus": 4.5,
   "Sodium": 1.6,
-  "Food Intake (g/day)": "10-60"
+  "Food Intake": "10-60"
   },
   "2 ως 5": {
   "MEpoultry": 3107,
@@ -162,7 +162,7 @@ const poultry={
   "Calcium": 10,
   "Phosphorus": 4.5,
   "Sodium": 1.6,
-  "Food Intake (g/day)": "10-60"
+  "Food Intake": "60-145"
   },
   ">5":  {
   "MEpoultry": 3107,
@@ -172,18 +172,18 @@ const poultry={
   "Calcium": 10,
   "Phosphorus": 6,
   "Sodium": 1.8,
-  "Food Intake (g/day)": ">150"
+  "Food Intake": ">150"
   }}}
 const swine={
       "Αναπαραγωγών Χοίρων": {
-        "Εγκύων": {"DE": 2868, "CrudeProtein": 130, "Lysine": 5.5, "CrudeFiber": "<100", "Calcium": 8, "Phosphorus": 4, "Sodium": 2, "Food Intake": "2-2,5"},
-        "Γαλ/γών": {"DE": 3107, "CrudeProtein": 170, "Lysine": 7.5, "CrudeFiber": "<60", "Calcium": 8, "Phosphorus": 6, "Sodium": 2.5, "Food Intake": "3,5-7"}
+        "Εγκύων": {"DE": 2868, "CrudeProtein": 130, "Lysine": 5.5, "CrudeFiber": "<100", "Calcium": 8, "Phosphorus": 4, "Sodium": 2, "Food Intake": "2000-2500"},
+        "Γαλ/γών": {"DE": 3107, "CrudeProtein": 170, "Lysine": 7.5, "CrudeFiber": "<60", "Calcium": 8, "Phosphorus": 6, "Sodium": 2.5, "Food Intake": "3500-7000"}
       },
       "Αναπτυσσόμενων - Παχυνόμενων Χοίρων Ηλικία (εβδομάδες)": {
         "1 ως 4": {"DE": "3227-3465", "CrudeProtein": 220, "Lysine": 14, "CrudeFiber": "<40", "Calcium": 10, "Phosphorus": 7, "Sodium": 2, "Food Intake": null},
-        "5 ως 10": {"DE": 3107, "CrudeProtein": 180, "Lysine": 11, "CrudeFiber": "<50", "Calcium": 10, "Phosphorus": 6, "Sodium": 1.5, "Food Intake": "1,2"},
-        "11 ως 18": {"DE": 3107, "CrudeProtein": 160, "Lysine": 9, "CrudeFiber": "<60", "Calcium": 8, "Phosphorus": 6, "Sodium": 1.5, "Food Intake": "1,2-2,3"},
-        ">19": {"DE": 3107, "CrudeProtein": 140, "Lysine": 7, "CrudeFiber": "<70", "Calcium": 7, "Phosphorus": 4, "Sodium": 1.5, "Food Intake": "2,3-3,5"}
+        "5 ως 10": {"DE": 3107, "CrudeProtein": 180, "Lysine": 11, "CrudeFiber": "<50", "Calcium": 10, "Phosphorus": 6, "Sodium": 1.5, "Food Intake": "<1200"},
+        "11 ως 18": {"DE": 3107, "CrudeProtein": 160, "Lysine": 9, "CrudeFiber": "<60", "Calcium": 8, "Phosphorus": 6, "Sodium": 1.5, "Food Intake": "1200-2300"},
+        ">19": {"DE": 3107, "CrudeProtein": 140, "Lysine": 7, "CrudeFiber": "<70", "Calcium": 7, "Phosphorus": 4, "Sodium": 1.5, "Food Intake": "2300-3500"}
       }
   }
 

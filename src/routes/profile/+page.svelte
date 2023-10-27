@@ -48,12 +48,12 @@
 		<!-- <span>(icon)</span> -->
 		<p>Αλλαγή κωδικού</p>
   </a>
-
+<!-- 
   <button
 							on:click={logout}
 							class="btn ml-3 variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary"
 							>Αποσύνδεση</button
-						>
+						> -->
 <style lang="postcss">
   input{
     @apply bg-transparent border-b-2 border-gray-500 outline-none focus:outline-none;
