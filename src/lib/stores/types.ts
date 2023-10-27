@@ -8,6 +8,11 @@ export interface State{
 	updated?:string,
 	id?:string
 }
+export interface Form{
+    success:true,
+    message?:string,
+    requirements?:object
+  }
 export interface Feed {
 	id?: string;
 	Title?: string;
@@ -17,7 +22,12 @@ export interface Feed {
 	price?:number;
 	// Add more fields as necessary
 };
-
+export interface Requirement{
+title: string;
+type?: string;
+value:number;
+value2?:number;
+}
 export interface TableState {
 	selfeeds: Feed[];
 	extraCols: string[];

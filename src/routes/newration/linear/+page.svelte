@@ -3,10 +3,10 @@
 	import RationInfo from '$lib/RationInfo.svelte';
 	import { currentUser } from '$lib/pocketbase';
 	import { getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
-	import type { State } from '$lib/stores/types';
+	import type { Form, State } from '$lib/stores/types';
 	import AnimalFeedRequirements from '$lib/AnimalFeedRequirements.svelte';
-	import type { PageData } from "./$types";
-  	let d:PageData ;
+	import { page } from '$app/stores';
+  	let animals=$page.data;
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'Δεν μπόρεσε να αποθηκευτεί το σιτηρέσιο.',
@@ -18,7 +18,7 @@
 	let loadedTable: boolean = false;
 	let currentState: State;
 	let rationName = '';
-
+let form:any={};
 	let producerName = $currentUser?.name || '';
 	let currentDate: string;
 </script>
@@ -58,8 +58,8 @@
 	<div class="info" style="">
 		Σημείωση: Προσθέστε τροφές πατώντας στο "Δημόσιες Τροφές".<br />
 	</div>
-{JSON.stringify(d)}
-	<AnimalFeedRequirements />
+
+	<AnimalFeedRequirements bind:form={form} animals={animals?.animals} />
 
 
     <hr class="my-5" />
@@ -73,7 +73,7 @@
 	</div>
 
 	{#if !loadedTable}
-		<EditableTable bind:rationName bind:producerName bind:currentState linear={true} />
+		<EditableTable bind:rationName bind:producerName bind:currentState linear={true} bind:requirements={form} />
 	{:else}
 		<EditableTable stage2Read={record} bind:currentState />
 	{/if}

@@ -113,7 +113,6 @@ export const  SHEEP_VALUES = {
 
 const poultry={
     "Αυγοπαραγωγών / Περίοδος αυγοπαραγωγής (εβδ)": {
-      "Food Intake (g/day)": "85-120",
       "18 ως 40": {
         "MEpoultry": 2749,
         "CrudeProtein": 175,
@@ -121,6 +120,7 @@ const poultry={
   "CrudeFiber": 70,
   "Calcium": 35,
   "Phosphorus": 3.5,
+  "Food Intake (g/day)": "85-120",
   "Sodium": 1.8
   },
   "41 ως 60": {
@@ -130,6 +130,7 @@ const poultry={
   "CrudeFiber": 70,
   "Calcium": 38,
   "Phosphorus": 3.5,
+  "Food Intake (g/day)": "85-120",
   "Sodium": 1.8
   },
   "61 ως 80": {
@@ -139,6 +140,7 @@ const poultry={
   "CrudeFiber": 70,
   "Calcium": 40,
   "Phosphorus": 3.5,
+  "Food Intake (g/day)": "85-120",
   "Sodium": 1.8
   }},
   "Ανάπτυξη - πάχυνση ορνιθίων / Ηλικία (εβδ)": {
@@ -184,7 +186,6 @@ const swine={
         ">19": {"DE": 3107, "CrudeProtein": 140, "Lysine": 7, "CrudeFiber": "<70", "Calcium": 7, "Phosphorus": 4, "Sodium": 1.5, "Food Intake": "2,3-3,5"}
       }
   }
-
 
 
 const aigoprov={
@@ -247,7 +248,7 @@ const booeidh={"Συντήρηση (ημερήσιες ανάγκες)": {
     500: {"MJ KET": 14699, "CrudeProtein": 600, "Calcium": 37, "Phosphorus": 29, "Magnesium": 8.7, "Sodium": 9.9},
     }
     }
-    export const animals={"poultry":poultry, "swine":swine, "aigoprov": aigoprov, "booeidh":booeidh}
+export const animals={"poultry":poultry, "swine":swine, "aigoprov": aigoprov, "booeidh":booeidh}
 // export function swine_feed_requirements (swine_stage){
 //     const SWINE_VALUES = {
 //         "nursery": {

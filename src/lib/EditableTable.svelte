@@ -21,7 +21,7 @@
 	export let rationName: string="";
 	export let producerName: string="";
 	export let linear=false;
-
+	export let requirements={}
 	let certain=!linear?[
 		'Title',
 		'weight',
@@ -36,6 +36,17 @@
 		'Fat',
 		'CrudeFiber',
 		'CrudeProtein'];
+	$:{
+		if (Object.keys(requirements).length>0){
+			const c=$metrics.map(x=>x.Title)
+			console.log(requirements)
+			for (let key in requirements){
+				if (c.includes(key) && !certain.includes(key) && !inputmlist.includes(key)){
+					inputmlist.push(key)
+				}
+			}
+		}
+	}
     export let stage2Read:State={rationName, producerName, tableState:{selfeeds:[],extraCols:[]}}
 	let selected:Feed[]=[];
 	let columns:Column[]=[];
@@ -195,7 +206,7 @@ $: { if($loadedTables && waitingtoLoadState){
 
 {#if $feeds.length > 0 && $metrics.length > 0}
 <!-- selected={selected} columns={columns} -->
-<FeedsTable bind:selected={selected} bind:columns={columns} userFeeds={$userFeeds} feeds={$feeds} metrics={$metrics} edit={true} linear={linear} />
+<FeedsTable bind:selected={selected} bind:columns={columns} userFeeds={$userFeeds} feeds={$feeds} metrics={$metrics} edit={true} linear={linear} bind:requirements={requirements} />
 {:else}
 <TablePlaceHolder></TablePlaceHolder>
 {/if}

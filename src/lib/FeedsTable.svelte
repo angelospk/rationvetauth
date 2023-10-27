@@ -49,7 +49,7 @@
 		'CrudeFiber',
 		'CrudeProtein'];
 	export let tableState:TableState={selfeeds:[], extraCols:[]}
-
+export let requirements={};
 export let metrics:Column[]=[];
 export let feeds:Feed[]=[];
 export let userFeeds:Feed[]=[];
@@ -330,6 +330,23 @@ onMount(()=>{
 						{/if}
 					{/each}
 				</tr>
+				{#if Object.keys(requirements).length>0}
+				<tr class="bg-gray-300 mt-2 text-gray-700 text-lg">
+					
+					<td></td>
+					{#each columns as column}
+					{#if column.Title=="Title"}
+					<td class=" w-min">Απαιτήσεις</td>
+					{:else}
+						{#if requirements.hasOwnProperty( column.Title)}
+							<td class="font-bold">{requirements[column.Title]}</td>
+						{:else}
+						<td></td>
+							{/if}
+						{/if}
+					{/each}
+				</tr>
+				{/if}
 			</tfoot>
 		</table>
 	</div>
