@@ -32,7 +32,7 @@
 
 	<div class="flex-col p-6 {cl}">
 				<div class="text-center">
-					<p class="mt-3 text-gray-500 dark:text-gray-300">Σύνδεση σε λογαριασμό</p>
+					<p class="mt-3 text-gray-500 text-3xl dark:text-gray-300">Σύνδεση σε λογαριασμό</p>
 				</div>
 	
 				<div class="mt-8">
@@ -82,7 +82,7 @@
 					>
 						<!-- <form> -->
 						<div>
-							<label for="email" class="block mb-2 text-sm text-gray-600 dark:text-gray-200 text-left"
+							<label for="email" class="block mb-2 text-xl text-gray-600 dark:text-gray-200 text-left"
 								>Email</label
 							>
 							<input
@@ -97,7 +97,7 @@
 	
 						<div class="mt-6">
 							<div class="flex justify-between mb-2">
-								<label for="password" class="text-sm text-gray-600 dark:text-gray-200">Κωδικός</label>
+								<label for="password" class="text-xl text-gray-600 dark:text-gray-200">Κωδικός</label>
 								<a
 									href="/forgot-password"
 									class="text-sm text-gray-400 focus:text-blue-500 hover:text-blue-500 hover:underline"
@@ -121,7 +121,7 @@
 								<LoadingCircles />
 							{:else}
 								<button
-									class="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+									class="w-full px-4 py-2 text-xl hover:underline tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
 								>
 									Είσοδος
 								</button>
