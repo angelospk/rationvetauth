@@ -1,3 +1,4 @@
+
 export interface State{
    tableState:TableState
     rationName:string,
@@ -7,6 +8,10 @@ export interface State{
 	user?:string,
 	updated?:string,
 	id?:string
+}
+export interface AnimalInfo{
+	animal:string
+	type:{selection:string, subselection:string}
 }
 export interface Form{
     success:true,
@@ -22,12 +27,17 @@ export interface Feed {
 	price?:number;
 	// Add more fields as necessary
 };
-export interface Requirement{
-title: string;
-type?: string;
-value:number;
-value2?:number;
+export interface Req{
+	Title: string;
+	type: string;
+	value:number;
+	topValue?:number;
+	}
+export interface AnimalReqs{
+	reqs: Req[];
+	fractions: object;
 }
+
 export interface TableState {
 	selfeeds: Feed[];
 	extraCols: string[];
