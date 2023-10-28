@@ -213,6 +213,11 @@ onMount(()=>{
 		<table class="bg-white w-full table-row-checked" title={$currentUser?"Πίνακας Σιτηρεσίου":"Συνδέσου για να τον επεξεργαστείς και να τον αποθηκεύσεις!"}>
 			<!-- Table headers -->
 			<thead>
+				{#if requirements.hasOwnProperty("ΚΤ")}
+				<tr class="bg-gray-200 text-gray-700 text-lg">
+				<th colspan="5">ΚΤ: {requirements.ΚΤ||""}	</th>
+				</tr>
+				{/if}
 				<tr class="bg-stone-400 text-gray-700">
 					{#if linear}
 					<th class="text-primary w-min">Τιμή</th>
@@ -224,7 +229,7 @@ onMount(()=>{
 				{#if tableOptions[0] && tableOptions[0].visible}
 				<tr class="text-gray-700 bg-green-100 text-sm">
 					{#if linear}
-						<th class="w-min">€/kg</th>
+						<td class="w-min">€/kg</td>
 					{/if}
 					{#each columns as column}
 						{#if column.Title == 'Title'}
@@ -330,7 +335,7 @@ onMount(()=>{
 						{/if}
 					{/each}
 				</tr>
-				{#if Object.keys(requirements).length>0}
+				{#if requirements.reqs>0}
 				<tr class="bg-gray-300 mt-2 text-gray-700 text-lg">
 					
 					<td></td>

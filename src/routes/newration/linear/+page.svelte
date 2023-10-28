@@ -7,6 +7,7 @@
 	import AnimalFeedRequirements from '$lib/AnimalFeedRequirements.svelte';
 	import { page } from '$app/stores';
 	import { metrics } from '$lib/stores/data';
+	import { reverseTransformObject } from '$lib/greekfuncts';
 	let animals = $page.data;
 	let metr = $metrics;
 	const toastStore = getToastStore();
@@ -65,17 +66,19 @@
 	<AnimalFeedRequirements bind:form animals={animals?.animals} bind:animalInfo={info}/>
 	<!-- {JSON.stringify(transformObject(form))} -->
 	{#if form.reqs.length > 0}
-		
 			{#if info}
 				<div class="flex-col">Ζώο: {info.animal}</div>
 				<div class="flex-col">Κατηγορία: {info.type.selection}</div>
 				<div class="flex-col">Υποκατηγορία: {info.type.subselection}</div>
 			{/if}
-			<div class="card p-3 flex space-x-3 overflow-x-auto"></div>
+			<div class="card p-3 flex space-x-3 overflow-x-auto">
 			{#each form.reqs as req}
-				<div class="flex-col">{metr.find((x) => x.Title == req.Title)?.labelgr || req.Title}
+				
+				<div class="flex flex-col">
+				{metr.find((x) => x.Title == req.Title)?.gr || req.Title}
+				{metr.find((x) => x.Title == req.Title)?.units||""}
 				{#if req.type != "any"}
-					<input bind:value={req.value} type="number"/>
+					<input bind:value={req.value} min=0 type="number"/>
 				{/if}
 				<select bind:value={req.type}>
 					<option value="any">Οτιδήποτε</option>
@@ -103,7 +106,7 @@
 	</div>
 
 	{#if !loadedTable}
-		<EditableTable bind:rationName bind:producerName bind:currentState linear={true} />
+		<EditableTable bind:rationName bind:producerName bind:currentState linear={true} requirements={reverseTransformObject(form)} />
 	{:else}
 		<EditableTable stage2Read={record} bind:currentState />
 	{/if}

@@ -43,7 +43,11 @@ export function transformObject(inputObj:object) {
           transformedValue.value = lower;
           transformedValue.type = '-';
           transformedValue.topValue = upper;
-        } 
+        }
+        else if (value.startsWith('>')) {
+          transformedValue.value = parseFloat(value.substring(1));
+          transformedValue.type = '>';
+        }
         // Handle other cases
         else {
           // Custom handling for other cases can go here
@@ -55,5 +59,34 @@ export function transformObject(inputObj:object) {
     }
   
     return outputObj as AnimalReqs;
+  }
+  export function reverseTransformObject(inputObj: AnimalReqs): object {
+    const outputObj: { [key: string]: string } = {};
+  
+    for (const req of inputObj.reqs) {
+      // Check the 'type' and reverse transform the value accordingly
+      switch (req.type) {
+        case '=':
+          outputObj[req.Title] = req.value;
+          break;
+        case '<':
+          outputObj[req.Title] = `<${req.value}`;
+          break;
+        case '-':
+          if (req.topValue !== undefined) {
+            outputObj[req.Title] = `${req.value}-${req.topValue}`;
+          }
+          break;
+        case '>':
+            outputObj[req.Title] = `>${req.value}`;
+        
+          break;
+        default:
+          // Handle other types if needed
+          break;
+      }
+    }
+  
+    return outputObj;
   }
   
