@@ -1,18 +1,19 @@
 <script lang="ts">
 	import { popup } from '@skeletonlabs/skeleton';
-	import type {PopupSettings } from '@skeletonlabs/skeleton';
+	import type { PopupSettings } from '@skeletonlabs/skeleton';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
 	// import { metrics, feeds, userFeeds, type State } from '$lib/stores/data';
 	import { currentUser, pb } from '$lib/pocketbase';
-    import type { Feed, TableState, Column } from './stores/types';
+	import type { Feed, TableState, Column } from './stores/types';
 	import { onMount } from 'svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
-		message: 'Προσοχή! Μια τροφή δεν μπόρεσε να φορτωθεί, καθώς έχει διαγραφτεί από τον δημιουργό της.',
+		message:
+			'Προσοχή! Μια τροφή δεν μπόρεσε να φορτωθεί, καθώς έχει διαγραφτεί από τον δημιουργό της.',
 		timeout: 5000,
-		background: "bg-red-500"
+		background: 'bg-red-500'
 	};
 	const popupClick: PopupSettings = {
 		event: 'click',
@@ -24,40 +25,44 @@
 		target: 'optionsClick',
 		placement: 'top'
 	};
-	
-	let tableOptions = {
-		displayUnits:{ label: 'Εμφάνιση Μονάδων', visible: true },
-		displayPercentage:{ label: 'Εμφάνιση Ποσοστού', visible: true },
-		displayDMPercentage:{ label: 'Εμφάνιση Ποσοστού ανά ΞΟ', visible: false }
-	};
-	export let linear:boolean=false;
-	export let edit = false;
-	export let selected:Feed[]=[];
-	export let columns:Column[]=[];
-    let certain = linear?[
-		'Title',
-		'weight',
-		'DryMatter',
-		'Fat',
-		'CrudeFiber',
-		'CrudeProtein',
-		'Ash',
-		'Calcium',
-		'Phosphorus'
-	]:["Title","weight",'DryMatter',
-		'Fat',
-		'CrudeFiber',
-		'CrudeProtein'];
-	export let tableState:TableState={selfeeds:[], extraCols:[]}
-export let requirements={};
-export let metrics:Column[]=[];
-export let feeds:Feed[]=[];
-export let userFeeds:Feed[]=[];
+	export let linear: boolean = false;
 
-// $: columns = metrics.filter((x) => certain.includes(x.Title));
+	let tableOptions = {
+		displayUnits: { label: 'Εμφάνιση Μονάδων', visible: true },
+		displayPercentage: { label: 'Εμφάνιση Ποσοστού', visible: !linear },
+		displayDMPercentage: { label: 'Εμφάνιση Ποσοστού ανά ΞΟ', visible: false },
+		ratios: { label: 'Βάρη < > Αναλογίες', visible: linear }
+	};
+	export let edit = false;
+	export let selected: Feed[] = [];
+	export let columns: Column[] = [];
+	let totalWeight=100;
+	let certain = linear
+		? [
+				'Title',
+				'weight',
+				'DryMatter',
+				'Fat',
+				'CrudeFiber',
+				'CrudeProtein',
+				'Ash',
+				'Calcium',
+				'Phosphorus'
+		  ]
+		: ['Title', 'weight', 'DryMatter', 'Fat', 'CrudeFiber', 'CrudeProtein'];
+	export let tableState: TableState = { selfeeds: [], extraCols: [] };
+	export let requirements = {};
+	export let metrics: Column[] = [];
+	export let feeds: Feed[] = [];
+	export let userFeeds: Feed[] = [];
+
+	// $: columns = metrics.filter((x) => certain.includes(x.Title));
 	let sum = {};
-	let emptySum;
+	let totalRatio = {};
+	let emptySum, emptyRatio;
+
 	$: {
+		// Initialize sum and emptySum similar to your existing code
 		let tmp = feeds[0] || {};
 		if (tmp.length == 0) {
 			certain.forEach((x) => {
@@ -71,32 +76,53 @@ export let userFeeds:Feed[]=[];
 			}
 		}
 		emptySum = { ...sum };
+		emptyRatio = { ...sum };
 	}
+
 	$: {
 		sum = { ...emptySum }; // Reset the sum object to emptySum
+		totalRatio = { ...emptyRatio }; // Reset the totalRatio object to emptyRatio
 
 		if (selected.length > 0) {
 			for (let i = 0; i < selected.length; i++) {
-				// if (selected[i].weight==undefined) {
-                //     selected[i].weight=0
-                // }
-                sum.weight += selected[i].weight;
+				let feedRatio = selected[i].ratio || 0; // Default ratio is 1 if not defined
 
+				sum.weight += selected[i].weight;
+				totalRatio.weight += feedRatio ;
+				// Loop through each metric in the sum object
 				for (let m in sum) {
 					if (m != 'weight') {
 						if (selected[i].hasOwnProperty(m)) {
-							sum[m] += selected[i].weight?selected[i].weight*selected[i][m]:0;
-						} else {
-							// console.log(selected[i], m);
+							// Modify the sum with weighted values
+							sum[m] += selected[i].weight ? selected[i].weight * selected[i][m] : 0;
+
+							// Calculate the totalRatio with weighted values
+							// totalRatio[m] = (totalRatio[m] || 0) + feedRatio * sum[m];
+							totalRatio[m]+=feedRatio*selected[i][m]/100;
 						}
 					}
 				}
 			}
+			// totalWeight=sum.weight;
+			// If you want the ratios to sum to 100, you can normalize here
+			// let ratioSum = Object.values(totalRatio).reduce((a, b) => a + b, 0);
+			// for (let m in totalRatio) {
+			// 	totalRatio[m] = (totalRatio[m] / ratioSum) * 100;
+			// }
 		}
-		// saveState();
 	}
-
-	async function readState(tableState:TableState) {
+	function formatWeights(){
+		for (let i = 0; i < selected.length; i++) {
+			selected[i].weight=selected[i].ratio*totalWeight/100;
+		}
+	}
+	function formatRatios(){
+		for (let i = 0; i < selected.length; i++) {
+			selected[i].ratio=selected[i].weight/sum.weight*100;
+		}
+		totalWeight=sum.weight;
+	}
+	async function readState(tableState: TableState) {
 		// Iterate through the given stateTable
 		for (const item of tableState.selfeeds) {
 			console.log('here', item, feeds, userFeeds);
@@ -106,14 +132,14 @@ export let userFeeds:Feed[]=[];
 
 				// If not found in userFeeds, fetch from pocketbase
 				if (!userFeedItem) {
-				try {
+					try {
 						userFeedItem = await pb.collection('feeds').getOne(item.id, {
 							expand: 'user'
 						});
-				} catch (error) {
-					toastStore.trigger(te);
-					console.log(error);
-				}
+					} catch (error) {
+						toastStore.trigger(te);
+						console.log(error);
+					}
 				}
 				console.log(userFeedItem);
 				// If the item is found (either in userFeeds or in pocketbase), push to the result
@@ -139,14 +165,15 @@ export let userFeeds:Feed[]=[];
 			certain.push(...tableState.extraCols);
 		}
 		columns = metrics.filter((x) => certain.includes(x.Title));
-		return {selected, columns}
-;
+		return { selected, columns };
 	}
 
-onMount(()=>{
-
-	readState(tableState).then((r)=>{columns=r.columns;selected=r.selected})
-})
+	onMount(() => {
+		readState(tableState).then((r) => {
+			columns = r.columns;
+			selected = r.selected;
+		});
+	});
 
 	function formatNumber(number: Number) {
 		return Number.isInteger(number) ? number.toString() : number.toFixed(2);
@@ -154,97 +181,152 @@ onMount(()=>{
 </script>
 
 <!-- Table for feedstuff entry -->
-	<div class="flex space-x-5 md:space-x-10 justify-center print:hidden">
-		<button
-			class="shadow-xl rounded-full my-3 stroke-red-500 fill-red-500"
-			on:click|preventDefault
-			use:popup={popupClick}><svg class="w-8 h-8  hover:fill-red-300 text-secondary-500  dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-				<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.529 7.988a2.502 2.502 0 0 1 5 .191A2.441 2.441 0 0 1 10 10.582V12m-.01 3.008H10M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-			  </svg></button
+<div class="flex space-x-5 md:space-x-10 justify-center print:hidden">
+	<button
+		class="shadow-xl rounded-full my-3 stroke-red-500 fill-red-500"
+		on:click|preventDefault
+		use:popup={popupClick}
+		><svg
+			class="w-8 h-8 hover:fill-red-300 text-secondary-500 dark:text-white"
+			aria-hidden="true"
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			viewBox="0 0 20 20"
 		>
-		<button
-			class="btn-sm rounded-full my-3 variant-ghost-secondary hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:scale-105 hover:duration-1000 duration-1000 "
-			on:click|preventDefault
-			use:popup={optionsClick}><svg class="w-6 h-6 hover:fill-gray-700 text-secondary-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-				<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12.25V1m0 11.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M4 19v-2.25m6-13.5V1m0 2.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M10 19V7.75m6 4.5V1m0 11.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM16 19v-2"/>
-			  </svg></button
+			<path
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="1.5"
+				d="M7.529 7.988a2.502 2.502 0 0 1 5 .191A2.441 2.441 0 0 1 10 10.582V12m-.01 3.008H10M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+			/>
+		</svg></button
+	>
+	<button
+		class="btn-sm rounded-full my-3 variant-ghost-secondary hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:scale-105 hover:duration-1000 duration-1000"
+		on:click|preventDefault
+		use:popup={optionsClick}
+		><svg
+			class="w-6 h-6 hover:fill-gray-700 text-secondary-500 dark:text-white"
+			aria-hidden="true"
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			viewBox="0 0 20 20"
 		>
-	</div>
-	<div class="card p-4 variant-filled-secondary z-10" data-popup="optionsClick">
-		<ol>
-				<li>
-					<SlideToggle
-						name="slider-large"
-						active="bg-primary-500"
-						size="sm"
-						bind:checked={tableOptions.displayUnits.visible}
-					>
-						{tableOptions.displayUnits.label}</SlideToggle
-					>
-				</li>
-				<li>
-					<SlideToggle
-						name="slider-large"
-						active="bg-primary-500"
-						size="sm"
-						bind:checked={tableOptions.displayPercentage.visible}
-					>
-						{tableOptions.displayPercentage.label}</SlideToggle
-					>
-				</li>
-				<li>
-					<SlideToggle
-						name="slider-large"
-						active="bg-primary-500"
-						size="sm"
-						bind:checked={tableOptions.displayDMPercentage.visible}
-					>
-						{tableOptions.displayDMPercentage.label}</SlideToggle
-					>
-				</li>
-
-		</ol>
-		<div class="arrow variant-filled-secondary" />
-	</div>
-	<button class="card p-4 variant-filled-secondary z-10" data-popup="popupClick" on:click|preventDefault>
-		<p class="underline">Διατροφικά στοιχεία πίνακα:</p>
-		<ul>
-			<li>ΞΟ = Ξηρά Ουσία</li>
-			<li>ΟΛΟ = Ολικές Λιπαρές Ουσίες</li>
-			<li>ΟΚ = Ολικές Κυταρρίνες</li>
-			<li>Ca = Ασβέστιο</li>
-			<li>P = Φωσφόρος</li>
-			<li>ΟΑΟ = Ολικές Αζωτούχες Ουσίες</li>
-			<!-- <Accordion>
+			<path
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M4 12.25V1m0 11.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M4 19v-2.25m6-13.5V1m0 2.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M10 19V7.75m6 4.5V1m0 11.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM16 19v-2"
+			/>
+		</svg></button
+	>
+</div>
+<div class="card p-4 variant-filled-secondary z-10" data-popup="optionsClick">
+	<ol>
+		<li>
+			<SlideToggle
+				name="slider-large"
+				active="bg-primary-500"
+				size="sm"
+				bind:checked={tableOptions.ratios.visible}
+			>
+				{tableOptions.ratios.label}</SlideToggle
+			>
+		</li>
+		<li>
+			<SlideToggle
+				name="slider-large"
+				active="bg-primary-500"
+				size="sm"
+				bind:checked={tableOptions.displayUnits.visible}
+			>
+				{tableOptions.displayUnits.label}</SlideToggle
+			>
+		</li>
+		<li>
+			<SlideToggle
+				name="slider-large"
+				active="bg-primary-500"
+				size="sm"
+				bind:checked={tableOptions.displayPercentage.visible}
+			>
+				{tableOptions.displayPercentage.label}</SlideToggle
+			>
+		</li>
+		<li>
+			<SlideToggle
+				name="slider-large"
+				active="bg-primary-500"
+				size="sm"
+				bind:checked={tableOptions.displayDMPercentage.visible}
+			>
+				{tableOptions.displayDMPercentage.label}</SlideToggle
+			>
+		</li>
+	</ol>
+	<div class="arrow variant-filled-secondary" />
+</div>
+<button
+	class="card p-4 variant-filled-secondary z-10"
+	data-popup="popupClick"
+	on:click|preventDefault
+>
+	<p class="underline">Διατροφικά στοιχεία πίνακα:</p>
+	<ul>
+		<li>ΞΟ = Ξηρά Ουσία</li>
+		<li>ΟΛΟ = Ολικές Λιπαρές Ουσίες</li>
+		<li>ΟΚ = Ολικές Κυταρρίνες</li>
+		<li>Ca = Ασβέστιο</li>
+		<li>P = Φωσφόρος</li>
+		<li>ΟΑΟ = Ολικές Αζωτούχες Ουσίες</li>
+		<!-- <Accordion>
 			<AccordionItem>
 				<svelte:fragment slot="summary">Περισσότερα</svelte:fragment>
 				<svelte:fragment slot="content">Θες κι άλλα ε; Ατιμούτσικο.</svelte:fragment>
 			</AccordionItem></Accordion> -->
-		</ul>
-		<p class="text-xs my-2">
-			Στη γραμμή "Σύνολο" οι μονάδες εκτός τη στήλης "Βάρος" είναι g ή kcal αντίστοιχα.
-		</p>
-		<div class="arrow variant-filled-secondary" />
-	</button>
+	</ul>
+	<p class="text-xs my-2">
+		Στη γραμμή "Σύνολο" οι μονάδες εκτός τη στήλης "Βάρος" είναι g ή kcal αντίστοιχα.
+	</p>
+	<div class="arrow variant-filled-secondary" />
+</button>
 
-	<div class="overflow-x-auto rounded-md">
-		<table class="bg-white w-full table-row-checked" title={$currentUser?"Πίνακας Σιτηρεσίου":"Συνδέσου για να τον επεξεργαστείς και να τον αποθηκεύσεις!"}>
-			<!-- Table headers -->
-			<thead>
-				{#if requirements.hasOwnProperty("ΚΤ")}
+<div class="overflow-x-auto rounded-md">
+	<table
+		class="bg-white w-full table-row-checked"
+		title={$currentUser
+			? 'Πίνακας Σιτηρεσίου'
+			: 'Συνδέσου για να τον επεξεργαστείς και να τον αποθηκεύσεις!'}
+	>
+		<!-- Table headers -->
+		<thead>
+			{#if requirements.hasOwnProperty('ΚΤ')}
 				<tr class="bg-gray-200 text-gray-700 text-lg">
-				<th colspan="5">ΚΤ: {requirements.ΚΤ||""}	</th>
+					<th colspan="5">ΚΤ: {requirements.ΚΤ || ''} g/μέρα</th>
 				</tr>
-				{/if}
-				<tr class="bg-stone-400 text-gray-700">
-					{#if linear}
+			{/if}
+			<tr class="bg-stone-400 text-gray-700">
+				{#if linear}
 					<th class="text-primary w-min">Τιμή</th>
-					{/if}
-					{#each columns as column}
+				{/if}
+				{#each columns as column}
+					{#if column.Title == 'weight'}
+					<th class="text-primary w-min hover:cursor-pointer" on:click={()=>{tableOptions.ratios.visible=!tableOptions.ratios.visible}}>
+					<button >
+						{#if tableOptions.ratios.visible}
+							Αναλογία
+						{:else}
+							Βάρος
+						{/if}
+					</button></th>
+					{:else}
 						<th class="text-primary w-min">{column.gr}</th>
-					{/each}
-				</tr>
-				{#if tableOptions.displayUnits.visible}
+					{/if}
+				{/each}
+			</tr>
+			{#if tableOptions.displayUnits.visible}
 				<tr class="text-gray-700 bg-green-100 text-sm">
 					{#if linear}
 						<td class="w-min">€/kg</td>
@@ -252,6 +334,12 @@ onMount(()=>{
 					{#each columns as column}
 						{#if column.Title == 'Title'}
 							<td class="text-black-700 w-min">Μονάδες</td>
+						{:else if column.Title == 'weight'}
+							{#if tableOptions.ratios.visible}
+								<td>%</td>
+							{:else}
+								<td>kg</td>
+							{/if}
 						{:else if column.units !== undefined}
 							<td>{column.units}</td>
 						{:else}
@@ -259,130 +347,159 @@ onMount(()=>{
 						{/if}
 					{/each}
 				</tr>
-				{/if}
-			</thead>
+			{/if}
+		</thead>
 
-			<!-- Table body -->
-			<tbody>
-				{#each selected as feed, i}
-					<tr class="">
-						{#if linear}
+		<!-- Table body -->
+		<tbody>
+			{#each selected as feed, i}
+				<tr class="">
+					{#if linear}
+						<td>
+							<input type="number" bind:value={feed.price} step="0.5" min="0" />
+						</td>
+					{/if}
+					<td>
+						<span class="w-min text-gray-500 text-sm">{feed.Title}</span>
+					</td>
+					<td
+						>{#if edit}
+							{#if tableOptions.ratios.visible}
+								<div class="flex justify-between"><div class="{totalRatio.weight!=100?"ml-auto":"mx-auto"}"><input type="number" bind:value={feed.ratio} step="5" min="0" on:change={formatWeights} /></div><div class="{totalRatio.weight!=100?"block hover:cursor-pointer":"hidden"}" on:click={()=>{feed.ratio+=100-totalRatio.weight}}><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
+									<path d="M12.356 5.435 1.938 16.384a.5.5 0 0 0 .018.707l2.9 2.757a.5.5 0 0 0 .706-.018L15.978 8.882l-3.622-3.447Zm7.681-.819a.5.5 0 0 0-.018-.706l-2.9-2.757a.5.5 0 0 0-.707.017l-2.68 2.817 3.622 3.446 2.683-2.817Zm-2.89 12.233-1 .025-.024-1a1 1 0 1 0-2 .05l.025 1-1 .024a1 1 0 0 0 .05 2l1-.025.025 1a1 1 0 1 0 2-.05l-.025-1 1-.024a1 1 0 1 0-.05-2h-.001ZM2.953 9.2l.025 1a1 1 0 1 0 2-.05l-.025-1 1-.025a1 1 0 1 0-.05-2l-1 .025-.025-1a1 1 0 0 0-2 .049l.025 1-1 .025a1 1 0 0 0 .05 2l1-.024Zm15.07 2.626-2 .05.05 1.999 2-.05-.05-1.999ZM11.752.978l-2 .05.05 2 2-.05-.05-2Zm-2.95 2.075-2 .05.05 1.999 2-.05-.05-2ZM5.753 1.127l-1.999.05.05 2 1.999-.05-.05-2Zm15.194 7.625-2 .05.05 2 2-.05-.05-2Zm.125 4.998-2 .05.05 2 2-.05-.05-2Z"/>
+								  </svg></div> </div>
+							{:else}
+								<input type="number" bind:value={feed.weight} step="1" min="0" on:change={formatRatios}/>
+							{/if}
+						{:else}
+							{#if tableOptions.ratios.visible}
+								<p>{feed.ratio}</p>
+							{:else}
+								<p>{feed.weight}</p>
+							{/if}
+						{/if}</td
+					>
+
+					{#each columns as column}
+						{#if column.Title != 'Title' && column.Title != 'weight'}
 							<td>
-								<input
-									type="number"
-									bind:value={feed.price}
-									step="0.5"
-									min="0"
-								/>
-								<!-- <span class="w-min text-gray-500 text-sm">{}</span> -->
+								<p>{feed[column.Title]}</p>
 							</td>
 						{/if}
-						<td>
-							<span class="w-min text-gray-500 text-sm">{feed.Title}</span>
-						</td>
-						<td>{#if edit}
-							<input
-									type="number"
-									bind:value={feed.weight}
-									step="1"
-									min="0"
-								/>
-						{:else}
-							<p>{feed.weight}</p>
-						{/if}</td>
-
-						{#each columns as column}
-							{#if column.Title != 'Title' && column.Title != 'weight'}
-								<td>
-									<p>{feed[column.Title]}</p>
-								</td>
-							{/if}
-						{/each}
-					</tr>
-				{/each}
-			</tbody>
-			<tfoot>
-				
-				{#if tableOptions.displayPercentage.visible}
-					<tr class="bg-gray-200 text-gray-700">
-						{#if linear}
-							<td class=" w-min text-sm"></td>
-						{/if}
-						<td class=" w-min text-sm">Ποσοστό</td>
-						<td />
-						{#each columns as column}
-							{#if column.Title != 'Title' && column.Title != 'weight'}
-								{#if column.units == 'g/kg'}
-									<td class="font-bold">{formatNumber(sum[column.Title] / sum['weight'] / 10)}</td>
-								{:else}
-									<td />
-								{/if}
-							{/if}
-						{/each}
-					</tr>
-				{/if}
-				{#if tableOptions.displayDMPercentage.visible}
-					<tr class="bg-gray-200 text-gray-700">
-						{#if linear}
-							<td class=" w-min text-sm"></td>
-						{/if}
-						<td class=" w-min text-sm">Ποσοστό / ΞΟ </td>
-						<td />
-						{#each columns as column}
-							{#if column.Title != 'Title' && column.Title != 'weight'}
-								{#if column.units == 'g/kg'}
-									<td class="font-bold"
-										>{formatNumber((100 * sum[column.Title]) / sum.DryMatter)}</td
-									>
-								{:else}
-									<td />
-								{/if}
-							{/if}
-						{/each}
-					</tr>
-				{/if}
-				<tr class="bg-gray-300 text-gray-700 text-lg">
+					{/each}
+				</tr>
+			{/each}
+		</tbody>
+		<tfoot>
+			{#if tableOptions.displayPercentage.visible}
+				<tr class="bg-gray-200 text-gray-700">
 					{#if linear}
-						<td class=" w-min">0</td>
+						<td class=" w-min text-sm" />
 					{/if}
-					<td class=" w-min">Σύνολο</td>
-
+					<td class=" w-min text-sm">Ποσοστό</td>
+					<td />
 					{#each columns as column}
-						{#if column.Title != 'Title'}
-							<td class="font-bold">{formatNumber(sum[column.Title])}</td>
+						{#if column.Title != 'Title' && column.Title != 'weight'}
+							{#if column.units == 'g/kg'}
+								<td class="font-bold">{formatNumber(sum[column.Title] / sum['weight'] / 10)}</td>
+							{:else}
+								<td />
+							{/if}
 						{/if}
 					{/each}
 				</tr>
-				{#if Object.keys(requirements).length>0}
-				<tr class="bg-gray-300 mt-2 text-gray-700 text-lg">
-					
-					<td></td>
+			{/if}
+			{#if tableOptions.displayDMPercentage.visible}
+				<tr class="bg-gray-200 text-gray-700">
+					{#if linear}
+						<td class=" w-min text-sm" />
+					{/if}
+					<td class=" w-min text-sm">Ποσοστό / ΞΟ </td>
+					<td />
 					{#each columns as column}
-					{#if column.Title=="Title"}
-					<td class=" w-min">Απαιτήσεις</td>
-					{:else}
-						{#if requirements.hasOwnProperty( column.Title)}
+						{#if column.Title != 'Title' && column.Title != 'weight'}
+							{#if column.units == 'g/kg'}
+								<td class="font-bold">{formatNumber((100 * sum[column.Title]) / sum.DryMatter)}</td>
+							{:else}
+								<td />
+							{/if}
+						{/if}
+					{/each}
+				</tr>
+			{/if}
+			{#if tableOptions.ratios.visible}
+			<tr class="bg-gray-300 text-gray-700 text-lg">
+				{#if linear}
+					<td class=" w-min">0</td>
+				{/if}
+				<td class=" w-min">Σύνολο</td>
+
+				{#each columns as column}
+					{#if column.Title != 'Title'}
+					<td class="font-bold {totalRatio.weight>100?"text-red-600":""}">{formatNumber(totalRatio[column.Title])}</td>
+					{/if}
+					
+				{/each}
+			</tr>
+			<tr class="bg-gray-300 text-gray-700">
+				{#if linear}
+					<td class=" w-min">0</td>
+				{/if}
+				<td class=" w-min">Σύνολο (βάρος)</td>
+
+				{#each columns as column}
+					{#if column.Title == 'weight'}
+					<td><input type="number" on:change={formatWeights} min=0 step=10 bind:value={totalWeight}/>(kg)</td>
+					{:else if column.Title != 'Title'}
+
+					<td class="font-bold">{formatNumber(totalWeight*totalRatio[column.Title])}</td>
+					{/if}
+					
+				{/each}
+			</tr>
+			{:else}
+			<tr class="bg-gray-300 text-gray-700 text-lg">
+				{#if linear}
+					<td class=" w-min">0</td>
+				{/if}
+				<td class=" w-min">Σύνολο</td>
+
+				{#each columns as column}
+					{#if column.Title != 'Title'}
+					<td class="font-bold">{formatNumber(sum[column.Title])}</td>
+					{/if}
+					
+				{/each}
+			</tr>
+			{/if}
+			
+		
+			{#if Object.keys(requirements).length > 0}
+				<tr class="bg-gray-300 mt-2 text-gray-700 text-lg">
+					<td />
+					{#each columns as column}
+						{#if column.Title == 'Title'}
+							<td class=" w-min">Απαιτήσεις</td>
+						{:else if requirements.hasOwnProperty(column.Title)}
 							<td class="font-bold">{requirements[column.Title]}</td>
 						{:else}
-						<td></td>
-							{/if}
+							<td />
 						{/if}
 					{/each}
 				</tr>
-				{/if}
-			</tfoot>
-		</table>
-	</div>
-	<div class="secondary" style="margin-top: 5px;">
-		<br />
-	</div>
-
+			{/if}
+		</tfoot>
+	</table>
+</div>
+<div class="secondary" style="margin-top: 5px;">
+	<br />
+</div>
 
 <style lang="postcss">
 	/* input[type='number'] {
 		width: 4.5rem;
 	} */
-	th{
+	th {
 		background-color: aqua;
 		border: 1px dotted black;
 	}
@@ -391,9 +508,9 @@ onMount(()=>{
 		background-color: paleturquoise;
 	}
 
-input[type='number'] {
-	background-color:paleturquoise;
-}
+	input[type='number'] {
+		background-color: paleturquoise;
+	}
 	@media print {
 		/* Hide buttons and explanatory text */
 

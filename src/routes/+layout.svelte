@@ -34,7 +34,7 @@
 		if (res.ok) {
 			let dat = await res.json();
 			let fs = dat.d[0].data;
-			fs.forEach((x: Feed) => {x.weight = 0; if(!x.price)  x.price=0;});
+			fs.forEach((x: Feed) => {x.weight = 0; x.ratio=0; if(!x.price)  x.price=0;});
 			feeds.set(fs);
 			metrics.set(dat.d[1].data);
 		}
@@ -45,7 +45,7 @@
 					(await pb.collection('feeds').getFullList({
 						sort: '-created'
 					})) || [];
-				d.forEach((x: Feed) => {x.weight = 0; if(!x.price)  x.price=0;});
+				d.forEach((x: Feed) => {x.weight = 0;x.ratio=0; if(!x.price)  x.price=0;});
 				userFeeds.set(d);
 			} catch (err) {
 				console.log(err);

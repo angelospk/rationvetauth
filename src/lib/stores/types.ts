@@ -23,6 +23,7 @@ export interface Feed {
 	Title?: string;
 	weight?: number;
 	user?: string;
+	ratio?:number;
 	updated?: string;
 	price?:number;
 	// Add more fields as necessary
