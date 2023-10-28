@@ -77,12 +77,12 @@
 		}
 		emptySum = { ...sum };
 		emptyRatio = { ...sum };
+		console.log(emptySum)
 	}
 
 	$: {
 		sum = { ...emptySum }; // Reset the sum object to emptySum
 		totalRatio = { ...emptyRatio }; // Reset the totalRatio object to emptyRatio
-
 		if (selected.length > 0) {
 			for (let i = 0; i < selected.length; i++) {
 				let feedRatio = selected[i].ratio || 0; // Default ratio is 1 if not defined
@@ -313,7 +313,9 @@
 				{/if}
 				{#each columns as column}
 					{#if column.Title == 'weight'}
-					<th class="text-primary w-min hover:cursor-pointer" on:click={()=>{tableOptions.ratios.visible=!tableOptions.ratios.visible}}>
+					<th class="text-primary w-min hover:cursor-pointer" on:click={()=>{
+						if (tableOptions.ratios.visible){formatWeights()} else {formatRatios()}
+						tableOptions.ratios.visible=!tableOptions.ratios.visible}}>
 					<button >
 						{#if tableOptions.ratios.visible}
 							Αναλογία
@@ -365,7 +367,7 @@
 					<td
 						>{#if edit}
 							{#if tableOptions.ratios.visible}
-								<div class="flex justify-between"><div class="{totalRatio.weight!=100?"ml-auto":"mx-auto"}"><input type="number" bind:value={feed.ratio} step="5" min="0" on:change={formatWeights} /></div><div class="{totalRatio.weight!=100?"block hover:cursor-pointer":"hidden"}" on:click={()=>{feed.ratio+=100-totalRatio.weight}}><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
+								<div class="flex justify-between"><div class="{totalRatio.weight!=100?"mx-auto":"mx-auto"}"><input type="number" bind:value={feed.ratio} step="5" min="0" on:change={formatWeights} /></div><div class="{totalRatio.weight!=100?"block hover:cursor-pointer":"hidden"}" on:click={()=>{feed.ratio+=100-totalRatio.weight}}><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
 									<path d="M12.356 5.435 1.938 16.384a.5.5 0 0 0 .018.707l2.9 2.757a.5.5 0 0 0 .706-.018L15.978 8.882l-3.622-3.447Zm7.681-.819a.5.5 0 0 0-.018-.706l-2.9-2.757a.5.5 0 0 0-.707.017l-2.68 2.817 3.622 3.446 2.683-2.817Zm-2.89 12.233-1 .025-.024-1a1 1 0 1 0-2 .05l.025 1-1 .024a1 1 0 0 0 .05 2l1-.025.025 1a1 1 0 1 0 2-.05l-.025-1 1-.024a1 1 0 1 0-.05-2h-.001ZM2.953 9.2l.025 1a1 1 0 1 0 2-.05l-.025-1 1-.025a1 1 0 1 0-.05-2l-1 .025-.025-1a1 1 0 0 0-2 .049l.025 1-1 .025a1 1 0 0 0 .05 2l1-.024Zm15.07 2.626-2 .05.05 1.999 2-.05-.05-1.999ZM11.752.978l-2 .05.05 2 2-.05-.05-2Zm-2.95 2.075-2 .05.05 1.999 2-.05-.05-2ZM5.753 1.127l-1.999.05.05 2 1.999-.05-.05-2Zm15.194 7.625-2 .05.05 2 2-.05-.05-2Zm.125 4.998-2 .05.05 2 2-.05-.05-2Z"/>
 								  </svg></div> </div>
 							{:else}
@@ -430,7 +432,7 @@
 			{#if tableOptions.ratios.visible}
 			<tr class="bg-gray-300 text-gray-700 text-lg">
 				{#if linear}
-					<td class=" w-min">0</td>
+					<td class=" w-min"></td>
 				{/if}
 				<td class=" w-min">Σύνολο</td>
 
@@ -443,7 +445,7 @@
 			</tr>
 			<tr class="bg-gray-300 text-gray-700">
 				{#if linear}
-					<td class=" w-min">0</td>
+					<td class=" w-min">{formatNumber(sum.price)||""}</td>
 				{/if}
 				<td class=" w-min">Σύνολο (βάρος)</td>
 
@@ -460,7 +462,7 @@
 			{:else}
 			<tr class="bg-gray-300 text-gray-700 text-lg">
 				{#if linear}
-					<td class=" w-min">0</td>
+					<td class=" w-min">{formatNumber(sum.price)||""}</td>
 				{/if}
 				<td class=" w-min">Σύνολο</td>
 
