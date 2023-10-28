@@ -25,11 +25,11 @@
 		placement: 'top'
 	};
 	
-	let tableOptions = [
-		{ label: 'Εμφάνιση Μονάδων', visible: true },
-		{ label: 'Εμφάνιση Ποσοστού', visible: true },
-		{ label: 'Εμφάνιση Ποσοστού ανά ΞΟ', visible: false }
-	];
+	let tableOptions = {
+		displayUnits:{ label: 'Εμφάνιση Μονάδων', visible: true },
+		displayPercentage:{ label: 'Εμφάνιση Ποσοστού', visible: true },
+		displayDMPercentage:{ label: 'Εμφάνιση Ποσοστού ανά ΞΟ', visible: false }
+	};
 	export let linear:boolean=false;
 	export let edit = false;
 	export let selected:Feed[]=[];
@@ -154,7 +154,6 @@ onMount(()=>{
 </script>
 
 <!-- Table for feedstuff entry -->
-
 	<div class="flex space-x-5 md:space-x-10 justify-center print:hidden">
 		<button
 			class="shadow-xl rounded-full my-3 stroke-red-500 fill-red-500"
@@ -173,18 +172,37 @@ onMount(()=>{
 	</div>
 	<div class="card p-4 variant-filled-secondary z-10" data-popup="optionsClick">
 		<ol>
-			{#each tableOptions as option}
 				<li>
 					<SlideToggle
 						name="slider-large"
 						active="bg-primary-500"
 						size="sm"
-						bind:checked={option.visible}
+						bind:checked={tableOptions.displayUnits.visible}
 					>
-						{option.label}</SlideToggle
+						{tableOptions.displayUnits.label}</SlideToggle
 					>
 				</li>
-			{/each}
+				<li>
+					<SlideToggle
+						name="slider-large"
+						active="bg-primary-500"
+						size="sm"
+						bind:checked={tableOptions.displayPercentage.visible}
+					>
+						{tableOptions.displayPercentage.label}</SlideToggle
+					>
+				</li>
+				<li>
+					<SlideToggle
+						name="slider-large"
+						active="bg-primary-500"
+						size="sm"
+						bind:checked={tableOptions.displayDMPercentage.visible}
+					>
+						{tableOptions.displayDMPercentage.label}</SlideToggle
+					>
+				</li>
+
 		</ol>
 		<div class="arrow variant-filled-secondary" />
 	</div>
@@ -226,7 +244,7 @@ onMount(()=>{
 						<th class="text-primary w-min">{column.gr}</th>
 					{/each}
 				</tr>
-				{#if tableOptions[0] && tableOptions[0].visible}
+				{#if tableOptions.displayUnits.visible}
 				<tr class="text-gray-700 bg-green-100 text-sm">
 					{#if linear}
 						<td class="w-min">€/kg</td>
@@ -285,7 +303,7 @@ onMount(()=>{
 			</tbody>
 			<tfoot>
 				
-				{#if tableOptions[1] && tableOptions[1].visible}
+				{#if tableOptions.displayPercentage.visible}
 					<tr class="bg-gray-200 text-gray-700">
 						{#if linear}
 							<td class=" w-min text-sm"></td>
@@ -303,7 +321,7 @@ onMount(()=>{
 						{/each}
 					</tr>
 				{/if}
-				{#if tableOptions[2] && tableOptions[2].visible}
+				{#if tableOptions.displayDMPercentage.visible}
 					<tr class="bg-gray-200 text-gray-700">
 						{#if linear}
 							<td class=" w-min text-sm"></td>
@@ -335,7 +353,7 @@ onMount(()=>{
 						{/if}
 					{/each}
 				</tr>
-				{#if requirements.reqs>0}
+				{#if Object.keys(requirements).length>0}
 				<tr class="bg-gray-300 mt-2 text-gray-700 text-lg">
 					
 					<td></td>

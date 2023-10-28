@@ -40,6 +40,7 @@
 		if (Object.keys(requirements).length>0){
 			const c=$metrics.map(x=>x.Title)
 			console.log(requirements)
+			inputmlist=[]
 			for (let key in requirements){
 				if (c.includes(key) && !certain.includes(key) && !inputmlist.includes(key)){
 					inputmlist.push(key)
@@ -86,23 +87,6 @@ onMount(async () => {
 	// waitingtoLoadState=false;
 	});
 
-// 	function loadState() {
-// 		const savedState = localStorage.getItem('livestockFeedState');
-// 		console.log(savedState)
-// 		if (savedState) {
-// 			return JSON.parse(savedState)
-// 			// Set other variables from the saved state if needed
-// 		}
-// 		else return null;
-// 	}
-
-
-// 	function saveState() {
-// 			localStorage.setItem('livestockFeedState', JSON.stringify(currentState));
-// 			console.log('Saved', currentState);
-// 	}
-	
-	//filtrarei ta feeds kathe fora pou allazei to inputChipList dld to koutaki pou pliktrologei o xristis
 
 
 let waitingtoLoadState=true;
@@ -165,15 +149,7 @@ async function readState(tableState:TableState) {
 }
 
 $: { if($loadedTables && waitingtoLoadState){
-	// console.log(loaded)
-	// let t;
-	// if (loaded){
-	// 	console.log("loaded", loaded)
-	// 	t=loaded?.ts;
-	// 	producerName=loaded?.producerName
-	// 	rationName=loaded?.rationName
-	// 	if (t) readState(t).then((r)=>{inputChipList=r.inputChipList;inputChipListUser=r.inputChipListUser; inputmlist=r.inputmlist; waitingtoLoadState=false;})}
-	// }
+
 	waitingtoLoadState=false;
     let t=stage2Read?.tableState
     producerName=stage2Read?.producerName;
