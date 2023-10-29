@@ -223,7 +223,7 @@
 	bind:metricsAutocomplete
 	bind:userFoodAutocomplete
 />
-{#if selected.length>0 && requirements.req>0}
+{#if selected.length>0 && requirements.reqs.length>0}
 <button
 	class="koumpi mb-3"
 	on:click={async () => {
