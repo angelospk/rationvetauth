@@ -2,12 +2,12 @@
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
-	// import { metrics, feeds, userFeeds, type State } from '$lib/stores/data';
 	import { currentUser, pb } from '$lib/pocketbase';
 	import type { Feed, TableState, Column } from './stores/types';
 	import { onMount } from 'svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
+	import { formatNumber } from './greekfuncts';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message:
@@ -170,9 +170,7 @@
 		});
 	});
 
-	function formatNumber(number: Number) {
-		return Number.isInteger(number) ? number.toString() : number.toFixed(2);
-	}
+
 </script>
 
 <!-- Table for feedstuff entry -->

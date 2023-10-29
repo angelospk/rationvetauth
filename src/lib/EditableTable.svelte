@@ -13,6 +13,7 @@
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import { solveLP } from './solveLinear';
+	import { formatNumber } from './greekfuncts';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'Δεν μπόρεσε να φορτωθεί μια τροφή (ήταν τροφή κάποιου χρήστη).',
@@ -245,7 +246,7 @@
 
 {#if result!=undefined}
 {#if solved}	
-<div class="card p-4">Επιτυχής επίλυση. Συνολικό κόστος (για 100 κιλά): {result?.result || ''}</div>
+<div class="card p-4">Επιτυχής επίλυση. Συνολικό κόστος (για 100 κιλά): {formatNumber(result?.result) || ''}</div>
 {:else}
 <div class="p-4 bg-error-400 rounded-full">Το σιτηρέσιο δεν μπόρεσε να επιλυθεί. Δοκιμάστε να τροποποιήσετε τις τροφές ή να χαλαρώσετε τις λειτουργικές απαιτήσεις του ζώου.</div>
 {/if}

@@ -90,3 +90,6 @@ export function transformObject(inputObj:object) {
     return outputObj;
   }
   
+	export function formatNumber(number: Number) {
+		return Number.isInteger(number) ? number.toString() : number.toFixed(2);
+	}
