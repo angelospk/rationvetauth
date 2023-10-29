@@ -94,7 +94,6 @@
 			{/each}
 		</div>
 	{/if}
-
 	<hr class="my-5" />
 
 	<div class="heading print:hidden">
@@ -106,12 +105,11 @@
 	</div>
 
 	{#if !loadedTable}
-		<EditableTable bind:rationName bind:producerName bind:currentState linear={true} requirements={reverseTransformObject(form)} />
+		<EditableTable bind:rationName bind:producerName bind:currentState linear={true} requirementsString={reverseTransformObject(form)} requirements={form} />
 	{:else}
 		<EditableTable stage2Read={record} bind:currentState />
 	{/if}
 </div>
-
 <style lang="postcss">
 	.info {
 		@apply my-2 bg-secondary-400 rounded-lg print:hidden mx-auto max-w-lg;

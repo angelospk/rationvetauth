@@ -36,7 +36,7 @@
 	export let edit = false;
 	export let selected: Feed[] = [];
 	export let columns: Column[] = [];
-	let totalWeight=100;
+	export let totalWeight=100;
 	let certain = linear
 		? [
 				'Title',
@@ -103,12 +103,7 @@
 					}
 				}
 			}
-			// totalWeight=sum.weight;
-			// If you want the ratios to sum to 100, you can normalize here
-			// let ratioSum = Object.values(totalRatio).reduce((a, b) => a + b, 0);
-			// for (let m in totalRatio) {
-			// 	totalRatio[m] = (totalRatio[m] / ratioSum) * 100;
-			// }
+
 		}
 	}
 	function formatWeights(){

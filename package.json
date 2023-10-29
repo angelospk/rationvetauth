@@ -43,9 +43,11 @@
   "type": "module",
   "dependencies": {
     "@builder.io/sdk-svelte": "^0.6.3",
+    "@ellbur/javascript-lp-solver": "^0.4.26",
     "@floating-ui/dom": "^1.5.3",
     "flowbite-svelte": "^0.44.18",
     "flowbite-svelte-blocks": "^0.5.1",
+    "javascript-lp-solver": "^0.4.24",
     "mysql2": "^3.6.1",
     "papaparse": "^5.4.1",
     "pocketbase": "^0.18.2",

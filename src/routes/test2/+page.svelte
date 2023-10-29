@@ -1,62 +1,70 @@
 <script>
-	import Logo from '$lib/Logo.svelte'
-</script>
-<style>
-    .header-bg {
-        background-color: #4CAF50;
-        color: white;
+    import JSLPSolver from '@ellbur/javascript-lp-solver';
+    const solver = new JSLPSolver();
+    const model = {
+  optimize: "cost",
+  opType: "min",
+  constraints: {
+    protein: { min: 20 },
+    fiber: { max: 5 },
+    energy: { min: 50 }
+  },
+  variables: {
+    feedA: {
+      cost: 2,
+      protein: 8,
+      fiber: 1,
+      energy: 30
+    },
+    feedB: {
+      cost: 3,
+      protein: 10,
+      fiber: 0,
+      energy: 40
     }
-    .sub-header-bg {
-        background-color: #81C784;
-        color: white;
-    }
-    .even-row {
-        background-color: #F5F5F5;
-    }
-</style>
-<Logo cl="w-10 h-10" />
-<img src="https://media.discordapp.net/attachments/1123335980074663936/1164377792868257812/minilogo.webp?ex=6542fe52&is=65308952&hm=2f07892f63b5c8ae0547f6e32b9367c858f877856a65a4baa9aea5fc8e45f2be&=&width=497&height=497" alt="logo">
+  }
+};
 
-<table class="w-full border-collapse">
-    <thead>
-        <tr class="header-bg">
-            <th colspan="2"></th>
-            <th colspan="8" class="text-center">Μονάδες</th>
-        </tr>
-        <tr class="sub-header-bg">
-            <th class="p-2 border">Όνομα</th>
-            <th class="p-2 border">Βάρος</th>
-            <th class="p-2 border">ΞΟ</th>
-            <th class="p-2 border">ΟΛΟ</th>
-            <th class="p-2 border">ΟΚ</th>
-            <th class="p-2 border">Τέφρα</th>
-            <th class="p-2 border">Ca</th>
-            <th class="p-2 border">P</th>
-            <th class="p-2 border">ΟΛΟ</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr class="even-row">
-            <td class="p-2 border">Σύνολο</td>
-            <td class="p-2 border">0</td>
-            <td class="p-2 border">0</td>
-            <td class="p-2 border">0</td>
-            <td class="p-2 border">0</td>
-            <td class="p-2 border">0</td>
-            <td class="p-2 border">0</td>
-            <td class="p-2 border">0</td>
-            <td class="p-2 border">0</td>
-        </tr>
-        <tr>
-            <td class="p-2 border">Ποσοστό</td>
-            <td class="p-2 border">NaN</td>
-            <td class="p-2 border">NaN</td>
-            <td class="p-2 border">NaN</td>
-            <td class="p-2 border">NaN</td>
-            <td class="p-2 border">NaN</td>
-            <td class="p-2 border">NaN</td>
-            <td class="p-2 border">NaN</td>
-            <td class="p-2 border">NaN</td>
-        </tr>
-    </tbody>
-</table>
+// Solve the model
+const result = solver.Solve(model);
+
+// Analyze and provide feedback
+if (result.feasible) {
+  console.log("A feasible solution exists.");
+  console.log("Amount of feedA:", result.feedA || 0);
+  console.log("Amount of feedB:", result.feedB || 0);
+  console.log("Minimum cost:", result.result);
+} else {
+  console.log("No feasible solution exists.");
+  console.log("Consider the following options to make the problem feasible:");
+
+  // Suggestion 1: Use alternative feeds
+  console.log("- Try alternative feeds that might satisfy the constraints.");
+
+  // Suggestion 2: Relax some constraints
+  console.log("- Relax some nutrient constraints to widen the feasible region.");
+
+  // Suggestion 3: Increase available feeds
+  console.log("- Increase the range of available feeds.");
+
+};
+
+// var results = solver.Solve(model);
+// console.log(results);
+</script>
+{JSON.stringify(result)}
+<!-- display how much attributes will be used (capacity, planes, person, cost)
+{#if results!=undefined}
+    {#each Object.keys(results) as key}
+        {#if results[key]!=0}
+            {key}: {results[key]}<br>
+        {/if}
+    {/each}
+    <div class="flex flex-col">
+    <p>{model.variables.brit.capacity*results.brit||0+model.variables.yank.capacity*results.yank||0} total capacity</p>
+    <p>{model.variables.brit.plane*results.brit||0+model.variables.yank.plane*results.yank||0} total planes</p>
+        <p>{model.variables.brit.person*results.brit||0+model.variables.yank.person*results.yank||0} total person</p>
+            <p>{model.variables.brit.cost*results.brit||0+model.variables.yank.cost*results.yank||0} total cost</p></div>
+{/if} -->
+
+
