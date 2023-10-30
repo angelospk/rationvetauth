@@ -14,6 +14,11 @@
 	import { onMount } from 'svelte';
 	import { solveLP } from './solveLinear';
 	import { formatNumber } from './greekfuncts';
+	import type { Snapshot } from '../routes/$types';
+	export const snapshot:Snapshot = {
+		capture: () => currentState,
+		restore: (value) => (currentState=value)
+	};
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'Δεν μπόρεσε να φορτωθεί μια τροφή (ήταν τροφή κάποιου χρήστη).',
@@ -42,7 +47,6 @@
 	$: {
 		if (Object.keys(requirementsString).length > 0) {
 			const c = $metrics.map((x) => x.Title);
-			console.log(requirementsString);
 			inputmlist = [];
 			for (let key in requirementsString) {
 				if (c.includes(key) && !certain.includes(key) && !inputmlist.includes(key)) {
@@ -110,11 +114,9 @@
 	async function readState(tableState: TableState) {
 		// let tableState:TableState=stage2Read?.ts
 		for (const item of tableState.selfeeds) {
-			console.log(item);
 			if (item.id && item.weight) {
 				let userFeedItem = $userFeeds.find((feed) => feed.id === item.id);
 				let itemIsByUser = true;
-				console.log(userFeedItem, $userFeeds);
 				if (!userFeedItem) {
 					itemIsByUser = false;
 					try {
@@ -128,7 +130,6 @@
 				}
 				if (userFeedItem) {
 					userFeedItem.weight = item.weight; // Update the weight
-					console.log($currentUser, itemIsByUser);
 					if (!$currentUser || !itemIsByUser) {
 						// Assuming you have a variable `currentUser` to check if the user is signed in
 						if (!$feeds.some((x) => x.id == userFeedItem.id)) {
@@ -258,9 +259,9 @@
 
 {#if result!=undefined}
 {#if solved}	
-<div class="card p-4 max-w-lg">Επιτυχής επίλυση. Συνολικό κόστος (για 100 κιλά): {formatNumber(result?.result) || ''}</div>
+<div class="card p-4 max-w-lg mx-auto">Επιτυχής επίλυση.<br/>Συνολικό κόστος (για {totalWeight} κιλά): {formatNumber(result?.result) || ''} </div>
 {:else}
-<div class="p-4 bg-error-400 rounded-full max-w-lg">Το σιτηρέσιο δεν μπόρεσε να επιλυθεί. Δοκιμάστε να τροποποιήσετε τις τροφές ή να χαλαρώσετε τις λειτουργικές απαιτήσεις του ζώου.</div>
+<div class="p-4 bg-error-400 rounded-full max-w-lg mx-auto">Το σιτηρέσιο δεν μπόρεσε να επιλυθεί. Δοκιμάστε να τροποποιήσετε τις τροφές ή να χαλαρώσετε τις λειτουργικές απαιτήσεις του ζώου.</div>
 {/if}
 {/if}
 
