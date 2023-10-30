@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.postcss';
-	import { TabAnchor, TabGroup, storePopup, type ModalComponent } from '@skeletonlabs/skeleton';
+	import { TabAnchor, TabGroup, storePopup, type ModalComponent, type PopupSettings, popup } from '@skeletonlabs/skeleton';
 	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
 	import { page } from '$app/stores';
@@ -58,10 +58,20 @@
 			loadedTables.set(true);
 		}, 100);
 	});
+	
 	// // Set the current user from the data passed in from the server
 	// $: currentUser.set(data.user)
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
-
+	const popupSolve: PopupSettings = {
+		event: 'click',
+		target: 'popupSolve',
+		placement: 'bottom'
+	};
+	const popupUser:PopupSettings = {
+		event: 'click',
+		target: 'popupUser',
+		placement: 'left'
+	};
 	// console.log(data, $metrics, $feeds);
 	$: {
 		currentUser.set(pb.authStore.model || null);
@@ -111,11 +121,17 @@
 						<TabGroup>
 							<TabAnchor href="/" selected={$page.url.pathname === '/'}>Αρχική</TabAnchor>
 							<TabAnchor class="" selected={$page.url.pathname.includes("newration")}
-								><button>Επίλυση</button>
-								<Dropdown containerClass="opacity-90"
-									><DropdownItem><a href="/newration">Χειροκίνητα</a></DropdownItem>
-									<DropdownItem><a href="/newration/linear">Αυτόματα</a></DropdownItem>
-								</Dropdown>
+								><button use:popup={popupSolve}>Επίλυση</button>
+								<div class="card p-2 bg-transparent z-10" data-popup="popupSolve">
+									<ol>
+										<li>
+											<a class="hover:underline" href="/newration">Χειροκίνητα</a>
+										</li>
+										<li>
+											<a class="hover:underline" href="/newration/linear">Αυτόματα</a>
+										</li>
+									</ol>
+								</div>
 							</TabAnchor>
 							<TabAnchor
 								class="overflow-clip"
@@ -124,15 +140,25 @@
 							>
 						</TabGroup>
 
-							<button class="  rounded-full"
+							<button class="  rounded-full" use:popup={popupUser}
 								><svg class="w-10 h-8 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
 										<path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z"/>
 									  </svg></button
 							>
-							<Dropdown class=""  containerClass="opacity-90 relative pr-10  "
+							<div class="card p-2 bg-transparent z-10" data-popup="popupUser">
+								<ol>
+									<li>
+										<a class="hover:underline" href="/profile">Επεξεργασία</a>
+									</li>
+									<li>
+										<button class="hover:underline" on:click={logout} >Αποσύνδεση</button>
+									</li>
+								</ol>
+							</div>
+							<!-- <Dropdown class=""  containerClass="opacity-90 relative pr-10  "
 							><DropdownItem><a href="/profile">Επεξεργασία</a></DropdownItem>
 							<DropdownItem><button on:click={logout} >Αποσύνδεση</button></DropdownItem>
-						</Dropdown>
+						</Dropdown> -->
 							<!-- <a
 								class="btn sm:mx-1 btn-sm variant-ghost-surface hover:underline hover:bg-gradient-to-br variant-gradient-tertiary-primary"
 								href="/login"

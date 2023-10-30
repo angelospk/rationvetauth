@@ -59,16 +59,16 @@ export let form:any;
 		<svelte:fragment slot="lead">(icon)</svelte:fragment>
 		<span>Χοίροι</span>
 	</Tab>
-  <!-- <Tab bind:group={animal} value="custom" name="animal" on:click={reset}  selected={animal=="custom"}>
+  <Tab bind:group={animal} value="custom" name="animal" on:click={reset}  selected={animal=="custom"}>
 		<svelte:fragment slot="lead">(icon)</svelte:fragment>
 		<span>Προσαρμοσμένο</span>
-	</Tab> -->
+	</Tab>
 
 </TabGroup>
 
 
 
-<!-- {#if animal!="custom"} -->
+{#if animal!="custom"}
   <select name="selection" bind:value={selection} on:submit={()=>{
     formData={...formData, animal:animal}
   }}>
@@ -89,7 +89,7 @@ export let form:any;
     </select>
     <button class="koumpi">Υποβολή</button>
   {/if}
-  <!-- {/if} -->
+  {/if}
 </form>
 
 

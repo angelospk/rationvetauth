@@ -8,6 +8,7 @@
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import { formatNumber } from './greekfuncts';
+	import { fade, slide } from 'svelte/transition';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message:
@@ -16,12 +17,12 @@
 		background: 'bg-red-500'
 	};
 	const popupClick: PopupSettings = {
-		event: 'click',
+		event: 'hover',
 		target: 'popupClick',
 		placement: 'top'
 	};
 	const optionsClick: PopupSettings = {
-		event: 'click',
+		event: 'hover',
 		target: 'optionsClick',
 		placement: 'top'
 	};
@@ -100,6 +101,9 @@
 							// totalRatio[m] = (totalRatio[m] || 0) + feedRatio * sum[m];
 							totalRatio[m]+=feedRatio*selected[i][m]/100;
 						}
+						else{
+							selected[i][m]=0;
+						}
 					}
 				}
 			}
@@ -177,7 +181,6 @@
 <div class="flex space-x-5 md:space-x-10 justify-center print:hidden">
 	<button
 		class="shadow-xl rounded-full my-3 stroke-red-500 fill-red-500"
-		on:click|preventDefault
 		use:popup={popupClick}
 		><svg
 			class="w-8 h-8 hover:fill-red-300 text-secondary-500 dark:text-white"
@@ -197,7 +200,6 @@
 	>
 	<button
 		class="btn-sm rounded-full my-3 variant-ghost-secondary hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:scale-105 hover:duration-1000 duration-1000"
-		on:click|preventDefault
 		use:popup={optionsClick}
 		><svg
 			class="w-6 h-6 hover:fill-gray-700 text-secondary-500 dark:text-white"
@@ -288,6 +290,7 @@
 
 <div class="overflow-x-auto rounded-md">
 	<table
+		transition:fade="{{ duration: 300 }}"
 		class="bg-white w-full table-row-checked"
 		title={$currentUser
 			? 'Πίνακας Σιτηρεσίου'

@@ -1,30 +1,91 @@
 <script lang="ts">
 	import EditableTable from '$lib/EditableTable.svelte';
 	import RationInfo from '$lib/RationInfo.svelte';
-	import { currentUser } from '$lib/pocketbase';
-	import { getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
+	import { currentUser, pb } from '$lib/pocketbase';
+	import { getModalStore, getToastStore, type ModalSettings, type ToastSettings } from '@skeletonlabs/skeleton';
 	import type { AnimalInfo, AnimalReqs, Form, State } from '$lib/stores/types';
 	import AnimalFeedRequirements from '$lib/AnimalFeedRequirements.svelte';
 	import { page } from '$app/stores';
 	import { metrics } from '$lib/stores/data';
 	import { reverseTransformObject } from '$lib/greekfuncts';
+	import { onMount } from 'svelte';
 	let animals = $page.data;
 	let metr = $metrics;
+	let userReqs:AnimalReqs[];
+	let form: AnimalReqs = { reqs: [], fractions: {} };
+
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'Δεν μπόρεσε να αποθηκευτεί το σιτηρέσιο.',
 		timeout: 3000,
 		background: 'bg-green-600'
 	};
+	const modalStore = getModalStore();
+	// let selectedFeed:Feed;
+	const modal: ModalSettings = {
+		type: 'component',
+		body: 'Επέλεξε από τη λίστα για να φορτωθεί η προδιαγραφή!',
+		component: 'modalSithresia',
+		response(r) {
+			if (r){
+			form.reqs=[...form.reqs,{Title:r.Title, type:"any", value:0}]}
+		
+		},
+		buttonTextCancel: 'Ακύρωση',
+		meta: {metrs: $metrics.filter(x=>![...form.reqs.map(y=>y.Title),"weight","Title"].includes(x.Title))}
+		// backdropClasses: "!blur-1"
+	};
+	const modalLoadReqs: ModalSettings = {
+		type: 'component',
+		body: 'Επέλεξε από τη λίστα για να φορτωθεί η λίστα των προδιαγραφών!',
+		component: 'modalSithresia',
+		response(r) {
+			if (r && r.requirements && r.requirements?.reqs.length>0){
+			form=r.requirements
+			// console.log(r);
+			}
+		
+		},
+		buttonTextCancel: 'Ακύρωση',
+		
+		// backdropClasses: "!blur-1"
+	};
+	const saveReqs: ModalSettings = {
+	type: 'prompt',
+	// Data
+	title: 'Εισάγετε Όνομα',
+	body: 'Ονομάστε τις προδιαγραφές για να τις ξεχωρίζετε.',
+	// Populates the input value and attributes
+	value: '',
+	buttonTextConfirm: 'Επικύρωση',
+	buttonTextCancel: 'Ακύρωση',
+	valueAttr: { type: 'text', minlength: 3, required: true },
+	// Returns the updated response value
+	response: async (r: string) => {
+		form.reqs=form.reqs.filter(x=>x.type!="any")
+		let resp=await pb.collection('requirements').create({user:$currentUser?.id||"", Title:r, requirements:form})
+		if (resp){
+			console.log("success");
+		}
+	},
+};
+	// let metricRequirements=metrics
 	let send2Email: string;
 	let record: State;
 	let loadedTable: boolean = false;
 	let currentState: State;
 	let info:AnimalInfo;
 	let rationName = '';
-	let form: AnimalReqs = { reqs: [], fractions: {} };
 	let producerName = $currentUser?.name || '';
 	let currentDate: string;
+	let addMetric:string="Διάλεξε ΘΟ"
+
+	onMount(async()=>
+{
+	userReqs=await pb.collection('requirements').getFullList()||[];
+	modalLoadReqs.meta={metrs:userReqs};
+	// console.log(userReqs)
+})
 </script>
 
 <div class="overflow-x-hidden">
@@ -62,19 +123,22 @@
 	<div class="info" style="">
 		Σημείωση: Προσθέστε τροφές πατώντας στο "Δημόσιες Τροφές".<br />
 	</div>
-
+	<div class="print:hidden">
 	<AnimalFeedRequirements bind:form animals={animals?.animals} bind:animalInfo={info}/>
-	<!-- {JSON.stringify(transformObject(form))} -->
-	{#if form.reqs.length > 0}
-			{#if info}
+	{#if form.reqs.length > 0 || info?.animal=="custom"}
+			{#if info }
 				<div class="flex-col">Ζώο: {info.animal}</div>
-				<div class="flex-col">Κατηγορία: {info.type.selection}</div>
-				<div class="flex-col">Υποκατηγορία: {info.type.subselection}</div>
+				{#if info.type.subselection.length>0}<div class="flex-col">{info.type.selection}/{info.type.subselection}</div>{/if}
+
 			{/if}
 			<div class="card p-3 flex space-x-3 overflow-x-auto">
-			{#each form.reqs as req}
 				
-				<div class="flex flex-col">
+			{#if form.reqs.length==0}
+			<div  class="btn btn-sm variant-filled mx-auto text-xs h-4"><button on:click={()=>{modalStore.trigger(modalLoadReqs)}} >Άνοιγμα</button></div>
+			{/if}
+			
+			{#each form.reqs as req}
+			<div class="flex flex-col">
 				{metr.find((x) => x.Title == req.Title)?.gr || req.Title}
 				{metr.find((x) => x.Title == req.Title)?.units||""}
 				{#if req.type != "any"}
@@ -89,13 +153,25 @@
 				</select>
 				{#if req.type == "-"}
 					<input bind:value={req.topValue} type="number"/>
-				{/if}
-				</div>
+				{/if}			
+			</div>
 			{/each}
+	
+			<!-- {JSON.stringify($metrics.filter(x=>!form.reqs.map(y=>y.Title).includes(x.Title)))} -->
+			<div class="ml-auto">
+				<button
+				class="koumpi mt-2 " id="b2"
+				on:click={() => {
+					modalStore.trigger(modal);
+				}}>+/- ΘΟ</button
+			>
+			<p><button on:click={()=>{modalStore.trigger(saveReqs)}} class="koumpi mt-2">Αποθήκευση</button></p>
+		</div>
 		</div>
 	{/if}
-	<hr class="my-5" />
 
+	<hr class="my-5" />
+</div>
 	<div class="heading print:hidden">
 		<h2>Βήμα 3: Εισαγωγή Τροφών</h2>
 	</div>
@@ -110,6 +186,10 @@
 		<EditableTable stage2Read={record} bind:currentState />
 	{/if}
 </div>
+
+
+<hr class="my-3">
+<p class="text-xs print:hidden">1: Τα αποτελέσματα προκύπτουν μέσω  γραμμικού προγραμματισμού και χρησιμεύουν ως υπολογιστικές εκτιμήσεις. Ωστόσο δεν υποκαθιστούν τις συμβουλές των εμπειρογνωμόνων. Ο αλγόριθμος στοχεύει στην ελαχιστοποιήση του κόστους, όμως οι διακυμάνσεις στην ποιότητα των ζωοτροφών, οι συνθήκες υγείας των ζώων και άλλοι περιβαλλοντικοί παράγοντες μπορούν να επηρεάσουν σημαντικά την πραγματική αποτελεσματικότητα του σιτηρεσίου. Συνιστούμε ανεπιφύλακτα να συμβουλευτείτε εξειδικευμένους κτηνιάτρους και διατροφολόγους ζώων για να επικυρώσετε την καταλληλότητα και την ασφάλεια της προτεινόμενης σύνθεσης ζωοτροφών.</p>
 <style lang="postcss">
 	.info {
 		@apply my-2 bg-secondary-400 rounded-lg print:hidden mx-auto max-w-lg;

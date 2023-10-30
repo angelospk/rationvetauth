@@ -199,6 +199,7 @@
 
 {#if $feeds.length > 0 && $metrics.length > 0}
 	<!-- selected={selected} columns={columns} -->
+	{#key solved}
 	<FeedsTable
 		bind:selected
 		bind:columns
@@ -210,6 +211,7 @@
 		{linear}
 		bind:requirements={requirementsString}
 	/>
+	{/key}
 {:else}
 	<TablePlaceHolder />
 {/if}
@@ -223,6 +225,13 @@
 	bind:metricsAutocomplete
 	bind:userFoodAutocomplete
 />
+{#if linear}
+<div class="heading print:hidden">
+	<h2>Βήμα 4: Επίλυση</h2>
+</div>
+<div class="info" style="">
+	Σημείωση: Πατήστε το κουμπί τις αυτόματης επίλυσης αφού διάλεξτε τροφές και εισάγετε τις αντίστοιχες τιμές τους.<br />
+</div>
 {#if selected.length>0 && requirements.reqs.length>0}
 <button
 	class="koumpi mb-3"
@@ -240,7 +249,7 @@
 				}
 			});
 		}
-	}}>Προσπάθεια Αυτόματης Επίλυσης*</button
+	}}>Προσπάθεια Αυτόματης Επίλυσης<sup>1</sup></button
 >
 {:else}
 <button class="btn bg-gray-400">Προσπάθεια Αυτόματης Επίλυσης<sup>1</sup></button>
@@ -249,13 +258,25 @@
 
 {#if result!=undefined}
 {#if solved}	
-<div class="card p-4">Επιτυχής επίλυση. Συνολικό κόστος (για 100 κιλά): {formatNumber(result?.result) || ''}</div>
+<div class="card p-4 max-w-lg">Επιτυχής επίλυση. Συνολικό κόστος (για 100 κιλά): {formatNumber(result?.result) || ''}</div>
 {:else}
-<div class="p-4 bg-error-400 rounded-full">Το σιτηρέσιο δεν μπόρεσε να επιλυθεί. Δοκιμάστε να τροποποιήσετε τις τροφές ή να χαλαρώσετε τις λειτουργικές απαιτήσεις του ζώου.</div>
+<div class="p-4 bg-error-400 rounded-full max-w-lg">Το σιτηρέσιο δεν μπόρεσε να επιλυθεί. Δοκιμάστε να τροποποιήσετε τις τροφές ή να χαλαρώσετε τις λειτουργικές απαιτήσεις του ζώου.</div>
 {/if}
 {/if}
 
+{/if}
 
 
-<hr class="my-3">
-<p class="text-xs"><sup>1</sup>: Τα αποτελέσματα προκύπτουν μέσω  γραμμικού προγραμματισμού και χρησιμεύουν ως υπολογιστικές εκτιμήσεις. Ωστόσο δεν υποκαθιστούν τις συμβουλές των εμπειρογνωμόνων. Ο αλγόριθμος στοχεύει στην ελαχιστοποιήση του κόστους, όμως οι διακυμάνσεις στην ποιότητα των ζωοτροφών, οι συνθήκες υγείας των ζώων και άλλοι περιβαλλοντικοί παράγοντες μπορούν να επηρεάσουν σημαντικά την πραγματική αποτελεσματικότητα του σιτηρεσίου. Συνιστούμε ανεπιφύλακτα να συμβουλευτείτε εξειδικευμένους κτηνιάτρους και διατροφολόγους ζώων για να επικυρώσετε την καταλληλότητα και την ασφάλεια της προτεινόμενης σύνθεσης ζωοτροφών.</p>
+<style lang="postcss">
+	.info {
+		@apply my-2 bg-secondary-400 rounded-lg print:hidden mx-auto max-w-lg;
+	}
+	.heading {
+		font-size: x-large;
+		margin-top: 1rem;
+		@apply  underline
+	}
+	.btn{
+		@apply print:hidden;
+	}
+</style>
