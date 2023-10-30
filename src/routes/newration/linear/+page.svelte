@@ -9,6 +9,7 @@
 	import { metrics } from '$lib/stores/data';
 	import { reverseTransformObject } from '$lib/greekfuncts';
 	import { onMount } from 'svelte';
+	import AccordionSaveShare from '$lib/AccordionSaveShare.svelte';
 	let animals = $page.data;
 	let metr = $metrics;
 	let userReqs:AnimalReqs[];
@@ -187,6 +188,7 @@
 	{/if}
 </div>
 
+<AccordionSaveShare bind:currentDate={currentDate} bind:currentState={currentState}/>
 
 <hr class="my-3">
 <p class="text-xs print:hidden">1: Τα αποτελέσματα προκύπτουν μέσω  γραμμικού προγραμματισμού και χρησιμεύουν ως υπολογιστικές εκτιμήσεις. Ωστόσο δεν υποκαθιστούν τις συμβουλές των εμπειρογνωμόνων. Ο αλγόριθμος στοχεύει στην ελαχιστοποιήση του κόστους, όμως οι διακυμάνσεις στην ποιότητα των ζωοτροφών, οι συνθήκες υγείας των ζώων και άλλοι περιβαλλοντικοί παράγοντες μπορούν να επηρεάσουν σημαντικά την πραγματική αποτελεσματικότητα του σιτηρεσίου. Συνιστούμε ανεπιφύλακτα να συμβουλευτείτε εξειδικευμένους κτηνιάτρους και διατροφολόγους ζώων για να επικυρώσετε την καταλληλότητα και την ασφάλεια της προτεινόμενης σύνθεσης ζωοτροφών.</p>

@@ -9,7 +9,7 @@ export function solveLP(feeds, requirements, totalWeight=100) {
     opType: "min",
     constraints: {},
     variables: {},
-    options:{"tolerance": 0.05}
+    // options:{"tolerance": 0.05}
   };
 
   // Add feeds as variables
