@@ -46,6 +46,8 @@
     "@floating-ui/dom": "^1.5.3",
     "flowbite-svelte": "^0.44.18",
     "flowbite-svelte-blocks": "^0.5.1",
+    "highs": "^1.0.0",
+    "highs-solver": "^0.6.0",
     "javascript-lp-solver": "^0.4.24",
     "mysql2": "^3.6.1",
     "papaparse": "^5.4.1",
