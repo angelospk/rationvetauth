@@ -237,19 +237,20 @@
 <button
 	class="koumpi mb-3"
 	on:click={async () => {
-		solved = false;
+		console.log("tpt");
+		// solved = false;
 		
-		result = solveLP(selected, requirements.reqs);
-		if (result && result?.feasible) {
-			solved=true;
-			selected.forEach((feed, i) => {
-				if (result.hasOwnProperty(`feed${i}`)) {
-					feed.ratio = result[`feed${i}`] || 0;
-				} else {
-					feed.ratio = 0;
-				}
-			});
-		}
+		// result = solveLP(selected, requirements.reqs);
+		// if (result && result?.feasible) {
+		// 	solved=true;
+		// 	selected.forEach((feed, i) => {
+		// 		if (result.hasOwnProperty(`feed${i}`)) {
+		// 			feed.ratio = result[`feed${i}`] || 0;
+		// 		} else {
+		// 			feed.ratio = 0;
+		// 		}
+		// 	});
+		// }
 	}}>Προσπάθεια Αυτόματης Επίλυσης<sup>1</sup></button
 >
 {:else}

@@ -16,7 +16,7 @@
   </div>
 {:else}
 <div class="flex-col justify-center space-y-5 lg:space-x-5 lg:flex-row flex  pt-[3vh]">
-  <div class= "text-5xl"><p class="gradient-heading">Καλώς ήλθατε!</p><p>Θα φάτε κάτι; Να σας κεράσουμε;</p><p>Κάνα σιτηρέσιο ψήνεστε;</p></div>
+  <div class= "text-5xl"><p class="gradient-heading">Καλώς ήλθατε!</p></div>
   <div class="max-w-md card mx-auto"><LoginComponent /></div>
 </div>
 {/if}

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import AccordionSaveShare from './AccordionSaveShare.svelte';
+  import AccordionSaveShare from '../../lib/AccordionSaveShare.svelte';
 
 
 	import EditableTable from '$lib/EditableTable.svelte';

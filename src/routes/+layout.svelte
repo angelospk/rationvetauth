@@ -2,7 +2,7 @@
 	import '../app.postcss';
 	import { TabAnchor, TabGroup, storePopup, type ModalComponent, type PopupSettings, popup } from '@skeletonlabs/skeleton';
 	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
-	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
+	import { computePosition, autoUpdate, offset, shift, flip, arrow, inline } from '@floating-ui/dom';
 	import { page } from '$app/stores';
 	import { pb, currentUser } from '$lib/pocketbase';
 	import ModalExampleForm from '$lib/ModalExampleForm.svelte';
@@ -61,7 +61,7 @@
 	
 	// // Set the current user from the data passed in from the server
 	// $: currentUser.set(data.user)
-	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
+	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow, inline });
 	const popupSolve: PopupSettings = {
 		event: 'click',
 		target: 'popupSolve',
@@ -70,7 +70,11 @@
 	const popupUser:PopupSettings = {
 		event: 'click',
 		target: 'popupUser',
-		placement: 'left'
+		placement: 'left',
+		middleware: {
+			offset: 42,
+		}
+		
 	};
 	// console.log(data, $metrics, $feeds);
 	$: {
@@ -122,7 +126,8 @@
 							<TabAnchor href="/" selected={$page.url.pathname === '/'}>Αρχική</TabAnchor>
 							<TabAnchor class="" selected={$page.url.pathname.includes("newration")}
 								><button use:popup={popupSolve}>Επίλυση</button>
-								<div class="card p-2 bg-transparent z-10" data-popup="popupSolve">
+								<div class="p-2 rounded-lg variant-filled-secondary  z-10" data-popup="popupSolve">
+									<div class="arrow variant-filled-secondary" />
 									<ol>
 										<li>
 											<a class="hover:underline" href="/newration">Χειροκίνητα</a>
@@ -145,7 +150,8 @@
 										<path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z"/>
 									  </svg></button
 							>
-							<div class="card p-2 bg-transparent z-10" data-popup="popupUser">
+							<div class="p-2 rounded-lg variant-filled-secondary absolute  top-0 left-0 z-10" data-popup="popupUser">
+								<div class="arrow variant-filled-secondary" />
 								<ol>
 									<li>
 										<a class="hover:underline" href="/profile">Επεξεργασία</a>
