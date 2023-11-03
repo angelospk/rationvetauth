@@ -12,7 +12,7 @@
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
-	import { solveLP } from './solveLinear';
+	
 	import { formatNumber } from './greekfuncts';
 	import type { Snapshot } from '../routes/$types';
 	export const snapshot:Snapshot = {
