@@ -238,6 +238,16 @@
 	class="koumpi mb-3"
 	on:click={async () => {
 		console.log("tpt");
+		// const resp=await fetch("/api/compute",{ method:"POST", body:JSON.stringify({selected, requirements:requirements.reqs})})
+		const resp= await fetch("/api/compute", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ selected, requirements: requirements.reqs })
+		})
+		const d=await resp.json()
+		console.log(d)
 		// solved = false;
 		
 		// result = solveLP(selected, requirements.reqs);

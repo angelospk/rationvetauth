@@ -14,12 +14,7 @@
 
 //   // Add feeds as variables
 //   feeds.forEach((feed, i) => {
-//     // model.variables[`feed${i}`] = { price: feed.price };
-//     // Object.keys(feed).forEach((key) => {
-//     //   if (key !== "Title" && key !== "price" && key !== "weight") {
-//     //     model.variables[`feed${i}`][key] = feed[key] * feed.weight;
-//     //   }
-//     // });
+
 //     feed.weight=1;
 //     model.variables[`feed${i}`]=feed;
 //   });
@@ -27,11 +22,7 @@
 //   // Add constraints from the requirements table
 //   requirements.forEach((req) => {
 //     let constraint = {};
-//     // feeds.forEach((feed, i) => {
-//     //   if (feed.hasOwnProperty(req.Title)) {
-//     //     constraint[`feed${i}`] = feed[req.Title];
-//     //   }
-//     // });
+
 //     if (feeds[0].hasOwnProperty(req.Title) && req.type!="any") {
 //       model.constraints[req.Title] = {};
 //       switch (req.type) {
