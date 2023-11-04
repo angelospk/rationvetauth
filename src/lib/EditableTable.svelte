@@ -60,6 +60,7 @@
 		producerName,
 		tableState: { selfeeds: [], extraCols: [] }
 	};
+	let ratiosSelected:boolean;
 	let selected: Feed[] = [];
 	let columns: Column[] = [];
 	let minimalSelected: Feed[] = [];
@@ -79,7 +80,7 @@
 		currentState = {
 			rationName: rationName,
 			producerName: producerName,
-			tableState: { selfeeds: minimalSelected, extraCols: inputmlist }
+			tableState: { selfeeds: minimalSelected, extraCols: inputmlist, ratios:ratiosSelected }
 		};
 	}
 	// if (!waitingtoLoadState)saveState();
@@ -92,9 +93,9 @@
 	];
 	$: minimalSelected = selected.map((item) => {
 		if (item.id) {
-			return { id: item.id, weight: item.weight };
+			return { id: item.id, weight: item.weight, public:false };
 		} else {
-			return { Title: item.Title, weight: item.weight };
+			return { Title: item.Title, weight: item.weight, public:true };
 		}
 	});
 
@@ -211,12 +212,13 @@
 		bind:totalWeight
 		{linear}
 		bind:requirements={requirementsString}
+		bind:ratiosSelected
 	/>
 	{/key}
 {:else}
 	<TablePlaceHolder />
 {/if}
-
+{JSON.stringify(currentState)}
 <TableEditButtons
 	currentUser={$currentUser}
 	bind:inputChipList
