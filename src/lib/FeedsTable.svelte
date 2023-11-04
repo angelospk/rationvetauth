@@ -22,7 +22,7 @@
 		placement: 'top'
 	};
 	const optionsClick: PopupSettings = {
-		event: 'hover',
+		event: 'click',
 		target: 'optionsClick',
 		placement: 'top'
 	};
