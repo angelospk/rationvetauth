@@ -52,7 +52,7 @@
 <RationInfo producerName={ration?.producerName} rationName={ration?.rationName} currentDate={ration?.date} />
 	<!-- selected={selected} columns={columns} -->
 	<FeedsTable
-		tableState={ration?.tableState}
+		ration={ration}
 		userFeeds={$userFeeds}
 		feeds={$feeds}
 		metrics={$metrics}

@@ -52,7 +52,7 @@
 				'Phosphorus'
 		  ]
 		: ['Title', 'weight', 'DryMatter', 'Fat', 'CrudeFiber', 'CrudeProtein'];
-	export let tableState: TableState = { selfeeds: [], extraCols: [] };
+	export let ration: State = {totalWeight:0, producerName:"",rationName:"" ,tableState:{selfeeds: [], extraCols: [] }};
 	export let requirements = {};
 	export let metrics: Column[] = [];
 	export let feeds: Feed[] = [];
@@ -210,10 +210,10 @@
 		for (const item of tableState.selfeeds) {
 			console.log('here', item, feeds, userFeeds);
 			if (!item.mix) {
-				if (item.id && item.weight) {
+				if (item.id ) {
+
 					// If the item has an "id" and "weight", then find the matching item in userFeeds
 					let userFeedItem = userFeeds.find((feed) => feed.id === item.id);
-
 					// If not found in userFeeds, fetch from pocketbase
 					if (!userFeedItem) {
 						try {
@@ -230,17 +230,18 @@
 					if (userFeedItem) {
 						selected.push({
 							...userFeedItem, // Spread all properties of the userFeedItem
-							weight: item.weight // Override with the weight from the stateTable
-						});
+							weight: tableState.ratios?item.ratio||0*ration.totalWeight:item.weight // Override with the weight from the stateTable
+						});	
 					}
-				} else if (item.Title && item.weight) {
+				} else if (item.Title ) {
+
 					// If the item has a "Title" and "weight", then find the matching item in feeds
 					const feedItem = feeds.find((feed) => feed.Title === item.Title);
 
 					if (feedItem) {
 						selected.push({
 							...feedItem, // Spread all properties of the feedItem
-							weight: item.weight // Override with the weight from the stateTable
+							weight: tableState.ratios?item.ratio||0*ration.totalWeight:item.weight // Override with the weight from the stateTable
 						});
 					}
 				}
@@ -271,7 +272,7 @@
 	}
 
 	onMount(() => {
-		readState(tableState).then((r) => {
+		readState(ration.tableState).then((r) => {
 			columns = r.columns;
 			selected = r.selected;
 		});
