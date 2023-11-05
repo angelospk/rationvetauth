@@ -1,7 +1,8 @@
-import type { AnimalReqs, Req } from "./stores/types";
+import type { AnimalReqs, Feed, Req, State } from "./stores/types";
 
-/**
- * @param {string} text - Delete accents from greek text
+/**Delete accents from greek text
+ * @param {string} text - 
+ * @returns {string} - Normalized text
  */
 export function normalizeGreek(text:string) {
     text = text.replace(/Ά|Α|ά/g, 'α')
@@ -60,6 +61,10 @@ export function transformObject(inputObj:object) {
   
     return outputObj as AnimalReqs;
   }
+/** 
+@param {object} inputObj - Input object of requirements to be reverse transformed
+ * @returns {object} - Reverse Transformed object
+ */
   export function reverseTransformObject(inputObj: AnimalReqs): object {
     const outputObj: { [key: string]: string } = {};
   
@@ -90,6 +95,13 @@ export function transformObject(inputObj:object) {
     return outputObj;
   }
   
-	export function formatNumber(number: Number) {
+  /** returns integer or fixed up to 2 decimals number
+@param {number}  - number to be formatted
+ * @returns {string} - fixed number
+ */
+	export function formatNumber(number: number) {
 		return Number.isInteger(number) ? number.toString() : number.toFixed(2);
 	}
+
+
+  

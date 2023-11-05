@@ -12,12 +12,12 @@
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
-	
+
 	import { formatNumber } from './greekfuncts';
 	import type { Snapshot } from '../routes/$types';
-	export const snapshot:Snapshot = {
+	export const snapshot: Snapshot = {
 		capture: () => currentState,
-		restore: (value) => (currentState=value)
+		restore: (value) => (currentState = value)
 	};
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
@@ -60,7 +60,7 @@
 		producerName,
 		tableState: { selfeeds: [], extraCols: [] }
 	};
-	let ratiosSelected:boolean;
+	let ratiosSelected: boolean;
 	let selected: Feed[] = [];
 	let columns: Column[] = [];
 	let minimalSelected: Feed[] = [];
@@ -80,7 +80,7 @@
 		currentState = {
 			rationName: rationName,
 			producerName: producerName,
-			tableState: { selfeeds: minimalSelected, extraCols: inputmlist, ratios:ratiosSelected }
+			tableState: { selfeeds: minimalSelected, extraCols: inputmlist, ratios: ratiosSelected }
 		};
 	}
 	// if (!waitingtoLoadState)saveState();
@@ -91,31 +91,187 @@
 		...$feeds.filter((x) => inputChipList.includes(x.Title)),
 		...$userFeeds.filter((x) => inputChipListUser.includes(x.Title))
 	];
-	$: minimalSelected = selected.map((item) => {
-		if (item.id) {
-			return { id: item.id, weight: item.weight, public:false };
-		} else {
-			return { Title: item.Title, weight: item.weight, public:true };
-		}
-	});
+	$: minimalSelected = !ratiosSelected
+		? selected.map((item) => {
+				if (item.id) {
+					if ($userFeeds.map((x) => x.id).includes(item.id))
+						return { id: item.id, weight: item.weight, public: false, mix: false };
+					else return { id: item.id, weight: item.weight, mix: true, public: false };
+				} else {
+					return { Title: item.Title, weight: item.weight, public: true };
+				}
+		  })
+		: selected.map((item) => {
+				if (item.id) {
+					if ($userFeeds.map((x) => x.id).includes(item.id))
+						return { id: item.id, ratio: item.ratio, public: false, mix: false };
+					else return { id: item.id, ratio: item.ratio, mix: true, public: false };
+				} else {
+					return { Title: item.Title, ratio: item.ratio, public: true };
+				}
+		  });
 
-	// $: {
-	// 	readState(stage2Read).then((r)=>{certain=r.certain;selected=r.selected})
-	// }
-
-	//onmount function to initialise
-	onMount(async () => {
-		// certain=
-		// loaded=loadState()
-		// waitingtoLoadState=false;
-	});
+	onMount(async () => {});
 
 	let waitingtoLoadState = true;
 	let loaded: State | null;
+	async function convertRationMixtoFeed(ration: State): Promise<Feed> {
+		let selectedMixFeeds: Feed[] = [];
+		let publicFeeds: Feed[] = ration.tableState.selfeeds.filter((x) => x.public);
+		publicFeeds.forEach((item) => {
+			const feedItem = $feeds.find((feed) => feed.Title === item.Title);
+			if (feedItem) {
+				feedItem.ratio = ration.tableState.ratios?item.ratio:item.weight||0/ration.totalWeight;
+				selectedMixFeeds.push(feedItem);
+			} else {
+				//no public food found
+				console.log(`Δε βρέθηκε η τροφή ${item.Title} στη βάση δεδομένων.`);
+				te.message = `Δε βρέθηκε η τροφή ${item.Title} στη βάση δεδομένων.`;
+				te.background = 'bg-error-400';
+				toastStore.trigger(te);
+			}
+		});
+		let foods2Fetch: string[] = [];
+		let uFeedsRead: Feed[] = ration.tableState.selfeeds.filter((x) => !x.public && !x.mix);
+		uFeedsRead.forEach((item) => {
+			const feedItem = $userFeeds.find((feed) => feed.id === item.id);
+			if (feedItem) {
+				feedItem.ratio =ration.tableState.ratios?item.ratio:item.weight||0/ration.totalWeight;
+				selectedMixFeeds.push(feedItem);
+			} else {
+				if (item.id) foods2Fetch.push(item.id);
+			}
+		});
+		let fetchedFeeds;
+		if (foods2Fetch.length > 0) {
+			try {
+				fetchedFeeds = await pb.collection('feeds').getList(1, 50, {
+					filter: `id=('${foods2Fetch.join("'||id='")}')`
+				});
+				console.log('fetched feeds', fetchedFeeds);
+			} catch (error) {
+				console.log('error fetching feeds', error);
+			}
+		}
+		if (fetchedFeeds && fetchedFeeds.items.length > 0 && uFeedsRead && uFeedsRead.length > 0) {
+			fetchedFeeds.items.forEach((item) => {
+				const found=uFeedsRead.find((x) => x.id == item.id)
+				if (found){
+				found.ratio = ration.tableState.ratios?item.ratio||0:item.weight||0/ration.totalWeight;
+				selectedMixFeeds.push(item);
+			}
+			});
+		}
+		let mixFeeds: Feed[] = ration.tableState.selfeeds.filter((x) => !x.public && x.mix);
+		mixFeeds.forEach(async (item) => {
+			try {
+				const rationMix: State = await pb.collection('rations').getOne(item.id);
+				const userFeedItem = await convertRationMixtoFeed(rationMix);
+				userFeedItem.ratio = ration.tableState.ratios?item.ratio||0:item.weight||0/ration.totalWeight;
+				// might need to update feed weights or ratios here
+				selectedMixFeeds.push(userFeedItem);
+			} catch (error) {
+				console.log("Δε βρέθηκε το σιτηρέσιο στη βάση δεδομένων.", error);
+				te.message = 'Δε βρέθηκε ένα σιτηρέσιο στη βάση δεδομένων.';
+				te.background = 'bg-error-400';
+				toastStore.trigger(te);
+			}
+
+		});
+		 
+		// create a feed item
+		let feed=$feeds[0]
+		for (let x in feed){
+			if (typeof feed[x]=="number") feed[x]=0;
+		}
+
+		selectedMixFeeds.forEach((item) => {
+			for (let x in feed){
+				if (typeof feed[x]=="number" && x!="weight" && x!="ratio") {
+					const r=item.ratio>1?item.ratio/100:item.ratio;
+					feed[x]+=item[x]*r
+}
+			}
+		});
+		feed.Title = ration.rationName;
+		feed.weight = ration.totalWeight;
+		feed.ratio = 0;
+		feed.id=ration.id;
+		feed.mix=true;
+		return feed;
+	}
+
 	async function readState(tableState: TableState) {
-		// let tableState:TableState=stage2Read?.ts
+		// let publicFeeds: Feed[] =tableState.selfeeds.filter((x) => x.public);
+		// publicFeeds.forEach((item) => {
+		// 	const feedItem = $feeds.find((feed) => feed.Title === item.Title);
+		// 	if (feedItem) {
+		// 		//weights or ratios?
+		// 		feedItem.weight = item.weight; // Update the weight
+		// 		// feedItem.ratio = ration.tableState.ratios?item.ratio:item.weight||0/ration.totalWeight;
+		// 		inputChipList.push(feedItem.Title);
+		// 	} else {
+		// 		//no public food found
+		// 		console.log(`Δε βρέθηκε η τροφή ${item.Title} στη βάση δεδομένων.`);
+		// 		te.message = `Δε βρέθηκε η τροφή ${item.Title} στη βάση δεδομένων.`;
+		// 		te.background = 'bg-error-400';
+		// 		toastStore.trigger(te);
+		// 	}
+		// });
+		// let foods2Fetch: string[] = [];
+		// let uFeedsRead: Feed[] = tableState.selfeeds.filter((x) => !x.public && !x.mix);
+		// uFeedsRead.forEach((item) => {
+		// 	const feedItem = $userFeeds.find((feed) => feed.id === item.id);
+		// 	if (feedItem) {
+		// 		feedItem.weight = item.weight; // Update the weight
+		// 		// feedItem.ratio = ration.tableState.ratios?item.ratio:item.weight||0/ration.totalWeight;
+		// 		inputChipListUser.push(feedItem.Title);
+		// 	} else {
+		// 		if (item.id) foods2Fetch.push(item.id);
+		// 	}
+		// });
+		// let fetchedFeeds;
+		// if (foods2Fetch.length > 0) {
+		// 	try {
+		// 		fetchedFeeds = await pb.collection('feeds').getList(1, 50, {
+		// 			filter: `id=('${foods2Fetch.join("'||id='")}')`
+		// 		});
+		// 		console.log('fetched feeds', fetchedFeeds);
+		// 	} catch (error) {
+		// 		console.log('error fetching feeds', error);
+		// 	}
+		// }
+		// if (fetchedFeeds && fetchedFeeds.items.length > 0 && uFeedsRead && uFeedsRead.length > 0) {
+		// 	fetchedFeeds.items.forEach((item) => {
+		// 		const found=uFeedsRead.find((x) => x.id == item.id)
+		// 		if (found){
+		// 		found.weight = item.weight; // Update the weight
+		// 		// feedItem.ratio = ration.tableState.ratios?item.ratio||0:item.weight||0/ration.totalWeight;
+		// 		inputChipListUser.push(item.Title);
+		// 	}
+		// 	});
+		// }
+		// let mixFeeds: Feed[] = tableState.selfeeds.filter((x) => !x.public && x.mix);
+		// mixFeeds.forEach(async (item) => {
+		// 	try {
+		// 		const rationMix: State = await pb.collection('rations').getOne(item.id);
+		// 		const userFeedItem = await convertRationMixtoFeed(rationMix);
+		// 		userFeedItem.weight = item.weight; // Update the weight
+		// 		// feedItem.ratio = ration.tableState.ratios?item.ratio||0:item.weight||0/ration.totalWeight;
+		// 		$feeds = [...$feeds, userFeedItem];
+		// 		inputChipList.push(userFeedItem.Title);
+		// 	} catch (error) {
+		// 		console.log("Δε βρέθηκε το σιτηρέσιο στη βάση δεδομένων.", error);
+		// 		te.message = 'Δε βρέθηκε ένα μείγμα σιτηρεσίου στη βάση δεδομένων.';
+		// 		te.background = 'bg-error-400';
+		// 		toastStore.trigger(te);
+		// 	}
+
+		// });
+
+	
 		for (const item of tableState.selfeeds) {
-			if (item.id && item.weight) {
+			if (item.id) {
 				let userFeedItem = $userFeeds.find((feed) => feed.id === item.id);
 				let itemIsByUser = true;
 				if (!userFeedItem) {
@@ -125,14 +281,26 @@
 							expand: 'user'
 						});
 					} catch (err) {
-						console.log(err);
-						toastStore.trigger(te);
+
+						if (item.mix) {
+							//fortwse to ration ws trofi
+							try {
+								const rationMix: State = await pb.collection('rations').getOne(item.id);
+								userFeedItem = await convertRationMixtoFeed(rationMix);
+							} catch (error) {
+								te.message = 'Δε βρέθηκε το σιτηρέσιο στη βάση δεδομένων.';
+								te.background = 'bg-error-400';
+								toastStore.trigger(te);
+							}
+						} else {
+							console.log(err);
+							toastStore.trigger(te);
+						}
 					}
 				}
 				if (userFeedItem) {
 					userFeedItem.weight = item.weight; // Update the weight
 					if (!$currentUser || !itemIsByUser) {
-						// Assuming you have a variable `currentUser` to check if the user is signed in
 						if (!$feeds.some((x) => x.id == userFeedItem.id)) {
 							$feeds = [...$feeds, userFeedItem];
 						}
@@ -145,7 +313,7 @@
 						}
 					}
 				}
-			} else if (item.Title && item.weight) {
+			} else if (item.Title) {
 				const feedItem = $feeds.find((feed) => feed.Title === item.Title);
 
 				if (feedItem) {
@@ -156,10 +324,8 @@
 		}
 
 		if (tableState.extraCols && tableState.extraCols.length > 0) {
-			// certain.push(...tableState.extraCols);
 			inputmlist.push(...tableState.extraCols);
 		}
-		// console.log(inputmlist, inputChipList, inputChipListUser);
 		return { inputChipListUser, inputChipList, inputmlist };
 	}
 
@@ -202,23 +368,24 @@
 {#if $feeds.length > 0 && $metrics.length > 0}
 	<!-- selected={selected} columns={columns} -->
 	{#key solved}
-	<FeedsTable
-		bind:selected
-		bind:columns
-		userFeeds={$userFeeds}
-		feeds={$feeds}
-		metrics={$metrics}
-		edit={true}
-		bind:totalWeight
-		{linear}
-		bind:requirements={requirementsString}
-		bind:ratiosSelected
-	/>
+		<FeedsTable
+			bind:selected
+			bind:columns
+			userFeeds={$userFeeds}
+			feeds={$feeds}
+			metrics={$metrics}
+			edit={true}
+			bind:totalWeight
+			{linear}
+			bind:requirements={requirementsString}
+			bind:ratiosSelected
+		/>
 	{/key}
 {:else}
 	<TablePlaceHolder />
 {/if}
 {JSON.stringify(currentState)}
+
 <TableEditButtons
 	currentUser={$currentUser}
 	bind:inputChipList
@@ -229,57 +396,62 @@
 	bind:userFoodAutocomplete
 />
 {#if linear}
-<div class="heading print:hidden">
-	<h2>Βήμα 4: Επίλυση</h2>
-</div>
-<div class="info" style="">
-	Σημείωση: Πατήστε το κουμπί τις αυτόματης επίλυσης αφού διάλεξτε τροφές και εισάγετε τις αντίστοιχες τιμές τους.<br />
-</div>
-{#if selected.length>0 && requirements.reqs.length>0}
-<button
-	class="koumpi mb-3"
-	on:click={async () => {
-		console.log("tpt");
-		// const resp=await fetch("/api/compute",{ method:"POST", body:JSON.stringify({selected, requirements:requirements.reqs})})
-		const resp= await fetch("/api/compute", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({ selected, requirements: requirements.reqs })
-		})
-		const d=await resp.json()
-		console.log(d)
-		// solved = false;
-		
-		// result = solveLP(selected, requirements.reqs);
-		// if (result && result?.feasible) {
-		// 	solved=true;
-		// 	selected.forEach((feed, i) => {
-		// 		if (result.hasOwnProperty(`feed${i}`)) {
-		// 			feed.ratio = result[`feed${i}`] || 0;
-		// 		} else {
-		// 			feed.ratio = 0;
-		// 		}
-		// 	});
-		// }
-	}}>Προσπάθεια Αυτόματης Επίλυσης<sup>1</sup></button
->
-{:else}
-<button class="btn bg-gray-400">Προσπάθεια Αυτόματης Επίλυσης<sup>1</sup></button>
-{/if}
+	<div class="heading print:hidden">
+		<h2>Βήμα 4: Επίλυση</h2>
+	</div>
+	<div class="info" style="">
+		Σημείωση: Πατήστε το κουμπί τις αυτόματης επίλυσης αφού διάλεξτε τροφές και εισάγετε τις
+		αντίστοιχες τιμές τους.<br />
+	</div>
+	{#if selected.length > 0 && requirements.reqs.length > 0}
+		<button
+			class="koumpi mb-3"
+			on:click={async () => {
+				console.log('tpt');
+				// const resp=await fetch("/api/compute",{ method:"POST", body:JSON.stringify({selected, requirements:requirements.reqs})})
+				const resp = await fetch('/api/compute', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ selected, requirements: requirements.reqs })
+				});
+				const d = await resp.json();
+				console.log(d);
+				// solved = false;
 
+				// result = solveLP(selected, requirements.reqs);
+				// if (result && result?.feasible) {
+				// 	solved=true;
+				// 	selected.forEach((feed, i) => {
+				// 		if (result.hasOwnProperty(`feed${i}`)) {
+				// 			feed.ratio = result[`feed${i}`] || 0;
+				// 		} else {
+				// 			feed.ratio = 0;
+				// 		}
+				// 	});
+				// }
+			}}>Προσπάθεια Αυτόματης Επίλυσης<sup>1</sup></button
+		>
+	{:else}
+		<button class="btn bg-gray-400">Προσπάθεια Αυτόματης Επίλυσης<sup>1</sup></button>
+	{/if}
 
-{#if result!=undefined}
-{#if solved}	
-<div class="card p-4 max-w-lg mx-auto">Επιτυχής επίλυση.<br/>Συνολικό κόστος (για {totalWeight} κιλά): {formatNumber(result?.result) || ''} </div>
-{:else}
-<div class="p-4 bg-error-400 rounded-full max-w-lg mx-auto">Το σιτηρέσιο δεν μπόρεσε να επιλυθεί. Δοκιμάστε να τροποποιήσετε τις τροφές ή να χαλαρώσετε τις λειτουργικές απαιτήσεις του ζώου.</div>
+	{#if result != undefined}
+		{#if solved}
+			<div class="card p-4 max-w-lg mx-auto">
+				Επιτυχής επίλυση.<br />Συνολικό κόστος (για {totalWeight} κιλά): {formatNumber(
+					result?.result
+				) || ''}
+			</div>
+		{:else}
+			<div class="p-4 bg-error-400 rounded-full max-w-lg mx-auto">
+				Το σιτηρέσιο δεν μπόρεσε να επιλυθεί. Δοκιμάστε να τροποποιήσετε τις τροφές ή να χαλαρώσετε
+				τις λειτουργικές απαιτήσεις του ζώου.
+			</div>
+		{/if}
+	{/if}
 {/if}
-{/if}
-
-{/if}
-
 
 <style lang="postcss">
 	.info {
@@ -288,9 +460,9 @@
 	.heading {
 		font-size: x-large;
 		margin-top: 1rem;
-		@apply  underline
+		@apply underline;
 	}
-	.btn{
+	.btn {
 		@apply print:hidden;
 	}
 </style>

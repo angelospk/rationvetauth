@@ -8,6 +8,7 @@ export interface State{
 	user?:string,
 	updated?:string,
 	id?:string
+	totalWeight:number
 }
 export interface AnimalInfo{
 	animal:string
@@ -26,7 +27,8 @@ export interface Feed {
 	ratio?:number;
 	updated?: string;
 	price?:number;
-	// Add more fields as necessary
+	public?:boolean;
+	mix?:boolean
 };
 export interface Req{
 	Title: string;
@@ -40,6 +42,7 @@ export interface AnimalReqs{
 }
 
 export interface TableState {
+	ratios?:boolean;
 	selfeeds: Feed[];
 	extraCols: string[];
 };
@@ -49,7 +52,6 @@ export interface Column {
 	units?: string,
 	labelgr?: string,
 	cat?:string
-	// Add more fields as necessary
 };
 export interface Option{
     label:string,
