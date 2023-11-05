@@ -106,6 +106,7 @@
 					}
 				}
 			}
+			ration.totalWeight=sum.weight;
 		}
 	}
 	async function convertRationMixtoFeed(ration: State): Promise<Feed> {

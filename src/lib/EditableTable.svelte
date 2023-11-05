@@ -58,6 +58,7 @@
 	export let stage2Read: State = {
 		rationName,
 		producerName,
+		totalWeight:0,
 		tableState: { selfeeds: [], extraCols: [] }
 	};
 	let ratiosSelected: boolean;
@@ -74,12 +75,14 @@
 	export let currentState: State = {
 		rationName,
 		producerName,
+		totalWeight:0,
 		tableState: { selfeeds: [], extraCols: [] }
 	};
 	$: {
 		currentState = {
 			rationName: rationName,
 			producerName: producerName,
+			totalWeight: totalWeight,
 			tableState: { selfeeds: minimalSelected, extraCols: inputmlist, ratios: ratiosSelected }
 		};
 	}
