@@ -79,7 +79,6 @@
 		}
 		emptySum = { ...sum };
 		emptyRatio = { ...sum };
-		console.log(emptySum);
 	}
 
 	$: {
@@ -225,7 +224,6 @@
 							console.log(error);
 						}
 					}
-					console.log(userFeedItem);
 					// If the item is found (either in userFeeds or in pocketbase), push to the result
 					if (userFeedItem) {
 						selected.push({

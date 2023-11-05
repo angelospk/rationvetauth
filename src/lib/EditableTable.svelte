@@ -93,10 +93,8 @@
 	];
 	$: minimalSelected = !ratiosSelected
 		? selected.map((item) => {
-				if (item.id) {
-					if ($userFeeds.map((x) => x.id).includes(item.id))
-						return { id: item.id, weight: item.weight, public: false, mix: false };
-					else return { id: item.id, weight: item.weight, mix: true, public: false };
+				if (item.user) {
+						return { id: item.id, weight: item.weight, public: false, mix: item.mix||false };
 				} else {
 					return { Title: item.Title, weight: item.weight, public: true };
 				}
@@ -142,19 +140,27 @@
 				if (item.id) foods2Fetch.push(item.id);
 			}
 		});
-		let fetchedFeeds;
+		let fetchedFeeds:Feed[]=[];
 		if (foods2Fetch.length > 0) {
-			try {
-				fetchedFeeds = await pb.collection('feeds').getList(1, 50, {
-					filter: `id=('${foods2Fetch.join("'||id='")}')`
-				});
-				console.log('fetched feeds', fetchedFeeds);
-			} catch (error) {
-				console.log('error fetching feeds', error);
-			}
+			foods2Fetch.forEach(async id=>{
+				try {
+					const feched=await pb.collection('feeds').getOne(id)
+					fetchedFeeds.push(feched)
+				} catch (error) {
+					console.log('error fetching feeds', error);
+				}
+			})
+			// try {
+			// 	fetchedFeeds = await pb.collection('feeds').getList(1, 50, {
+			// 		filter: `id=('${foods2Fetch.join("'||id='")}')`
+			// 	});
+			// 	console.log('fetched feeds', fetchedFeeds);
+			// } catch (error) {
+			// 	console.log('error fetching feeds', error);
+			// }
 		}
-		if (fetchedFeeds && fetchedFeeds.items.length > 0 && uFeedsRead && uFeedsRead.length > 0) {
-			fetchedFeeds.items.forEach((item) => {
+		if (fetchedFeeds && fetchedFeeds.length > 0 && uFeedsRead && uFeedsRead.length > 0) {
+			fetchedFeeds.forEach((item) => {
 				const found=uFeedsRead.find((x) => x.id == item.id)
 				if (found){
 				found.ratio = ration.tableState.ratios?item.ratio||0:item.weight||0/ration.totalWeight;
