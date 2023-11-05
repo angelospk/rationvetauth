@@ -7,6 +7,7 @@
 	import { currentUser, pb } from '$lib/pocketbase';
 	import type { State } from '$lib/stores/types';
 	import { enhance } from '$app/forms';
+	import { userRations } from './stores/data';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'Δεν μπόρεσε να αποθηκευτεί το σιτηρέσιο.',
@@ -32,6 +33,7 @@
 		te.message="Ο πίνακας σιτηρεσίου αποθηκεύτηκε επιτυχώς!"
 		te.background="bg-green-600"
 		toastStore.trigger(te)
+		$userRations=[...$userRations,record]
 	} catch (error) {
 		console.log(error)
 		// te.message=+"Πληροφορίες: ".concat(error)

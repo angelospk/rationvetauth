@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { metrics, feeds, userFeeds, loadedTables } from '$lib/stores/data';
+	import { metrics, feeds, userFeeds, loadedTables, userRations } from '$lib/stores/data';
 	import type { State, TableState } from '$lib/stores/types';
 	import FeedsTable from '$lib/FeedsTable.svelte';
 	import TablePlaceHolder from '$lib/TablePlaceHolder.svelte';
@@ -82,7 +82,11 @@
 					te.message = 'Το σιτηρέσιο αποθηκεύτηκε επιτυχώς!';
 					te.background = 'bg-green-600';
 					toastStore.trigger(te);
-					console.log(a);
+					userRations.update((rations) => {
+						let index = rations.findIndex((r) => r.id == $page.params.id);
+						rations[index] = ration;
+						return rations;
+					});
 				} catch (error) {
 					te.message = 'Απέτυχε η αποθήκευση του σιτηρεσίου!';
 					te.background = 'bg-red-600';
