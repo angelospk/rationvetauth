@@ -1,5 +1,6 @@
 <script>
   import { currentUser, pb } from '$lib/pocketbase';
+	import { userRations } from '$lib/stores/data';
 	import LoginComponent from './login/LoginComponent.svelte';
 
 </script>
@@ -7,7 +8,6 @@
 
 {#if $currentUser}
 <h1 class="text-xl">Αρχική Σελίδα</h1>
-
   <p class="my-2">Καλώς ήρθες, {$currentUser.name}.<br /></p>
   <div class="flex-col w-2/3 justify-center ml-auto mr-auto flex sm:flex-row sm:space-x-5 ">
     <a href="/feeds" class="my-2 koumpi">Οι Τροφές μου</a>

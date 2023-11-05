@@ -384,7 +384,6 @@
 {:else}
 	<TablePlaceHolder />
 {/if}
-{JSON.stringify(currentState)}
 
 <TableEditButtons
 	currentUser={$currentUser}

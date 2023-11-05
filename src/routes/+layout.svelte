@@ -6,21 +6,16 @@
 	import { page } from '$app/stores';
 	import { pb, currentUser } from '$lib/pocketbase';
 	import ModalExampleForm from '$lib/ModalExampleForm.svelte';
-	import type { PageData } from './$types';
 	import { goto } from '$app/navigation';
 	import { initializeStores } from '@skeletonlabs/skeleton';
 	import { Toast } from '@skeletonlabs/skeleton';
-	import { feeds, metrics, userFeeds, loadedTables } from '$lib/stores/data';
+	import { feeds, metrics, userFeeds, loadedTables, userRations } from '$lib/stores/data';
 	import { onMount } from 'svelte';
 	import { Modal } from '@skeletonlabs/skeleton';
 	import ModalExampleList from '$lib/ModalListaTrofes.svelte';
 	import ModalListaSithresia from '$lib/ModalListaSithresia.svelte';
 	import Logo from '$lib/Logo.svelte';
-	import { setContext } from 'svelte';
 	import type { Feed } from '$lib/stores/types';
-	import { fade } from 'svelte/transition';
-	import LoadingCircles from '$lib/Loading Circles.svelte';
-	import { Dropdown, DropdownItem } from 'flowbite-svelte';
 	initializeStores();
 	// export let data: PageData
 	async function logout() {
@@ -33,11 +28,15 @@
 		const res = await fetch('/api/data');
 		if (res.ok) {
 			let dat = await res.json();
-			let fs = dat.d[0].data;
+			console.log(dat)
+			// let fs = dat.d[0].data;
+			let fs=dat.d.pub
 			fs.forEach((x: Feed) => {x.weight = 0; x.ratio=0; if(!x.price)  x.price=0;});
 			feeds.set(fs);
-			metrics.set(dat.d[1].data);
+			// metrics.set(dat.d[1].data);
+			metrics.set(dat.d.orologies)
 		}
+		loadedTables.set(true);
 		if ($currentUser) {
 			let d;
 			try {
@@ -47,6 +46,8 @@
 					})) || [];
 				d.forEach((x: Feed) => {x.weight = 0;x.ratio=0; if(!x.price)  x.price=0;});
 				userFeeds.set(d);
+				d= await pb.collection('rations').getFullList();
+				userRations.set(d);
 			} catch (err) {
 				console.log(err);
 				userFeeds.set([]);
@@ -55,7 +56,7 @@
 			// console.log("added userfeeds ffrom layout", $userFeeds)
 		}
 		setTimeout(() => {
-			loadedTables.set(true);
+			
 		}, 100);
 	});
 	
@@ -196,7 +197,7 @@
 		<div
 			class="container h-full mx-auto md:w-full flex justify-center text-center items-center my-5 overflow-x-auto"
 		>
-			<div class="w-full md:w-4/5">
+			<div class="w-full">
 				<slot />
 			</div>
 		</div>
