@@ -28,13 +28,15 @@
 		placement: 'top'
 	};
 	export let linear: boolean = false;
-
+	
 	let tableOptions = {
 		displayUnits: { label: 'Εμφάνιση Μονάδων', visible: true },
 		displayPercentage: { label: 'Εμφάνιση Ποσοστού', visible: !linear },
 		displayDMPercentage: { label: 'Εμφάνιση Ποσοστού ανά ΞΟ', visible: false },
 		ratios: { label: 'Βάρη < > Αναλογίες', visible: linear }
 	};
+	export let ratiosSelected=tableOptions.ratios.visible;
+	$: ratiosSelected=tableOptions.ratios.visible;
 	export let edit = false;
 	export let selected: Feed[] = [];
 	export let columns: Column[] = [];
@@ -246,9 +248,9 @@
 				}
 			} else {
 				//feed is mix. So then, load the mix and add it to the selected
-				let mixItem;
+				let mixItem:State;
 				try {
-					mixItem = await pb.collection('rations').getOne(item.id);
+					mixItem = await pb.collection('rations').getOne(item.id||"");
 					let foodMix=await convertRationMixtoFeed(mixItem);
 					console.log(foodMix)
 					selected.push({

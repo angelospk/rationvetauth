@@ -281,7 +281,7 @@
 	
 		for (const item of tableState.selfeeds) {
 			if (item.id) {
-				let userFeedItem = $userFeeds.find((feed) => feed.id === item.id);
+				let userFeedItem:Feed|undefined = $userFeeds.find((feed) => feed.id === item.id);
 				let itemIsByUser = true;
 				if (!userFeedItem) {
 					itemIsByUser = false;
@@ -307,10 +307,10 @@
 						}
 					}
 				}
-				if (userFeedItem) {
+				if (userFeedItem && userFeedItem.Title) {
 					userFeedItem.weight = item.weight; // Update the weight
 					if (!$currentUser || !itemIsByUser) {
-						if (!$feeds.some((x) => x.id == userFeedItem.id)) {
+						if (!$feeds.some((x) => x.id == userFeedItem?.id)) {
 							$feeds = [...$feeds, userFeedItem];
 						}
 						if (!inputChipList.includes(userFeedItem.Title)) {

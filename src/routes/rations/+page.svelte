@@ -1,7 +1,7 @@
 <script lang="ts">
 
 	import { currentUser, pb } from "$lib/pocketbase";
-	import type { State } from "$lib/stores/types";
+	import type { Feed, State } from "$lib/stores/types";
 	import { onMount } from "svelte";
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
@@ -14,8 +14,8 @@
 		timeout: 1000
 	};
 let rations:State[];
-function totalWeight(selfeeds) {
-		return selfeeds.reduce((acc, curr) => acc + curr.weight, 0);
+function totalWeight(selfeeds:Feed[]) {
+		return selfeeds.reduce((acc, curr) => acc + <number>curr.weight||0, 0);
 	}
 	onMount(async () => {
 		// rations=$userRations;
@@ -33,7 +33,6 @@ function totalWeight(selfeeds) {
 
 
 	function gotoration(id: string|null) {
-		
         console.log("/ration/"+id)
         goto("/ration/"+id)
 	}
@@ -62,7 +61,7 @@ function totalWeight(selfeeds) {
 {:else}
 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
     {#each $userRations as ration}
-        <button class="card card-hover bg-white shadow-lg rounded-lg p-4 mx-auto hover:variant-outline-secondary focus:animate-ping" on:click={gotoration(ration?.id||null)}>
+        <button class="card card-hover bg-white shadow-lg rounded-lg p-4 mx-auto hover:variant-outline-secondary focus:animate-ping" on:click={gotoration(ration?.id||"")}>
             <div class="flex justify-between space-x-3 sm:space-x-10 items-start">
                 <h2 class="text-lg font-semibold mb-2">{ration.rationName || 'Unnamed Ration'}</h2>
                 <p class="text-xs text-gray-500">{ration.updated}</p>

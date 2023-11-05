@@ -11,7 +11,7 @@ export function createInstance() {
   
   export const pb = createInstance()
   export const currentUser=writable(pb.authStore.model);
-  pb.authStore.onChange((auth)=>{
+  pb.authStore.onChange(()=>{
     // console.log("authstore changed", pb.authStore)
     currentUser.set(pb.authStore.model)
 })

@@ -8,7 +8,7 @@
 	import { currentUser, pb } from '$lib/pocketbase';
 
 	import { AccordionItem, getToastStore, Accordion } from '@skeletonlabs/skeleton';
-	import type { Accordion, ToastSettings } from '@skeletonlabs/skeleton';
+	import type {  ToastSettings } from '@skeletonlabs/skeleton';
 	import RationInfo from '$lib/RationInfo.svelte';
 	import { goto } from '$app/navigation';
 	import LoadingCircles from '$lib/Loading Circles.svelte';
@@ -63,7 +63,7 @@
 		metrics={$metrics}
 		edit={Boolean($currentUser)}
 	/> -->
-	{#if $currentUser.id == ration_user_id || $currentUser.role == 'admin'}
+	{#if $currentUser &&( $currentUser.id == ration_user_id || $currentUser.role == 'admin')}
 		<EditableTable stage2Read={ration} bind:currentState={ration} />
 		<!-- <EditableTable bind:currentState={ration} 	/> -->
 	{:else}
