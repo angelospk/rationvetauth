@@ -127,14 +127,14 @@
 							<TabAnchor href="/" selected={$page.url.pathname === '/'}>Αρχική</TabAnchor>
 							<TabAnchor class="" selected={$page.url.pathname.includes("newration")}
 								><button use:popup={popupSolve}>Επίλυση</button>
-								<div class="p-2 rounded-lg variant-filled-secondary  z-10" data-popup="popupSolve">
+								<div class="p-2 rounded-lg variant-filled-secondary text-lg  z-10" data-popup="popupSolve">
 									<div class="arrow variant-filled-secondary" />
 									<ol>
 										<li>
-											<a class="hover:underline" href="/newration">Χειροκίνητα</a>
+											<a class="hover:underline hover:bg-teal-400 hover:rounded-lg hover:shadow-lg" href="/newration">Χειροκίνητα</a>
 										</li>
 										<li>
-											<a class="hover:underline" href="/newration/linear">Αυτόματα</a>
+											<a class="hover:underline hover:bg-teal-400 hover:rounded-lg hover:shadow-lg" href="/newration/linear">Αυτόματα</a>
 										</li>
 									</ol>
 								</div>
@@ -151,14 +151,14 @@
 										<path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z"/>
 									  </svg></button
 							>
-							<div class="p-2 rounded-lg variant-filled-secondary absolute  top-0 left-0 z-10" data-popup="popupUser">
+							<div class="p-2 rounded-lg variant-filled-secondary absolute text-lg top-0 left-0 z-10" data-popup="popupUser">
 								<div class="arrow variant-filled-secondary" />
 								<ol>
 									<li>
-										<a class="hover:underline" href="/profile">Επεξεργασία</a>
+										<a class="hover:underline hover:bg-teal-400 hover:rounded-lg hover:shadow-lg" href="/profile">Επεξεργασία</a>
 									</li>
 									<li>
-										<button class="hover:underline" on:click={logout} >Αποσύνδεση</button>
+										<button class="hover:underline hover:bg-teal-400 hover:rounded-lg hover:shadow-lg" on:click={logout} >Αποσύνδεση</button>
 									</li>
 								</ol>
 							</div>
