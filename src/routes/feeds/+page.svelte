@@ -96,7 +96,7 @@
 	</div>
 </Popover>
 <div class="flex justify-between mb-4">
-	<h1 class="font-bold mb-3 mx-auto">Οι Τροφές μου</h1>
+	<h1 class="font-bold mb-3 mx-auto text-2xl">Οι Τροφές μου</h1>
 	<div class="" id="as">
 		<label class="flex items-center space-x-2 card p-2 text-xs">
 			<input class="checkbox" type="checkbox" bind:checked={detailed} />

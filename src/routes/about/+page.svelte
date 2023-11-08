@@ -48,13 +48,13 @@ p {
 
 </style>
 
-<!-- <h1 class="text-2xl my-10">Πληροφορίες</h1> -->
-<TabGroup   name="tab">
+<h1 class="text-4xl mb-10">Λίγα λόγια για εμάς</h1>
+<!-- <TabGroup class="w-fit mx-auto "  name="tab">
 <Tab bind:group={tab} name="tab" value="vet"> 
   Εργαστήριο
 </Tab>
    
-</TabGroup>
+</TabGroup> -->
 <p class="text-lg w-1/2 mx-auto whitespace-pre-line  ">
   Η Κτηνιατρική Σχολή του Αριστοτελείου Πανεπιστημίου Θεσσαλονίκης είναι μία από τις κορυφαίες εκπαιδευτικές ιδρύσεις στον τομέα της κτηνιατρικής στην Ελλάδα. Ιδρύθηκε το 1950 και αποτελεί μέρος της Σχολής Θετικών Επιστημών του ΑΠΘ.
   
