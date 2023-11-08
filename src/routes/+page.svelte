@@ -16,7 +16,9 @@
   </div>
 {:else}
 <div class="flex-col justify-center space-y-5 lg:space-x-5 lg:flex-row flex  pt-[3vh]">
-  <div class= "text-5xl"><p class="gradient-heading">Καλώς ήλθατε!</p></div>
+  <div class= "text-5xl"><p class="gradient-heading">Καλώς ήλθατε!</p><br>
+    <p> Το παρόν έργο αποτελεί καίρια καινοτομία για δημιουργία - επίλυση σιτηρεσίων για τους φοιτητές αλλά και για ιδιώτες !</p></div>
+  
   <div class="max-w-md card mx-auto"><LoginComponent /></div>
 </div>
 {/if}

@@ -99,7 +99,7 @@
 		<title>Διαδυκτιακή Εφαρμογή Επίλυσης Σιτηρεσιών</title>
 		<svelte:fragment slot="header">
 			<!-- App Bar -->
-			{#if $currentUser}
+			
 			<AppBar padding="0" spacing="0" background="transparent">
 				<svelte:fragment slot="lead">
 					<a href="/" class="text-xl"
@@ -125,6 +125,7 @@
 					></div> -->
 						<TabGroup>
 							<TabAnchor href="/" selected={$page.url.pathname === '/'}>Αρχική</TabAnchor>
+							{#if $currentUser}
 							<TabAnchor class="" selected={$page.url.pathname.includes("newration")}
 								><button use:popup={popupSolve}>Επίλυση</button>
 								<div class="p-2 rounded-lg variant-filled-secondary text-lg  z-10" data-popup="popupSolve">
@@ -139,18 +140,20 @@
 									</ol>
 								</div>
 							</TabAnchor>
+							{/if}
 							<TabAnchor
 								class="overflow-clip"
-								href="/test"
-								selected={$page.url.pathname === '/test'}>Εργαστήριο</TabAnchor
+								href="/about"
+								selected={$page.url.pathname === '/about'}>Πληροφορίες</TabAnchor
 							>
 						</TabGroup>
-
+							{#if $currentUser}
 							<button class="  rounded-full" use:popup={popupUser}
 								><svg class="w-10 h-8 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
 										<path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z"/>
 									  </svg></button
 							>
+							{/if}
 							<div class="p-2 rounded-lg variant-filled-secondary absolute text-lg top-0 left-0 z-10" data-popup="popupUser">
 								<div class="arrow variant-filled-secondary" />
 								<ol>
@@ -176,7 +179,7 @@
 					</div>
 				</svelte:fragment>
 			</AppBar>
-			{/if}
+			 
 			{#if $currentUser?.name == ''}
 				<!-- <div class="w-fit text-center mx-auto"><div class=" w-full bg-gradient-to-t from-transparent to-red-500 text-center rounded-t-xl "><div class="w-full p-2"></div></div>
 		<div class="flex"><div class="px-5 bg-gradient-to-l from-transparent to-red-500"></div>

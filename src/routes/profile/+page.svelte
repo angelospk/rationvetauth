@@ -33,7 +33,7 @@
     <label for="country">Χώρα:</label>
     <input type="text" id="country" name="country" value="{$currentUser?.country||""}" /> -->
     <label for="postalCode">Ταχ. Κώδικας:</label>
-    <input type="number" style="width: 4rem" id="postalCode" name="postalCode" bind:value={formd.postalCode} />
+    <input type="text" pattern="[0-9]{5}"  style="width: 4rem" id="postalCode" name="postalCode" bind:value={formd.postalCode} />
     <!-- <label for="userId">userId:</label>
     <input class="hover:cursor-not-allowed" readonly  type="text" id="userId" name="userId" value={$currentUser?.id} /> -->
 <br>
