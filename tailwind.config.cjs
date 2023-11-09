@@ -16,6 +16,9 @@ module.exports = {
 	],
 	theme: {
 		extend: {
+			fontFamily:{
+				osans:['Open-sans'],
+				},
 			keyframes: {
 				wiggle: {
 					'0%, 100%': { transform: 'rotate(-9deg)' },

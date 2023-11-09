@@ -3,28 +3,38 @@
 @tailwind components;
 @tailwind utilities;
 
-:root [data-theme='skeleton'] {
-	--theme-font-family-base: sans-serif;
-	--theme-font-family-heading: sans-serif;
+@font-face {
+	/* Reference name */
+	font-family: 'Open-sans';
+	/* For multiple files use commas, ex: url(), url(), ... */
+	src: url('/fonts/OpenSans-VariableFont_wdth,wght.ttf');
+}
+:root [data-theme='crimson'] {
+    --theme-font-family-base: 'Open-sans', sans-serif;
+    --theme-font-family-heading: 'Open-sans', sans-serif;
+    /* ... */
 }
 
+
 body {
-background-color:#99b1ff;
+background-color:#b1ff99;
 background-image:
-radial-gradient(at 23% 13%, hsla(211,100%,33%,1) 0px, transparent 50%),
-radial-gradient(at 89% 8%, hsla(209,100%,31%,1) 0px, transparent 50%),
-radial-gradient(at 17% 88%, hsla(203,100%,32%,1) 0px, transparent 50%),
-radial-gradient(at 46% 27%, hsla(207,100%,84%,1) 0px, transparent 50%),
-radial-gradient(at 39% 51%, hsla(219,100%,50%,1) 0px, transparent 50%),
-radial-gradient(at 58% 78%, hsla(196,100%,49%,1) 0px, transparent 50%),
-radial-gradient(at 82% 68%, hsla(196,100%,27%,1) 0px, transparent 50%);
+radial-gradient(at 10% 42%, hsla(227,82%,33%,1) 0px, transparent 50%),
+radial-gradient(at 72% 2%, hsla(222,92%,29%,1) 0px, transparent 50%),
+radial-gradient(at 6% 92%, hsla(231,56%,27%,1) 0px, transparent 50%),
+radial-gradient(at 60% 44%, hsla(217,25%,84%,1) 0px, transparent 50%),
+radial-gradient(at 29% 30%, hsla(229,87%,50%,1) 0px, transparent 50%),
+radial-gradient(at 55% 40%, hsla(206,48%,49%,1) 0px, transparent 50%),
+radial-gradient(at 2% 73%, hsla(206,63%,27%,1) 0px, transparent 50%),
+radial-gradient(at 92% 91%, hsla(227,57%,32%,1) 0px, transparent 50%);
   }
+
 
 input[type='number'] {
 	width: 3.5rem;
 }
 .card{
-	background-color: mediumturquoise;
+	@apply bg-gradient-to-l from-transparent to-blue-400;
 }
 
 
@@ -41,6 +51,14 @@ a:active, button:active {
 	@apply bg-gradient-to-br;
 	/* Color Stops */
 	@apply from-primary-500 via-tertiary-500 to-secondary-500;
+}
+.heading{
+    background: radial-gradient(#eff1ff,transparent 90%);
+    background-position: 50% 75%;
+    background-size: 100% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 .koumpi {
 	@apply btn bg-secondary-active-token hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:duration-300 duration-300 print:hidden;

@@ -5,6 +5,8 @@
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
 	import AutocompleteTest from './AutocompleteTest.svelte';
+	import { fly } from 'svelte/transition';
+	import { circIn } from 'svelte/easing';
 	export let currentUser: any | null;
 //  import {certain} from './AddFoods.svelte'
 	const loginClick: PopupSettings = {
@@ -127,7 +129,7 @@
 </div>
 <div class="my-3 flex justify-end print:hidden">
 	{#if addMetrics}
-		<div class="card max-w-md max-h-60 p-4 overflow-y-auto" tabindex="-1">
+		<div in:fly={{ y: -50, duration: 200, easing:circIn }}  class="card max-w-md max-h-60 p-4 overflow-y-auto" tabindex="-1">
 			<InputChip
 				bind:input={inputMetric}
 				bind:value={inputmlist}
@@ -147,7 +149,7 @@
 </div>
 <div class="my-3 max-w-lg flex print:hidden">
 	{#if addUserFoodVisible}
-		<div
+		<div in:fly={{ y: -50, duration: 200, easing:circIn }} 
 			class="card max-w-md mx-auto content-center justify-center max-h-60 p-4 overflow-y-auto"
 			tabindex="-1"
 		>
@@ -170,7 +172,7 @@
 </div>
 <div class="my-3 max-w-lg flex justify-start print:hidden">
 	{#if addFoodVisible}
-		<div class="card max-w-md max-h-60 p-4 overflow-y-auto" tabindex="-1">
+		<div in:fly={{ y: -50, duration: 200, easing:circIn }}  class="card max-w-md max-h-60 p-4 overflow-y-auto" tabindex="-1">
 			<InputChip
 				bind:input={inputChip}
 				bind:value={inputChipList}

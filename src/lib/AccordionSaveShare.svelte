@@ -53,7 +53,7 @@ const print = () => {
 	
 </script>
 
-<div class="text-center max-w-3xl mx-auto print:hidden">
+<div class="text-center max-w-3xl mx-auto print:hidden text-slate-50">
 		<Accordion>
 			<AccordionItem>
 				<svelte:fragment slot="lead"><div class="flex space-x-2"><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -63,9 +63,9 @@ const print = () => {
 					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 18a.969.969 0 0 0 .933 1h12.134A.97.97 0 0 0 15 18M1 7V5.828a2 2 0 0 1 .586-1.414l2.828-2.828A2 2 0 0 1 5.828 1h8.239A.97.97 0 0 1 15 2v5M6 1v4a1 1 0 0 1-1 1H1m0 9v-5h1.5a1.5 1.5 0 1 1 0 3H1m12 2v-5h2m-2 3h2m-8-3v5h1.375A1.626 1.626 0 0 0 10 13.375v-1.75A1.626 1.626 0 0 0 8.375 10H7Z"/>
 				  </svg></div></svelte:fragment>
 				<svelte:fragment slot="summary">Εκτύπωση</svelte:fragment>
-				<svelte:fragment slot="content"> <div class="card p-4">Εκτύπωσε ή αποθήκευσε ως pdf.<br><button class="koumpi" id="ekt" use:popup={popupHover} on:click={print}>
+				<svelte:fragment slot="content"> <div class=" p-4">Εκτύπωσε ή αποθήκευσε ως pdf.<br><button class="koumpi my-3" id="ekt" use:popup={popupHover} on:click={print}>
 					Εκτύπωση</button
-				><div class="card p-4 variant-filled-primary" data-popup="popupHover">
+				><div class=" p-4 rounded-lg variant-filled-primary" data-popup="popupHover">
 					<div class="arrow variant-filled-primary" />
 					Για περισσότερες από οχτώ Θρεπτκές Ουσίες στον πίνακα προτείνεται προσανατολισμός Landscape στην Εκτύπωση.
 				</div>
@@ -78,7 +78,7 @@ const print = () => {
 				  </svg></svelte:fragment>
 				<svelte:fragment slot="summary"><p class={$currentUser?"":"line-through"}>Αποθήκευση</p></svelte:fragment>
 				<svelte:fragment slot="content">
-                    <div class="card p-4">{#if !$currentUser}
+                    <div class=" p-4">{#if !$currentUser}
 Συνδέσου για να μπορείς να αποθηκεύεις σιτηρέσια στο λογαριασμό σου.
                      {:else}
                     Αποθήκευσε το παραπάνω σιτηρέσιο για μελλοντική χρήση ή επεξεργασία. <br>
@@ -94,7 +94,7 @@ const print = () => {
 					<path d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z"/>
 				  </svg></svelte:fragment>
 				<svelte:fragment slot="summary" ><p class={$currentUser?"":"line-through"}>Αποστολή σε E-mail</p></svelte:fragment>
-				<svelte:fragment slot="content"><div class="flex flex-col card p-4"><p>Μοιράσου ή στείλε σε κάποιον το σιτηρέσιο μέσω ηλεκτρονικού ταχυδρομείου.</p>
+				<svelte:fragment slot="content"><div class="flex flex-col p-4"><p>Μοιράσου ή στείλε σε κάποιον το σιτηρέσιο μέσω ηλεκτρονικού ταχυδρομείου.</p>
 					<form action="?/sendemail" method="POST" use:enhance={()=>{return async(r)=>{
 						console.log(r);
 					}}} >

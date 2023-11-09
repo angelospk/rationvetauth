@@ -18,8 +18,10 @@
 	import FeedDetails from '$lib/FeedDetails.svelte';
 	import LoadingCircles from '$lib/Loading Circles.svelte';
 	import { Popover, Button } from 'flowbite-svelte';
+	import { fly } from 'svelte/transition';
 	// writable;
 	// let userFeeds = writable([]);
+	let mounted:boolean;
 	const modalStore = getModalStore();
 	// let selectedFeed:Feed;
 	const modal: ModalSettings = {
@@ -34,6 +36,7 @@
 		// backdropClasses: "!blur-1"
 	};
 	onMount(async () => {
+		
 		if ($userFeeds.length == 0) {
 			const r: any =
 				(await pb.collection('feeds').getFullList({
@@ -42,6 +45,7 @@
 			console.log(r);
 			userFeeds.set(r);
 		}
+		mounted=true;
 	});
 	function createEmpty() {
 		let empty: Feed = {};
@@ -87,16 +91,19 @@
 	};
 </script>
 
+
+
+{#if mounted}
 <Popover
 	triggeredBy="#as"
-	class="p-1 text-xs bg-gradient-to-b from-transparent to-error-300 shadow-lg z-10  "
+	class="p-1 text-xs bg-gradient-to-b from-transparent to-error-600  shadow-lg z-10  "
 >
 	<div class="">
 		<p class="text-black">Εμφάνιση πλήρους ονόματος ή συντομογραφίας των χημικών συστάσεων</p>
 	</div>
 </Popover>
-<div class="flex justify-between mb-4">
-	<h1 class="font-bold mb-3 mx-auto text-2xl">Οι Τροφές μου</h1>
+<div in:fly={{ y: -200, duration: 1000 }} class="flex justify-between mb-4">
+	<h1 class="heading  mb-6 mx-auto text-3xl lg:text-5xl">Οι Τροφές μου</h1>
 	<div class="" id="as">
 		<label class="flex items-center space-x-2 card p-2 text-xs">
 			<input class="checkbox" type="checkbox" bind:checked={detailed} />
@@ -104,15 +111,15 @@
 		</label>
 	</div>
 </div>
-{#if !userFeeds}
-	<LoadingCircles />
-{:else}
-	<Accordion>
+{/if}
+{#if mounted}
+<div in:fly={{ y: 200, duration: 1000 }}>
+<Accordion >
 		{#each $userFeeds as da}
 			<AccordionItem>
 				<svelte:fragment slot="lead"
 					><svg
-						class="w-6 h-6 text-gray-800 dark:text-white"
+						class="w-6 h-6 text-slate-200"
 						aria-hidden="true"
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -128,9 +135,9 @@
 					</svg></svelte:fragment
 				>
 				<svelte:fragment slot="summary"
-					><div class="flex justify-between">
-						{da?.Title}
-						<div class="text-xs">{da.updated}</div>
+					><div class="flex justify-start">
+						<p class="text-black ml-auto">{da?.Title}</p>
+						<div class="text-xs ml-auto">{da.updated}</div>
 					</div></svelte:fragment
 				>
 				<svelte:fragment slot="content"
@@ -147,7 +154,7 @@
 		<AccordionItem>
 			<svelte:fragment slot="lead"
 				><svg
-					class="w-6 h-6 text-gray-800 dark:text-white"
+					class="w-6 h-6 text-slate-100"
 					aria-hidden="true"
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
@@ -162,7 +169,7 @@
 					/>
 				</svg></svelte:fragment
 			>
-			<svelte:fragment slot="summary">Φτιάξε Νέα Τροφή!</svelte:fragment>
+			<svelte:fragment slot="summary"><p class="text-center mr-[9rem]">Φτιάξε Νέα Τροφή!</p></svelte:fragment>
 			<svelte:fragment slot="content"
 				><div class="card p-3">
 					<div class="flex-container">
@@ -199,7 +206,7 @@
 						</div>
 						<Popover
 							triggeredBy="#b2"
-							class="p-2 bg-gradient-to-b from-transparent to-error-300 shadow-lg border-0 "
+							class="p-2 bg-gradient-to-b from-transparent to-error-600 shadow-lg border-0 "
 						>
 							<div class="">
 								<p class="text-black">Βάλε μια από τις γνωστές τροφές ως πρότυπο!</p>
@@ -217,11 +224,14 @@
 		</AccordionItem>
 		<!-- ... -->
 	</Accordion>
-
+</div>	
 	<!-- <div>{JSON.stringify(data)}</div> -->
 {/if}
 
-<style>
+<style >
+	p,h1{
+		color: whitesmoke;
+	}
 	.flex-container {
 		display: flex;
 		flex-wrap: wrap; /* Allow items to wrap to a new line */

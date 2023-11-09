@@ -1,61 +1,24 @@
 <script lang="ts">
-	import { Tab, TabAnchor, TabGroup } from "@skeletonlabs/skeleton";
+	import { onMount } from "svelte";
+	import { fly } from "svelte/transition";
+
 
 let tab:string="lab"
 	// reactive states updating table
+  let mounted:boolean;
 
-	import { TabItem } from "flowbite-svelte";
-
-
+onMount(()=>{mounted=true;})
 
 
 </script>
 
-<style>
-/* Define a view-based animation timeline */
-
-/* Define the fading animation */
-@keyframes fade {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes scale-up {
-  from {
-    background-color: red;
-    transform: scaleX(0);
-  }
-  to {
-    background-color: darkred;
-    transform: scaleX(1);
-  }
-}
-
-p {
-  /* animation: fade linear both;
-  animation-timeline: view();
-  Define when the animation should start and end based on the scroll position
-  animation-range: entry 20% cover 20%; */
-  animation: animate-it linear;
-  animation-timeline: scroll(root block);
-}
 
 
-</style>
+{#if mounted}
+<p in:fly={{y:-200, duration:1000}} class="text-4xl mb-10 heading ">Λίγα λόγια για εμάς</p>
 
-<h1 class="text-4xl mb-10">Λίγα λόγια για εμάς</h1>
-<!-- <TabGroup class="w-fit mx-auto "  name="tab">
-<Tab bind:group={tab} name="tab" value="vet"> 
-  Εργαστήριο
-</Tab>
-   
-</TabGroup> -->
-<p class="text-lg mx-auto whitespace-pre-line  ">
+
+<p in:fly={{y:200, duration:1000}} class="text-lg mx-auto whitespace-pre-line font-semibold text-white overflow-hidden ">
   Η Κτηνιατρική Σχολή του Αριστοτελείου Πανεπιστημίου Θεσσαλονίκης είναι μία από τις κορυφαίες εκπαιδευτικές ιδρύσεις στον τομέα της κτηνιατρικής στην Ελλάδα. Ιδρύθηκε το 1950 και αποτελεί μέρος της Σχολής Θετικών Επιστημών του ΑΠΘ.
   
   Οι σπουδές στην Κτηνιατρική Σχολή καλύπτουν ένα ευρύ φάσμα θεμάτων που σχετίζονται με την υγεία, την προστασία και την ευημερία των ζώων, καθώς και τη δημόσια υγεία και την παραγωγή τροφίμων. Οι φοιτητές αποκτούν βασικές και εξειδικευμένες γνώσεις στους τομείς της κτηνιατρικής, της αναπαραγωγής, της νοσηλείας και θεραπείας ζώων, της ζωικής παραγωγής και πολλών άλλων σχετικών θεμάτων.
@@ -68,3 +31,4 @@ p {
   
   Έτσι, με την βοήθεια μελών του εργαστηρίου διατροφής της κτηνιατρικής ΑΠΘ (Γιάννης και Στέλλα) αλλά και την αμέριστη βοήθεια του επίκουρου καθηγητή κ. Γιάννενα Ηλία προχωρήσαμε στην δημιουργία διαδικτυακής σελίδας για την διαμόρφωση των ζωοτροφών και δημιουργία σιτηρεσίων έτσι ώστε να έχουμε μεγιστοποίηση της απόδοσης των ζώων αλλά και ελαχιστοποίηση του κόστους.
   </p>
+  {/if}

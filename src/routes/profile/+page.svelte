@@ -7,15 +7,20 @@
   import { enhance } from '$app/forms';
   import type{PageData} from './$types';
 	import { getToastStore } from '@skeletonlabs/skeleton';
-
+	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
+  let mounted:boolean;
   export let data:PageData;
   export let form:FormData;
   let formd={name:$currentUser?.name, phone:$currentUser?.phone, postalCode:$currentUser?.postalCode};
   let toast=getToastStore()
-	
+	onMount(()=>{
+    mounted=true
+  })
 </script>
-
-<div class="flex justify-center">
+{#if mounted}
+<p in:fly={{ y: -200, duration: 1000 }} class="text-3xl lg:text-5xl heading mb-6">Το προφίλ μου</p>
+<div in:fly={{ y: 200, duration: 1000 }} class="flex justify-center">
   <!-- create a form for the user to change his profile details, name, telephone number, address, etc -->
   <!-- here is an example of his details in a json so that it can help you: {"avatar":"","collectionId":"_pb_users_auth_","collectionName":"users","created":"2023-10-12 22:31:10.187Z","email":"test@gmail.com","emailVisibility":false,"id":"e5mmhbxzh7xru2k","name":"Kostas","updated":"2023-10-14 15:34:40.268Z","username":"users44465","verified":true} -->
   <!-- you can use the currentUser store to get the user's details -->
@@ -51,11 +56,11 @@
 
 </div>
     
-	<a type="button" href="/profile/changepass" class="btn my-6 bg-gradient-to-br variant-gradient-tertiary-primary">
+	<a in:fly={{ y: 200, duration: 1000 }} type="button" href="/profile/changepass" class="btn my-6 bg-gradient-to-br variant-gradient-tertiary-primary">
 		<!-- <span>(icon)</span> -->
 		<p>Αλλαγή κωδικού</p>
   </a>
-
+  {/if}
 <style lang="postcss">
   input{
     @apply bg-transparent border-b-2 border-gray-500 outline-none focus:outline-none;

@@ -37,11 +37,11 @@
 	<div class="flex items-center w-full max-w-lg px-6 mx-auto">
 		<div class="flex-1">
 			<div class="text-center my-10">
-				<h1 class="mt-3 text-gray-500 dark:text-gray-300 text-3xl">Δημιουργία Λογαριασμού</h1>
+				<h1 class="mt-3 text-slate-100 dark:text-gray-300 text-3xl">Δημιουργία Λογαριασμού</h1>
 			</div>
 			
 			
-			<div class="flex justify-center"><p class="text-xl pt-4 mr-5 ">Είμαι: </p>  <div><RadioGroup  active="variant-filled-success" hover="hover:variant-soft-success">
+			<div class="flex justify-center"><p class="text-xl text-slate-100 pt-4 mr-5 ">Είμαι: </p>  <div><RadioGroup  active="variant-filled-success" hover="hover:variant-soft-success">
 				<RadioItem bind:group={val} name="justify" value={0}>Ιδιώτης</RadioItem>
 				<RadioItem bind:group={val} name="justify" value={1}>Φοιτητής</RadioItem>
 			</RadioGroup></div></div>
@@ -83,7 +83,7 @@
 					};
 				}}>
 					<div>
-						<label for="email" class="block mb-2 text-xl text-gray-600 dark:text-gray-200 text-left"
+						<label for="email" class="block mb-2 text-xl text-slate-100 dark:text-gray-200 text-left"
 							>Email</label
 						>
 						<input
@@ -99,7 +99,7 @@
 					</div>
 					{#if val==0}
 					<div>
-						<label for="name" class="block my-3 text-xl text-gray-600 dark:text-gray-200 text-left"
+						<label for="name" class="block my-3 text-xl text-slate-100 dark:text-gray-200 text-left"
 							>Όνοματεπώνυμο (προεραιτικό)</label
 						>
 						<input
@@ -114,7 +114,7 @@
 					</div>
 					{:else}
 					<div>
-						<label for="name" class="block my-3 text-xl text-gray-600 dark:text-gray-200 text-left"
+						<label for="name" class="block my-3 text-xl text-slate-100 dark:text-gray-200 text-left"
 							>ΑΕΜ</label
 						>
 						<input
@@ -132,7 +132,7 @@
 
 					<div class="mt-6">
 						<div class="flex justify-between mb-2">
-							<label for="password" class=" text-gray-600 text-xl dark:text-gray-200">Κωδικός</label>
+							<label for="password" class=" text-slate-100 text-xl dark:text-gray-200">Κωδικός</label>
 						</div>
 
 						<input
@@ -171,15 +171,15 @@
 					</div>
 					
 				
-					<p class="my-3">ή</p>
+					<p class="my-3 text-slate-100">ή</p>
 					<div class="flex space-x-5"><SignInGoogle text={"Κάνε έγγραφή με"}></SignInGoogle>
 						<SignInFacebook text={"Κάνε εγγραφή με"}/></div>
 				</form>
 				<hr class="my-6" />
-				<p class="mt-6 text-lg rounded-full text-center text-gray-400">
+				<p class="mt-6 text-slate-200 text-lg rounded-full text-center ">
 					Έχεις λογαριασμό; <a
 						href="/login"
-						class="text-blue-500 focus:outline-none focus:underline hover:underline">Κάνε σύνδεση</a
+						class="text-blue-400 focus:outline-none focus:underline hover:underline">Κάνε σύνδεση</a
 					>.
 				</p>
 			</div>

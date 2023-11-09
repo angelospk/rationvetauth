@@ -10,6 +10,7 @@
 	import { reverseTransformObject } from '$lib/greekfuncts';
 	import { onMount } from 'svelte';
 	import AccordionSaveShare from '$lib/AccordionSaveShare.svelte';
+	import { fly } from 'svelte/transition';
 	let animals = $page.data;
 	let metr = $metrics;
 	let userReqs:AnimalReqs[];
@@ -80,18 +81,20 @@
 	let producerName = $currentUser?.name || '';
 	let currentDate: string;
 	let addMetric:string="Διάλεξε ΘΟ"
+	let mounted:Boolean;
 
 	onMount(async()=>
-{
+{	mounted=true;
 	userReqs=await pb.collection('requirements').getFullList()||[];
 	modalLoadReqs.meta={metrs:userReqs};
 	// console.log(userReqs)
 })
 </script>
 
-<div class="overflow-x-hidden">
-	<div class="print:hidden">
-		<h2 class="text-xl md:text-3xl lg:text-4xl font-bold mb-2">
+
+	{#if mounted}
+	<div in:fly={{ y: -200, duration: 1000 }} class="print:hidden">
+		<h2 class="text-xl md:text-3xl lg:text-4xl heading mb-2">
 			Επίλυση Σιτηρεσίου με Γραμμικό Προγραμματισμό
 		</h2>
 		<div class="justify-center inline-flex mb-4">
@@ -106,7 +109,11 @@
 		</div>
 		<hr />
 	</div>
-	<div class="heading print:hidden">
+	{/if}
+	{#if mounted}
+	<div in:fly={{ y: 200, duration: 1000 }} class="overflow-x-hidden">
+		
+	<div class="heading print:hidden text-3xl">
 		<h2>Βήμα 1: Γενικές Πληροφορίες</h2>
 	</div>
 
@@ -117,8 +124,8 @@
 	<!-- <GeneralInfo bind:rationName={rationName} bind:producerName={producerName} bind:currentDate /> -->
 
 	<hr class="my-2" />
-
-	<div class="heading print:hidden">
+	
+	<div class="heading print:hidden text-3xl">
 		<h2>Βήμα 2: Επιλογή Ζώου και Διατροφικές Ανάγκες</h2>
 	</div>
 	<div class="info" style="">
@@ -172,8 +179,8 @@
 	{/if}
 
 	<hr class="my-5" />
-</div>
-	<div class="heading print:hidden">
+
+	<div class="heading print:hidden text-3xl">
 		<h2>Βήμα 3: Εισαγωγή Τροφών</h2>
 	</div>
 	<div class="hidden print:block text-center text-lg my-3">Πίνακας Σιτηρεσίου</div>
@@ -186,18 +193,21 @@
 	{:else}
 		<EditableTable stage2Read={record} bind:currentState />
 	{/if}
+	
 </div>
 
 <AccordionSaveShare bind:currentDate={currentDate} bind:currentState={currentState}/>
 
 <hr class="my-3">
 <p class="text-xs print:hidden">1: Τα αποτελέσματα προκύπτουν μέσω  γραμμικού προγραμματισμού και χρησιμεύουν ως υπολογιστικές εκτιμήσεις. Ωστόσο δεν υποκαθιστούν τις συμβουλές των εμπειρογνωμόνων. Ο αλγόριθμος στοχεύει στην ελαχιστοποιήση του κόστους, όμως οι διακυμάνσεις στην ποιότητα των ζωοτροφών, οι συνθήκες υγείας των ζώων και άλλοι περιβαλλοντικοί παράγοντες μπορούν να επηρεάσουν σημαντικά την πραγματική αποτελεσματικότητα του σιτηρεσίου. Συνιστούμε ανεπιφύλακτα να συμβουλευτείτε εξειδικευμένους κτηνιάτρους και διατροφολόγους ζώων για να επικυρώσετε την καταλληλότητα και την ασφάλεια της προτεινόμενης σύνθεσης ζωοτροφών.</p>
+</div>
+{/if}
+
 <style lang="postcss">
 	.info {
 		@apply my-2 bg-secondary-400 rounded-lg print:hidden mx-auto max-w-lg;
 	}
 	.heading {
-		font-size: x-large;
 		margin-top: 1rem;
 		@apply underline;
 	}

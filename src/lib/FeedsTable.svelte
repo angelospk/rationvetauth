@@ -362,7 +362,7 @@
 			>
 		</li>
 	</ol>
-	<div class="arrow variant-filled-secondary" />
+	<div class="arrow bg-gradient-to-l from-transparent to-blue-400" />
 </div>
 <button
 	class="card p-4 variant-filled-secondary z-10"
@@ -386,7 +386,7 @@
 	<p class="text-xs my-2">
 		Στη γραμμή "Σύνολο" οι μονάδες εκτός τη στήλης "Βάρος" είναι g ή kcal αντίστοιχα.
 	</p>
-	<div class="arrow variant-filled-secondary" />
+	<div class="arrow bg-gradient-to-l from-transparent to-blue-400" />
 </button>
 
 <div class="overflow-x-auto rounded-md">

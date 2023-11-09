@@ -12,6 +12,7 @@
 	import RationInfo from '$lib/RationInfo.svelte';
 	import { goto } from '$app/navigation';
 	import LoadingCircles from '$lib/Loading Circles.svelte';
+	import { fly } from 'svelte/transition';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'This message will auto-hide after 3 seconds.',
@@ -49,8 +50,10 @@
 {#if err}
 	<h1 class="card p-4 bg-error-500">Ουψ! Το σιτηρέσιο δεν μπορεί να φορτωθεί!</h1>
 {:else if $loadedTables && ration }
-<RationInfo producerName={ration?.producerName} rationName={ration?.rationName} currentDate={ration?.date} />
+<div in:fly={{ y: -200, duration: 1000 }}>
+<RationInfo producerName={ration?.producerName} rationName={ration?.rationName} currentDate={ration?.date} /></div>
 	<!-- selected={selected} columns={columns} -->
+	<div in:fly={{ y: 200, duration: 1000 }}>
 	<FeedsTable
 		ration={ration}
 		userFeeds={$userFeeds}
@@ -64,7 +67,7 @@
 		{#if $currentUser?.id==ration?.user}
 			
 			<a class="koumpi btn-sm sm:btn-base" href={"/ration/"+ration?.id+"/edit"}><svg
-				class="w-6 h-6 text-gray-800 dark:text-white"
+				class="w-6 h-6 text-gray-800 dark:text-white mr-2"
 				aria-hidden="true"
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
@@ -89,6 +92,7 @@
 		<a class="koumpi btn-sm sm:btn-base" href={"/newration?id=".concat(ration.id||"")}> Δημιουργία Αντίγραφου και Επεξεργασία</a>
 		{/if}
 	</div>
+</div>
 {:else}
 <LoadingCircles/>	
 <TablePlaceHolder />

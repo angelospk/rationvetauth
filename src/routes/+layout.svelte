@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.postcss';
-	import { TabAnchor, TabGroup, storePopup, type ModalComponent, type PopupSettings, popup } from '@skeletonlabs/skeleton';
+	import { TabAnchor, TabGroup, storePopup, type ModalComponent, type PopupSettings, popup, LightSwitch } from '@skeletonlabs/skeleton';
 	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
 	import { computePosition, autoUpdate, offset, shift, flip, arrow, inline } from '@floating-ui/dom';
 	import { page } from '$app/stores';
@@ -16,8 +16,11 @@
 	import ModalListaSithresia from '$lib/ModalListaSithresia.svelte';
 	import Logo from '$lib/Logo.svelte';
 	import type { Feed } from '$lib/stores/types';
+	import { browser } from '$app/environment';
+	
 	initializeStores();
 	// export let data: PageData
+	let loadingEnd:boolean;
 	async function logout() {
 		pb.authStore.clear();
 		userFeeds.set([]);
@@ -56,7 +59,7 @@
 			// console.log("added userfeeds ffrom layout", $userFeeds)
 		}
 		setTimeout(() => {
-			
+			loadingEnd=true;
 		}, 100);
 	});
 	
@@ -67,6 +70,11 @@
 		event: 'click',
 		target: 'popupSolve',
 		placement: 'bottom'
+	};
+	const popupLogo: PopupSettings = {
+		event: 'hover',
+		target: 'popupLogo',
+		placement: 'right'
 	};
 	const popupUser:PopupSettings = {
 		event: 'click',
@@ -102,13 +110,18 @@
 			
 			<AppBar padding="0" spacing="0" background="transparent">
 				<svelte:fragment slot="lead">
-					<a href="/" class="text-xl"
+					<button on:click={()=>{
+						if (browser) window.history.back();
+					}} use:popup={popupLogo}  class="text-xl"
 						><img
-							class="mx-1 content-center w-[65px] h-[65px] hover:animate-[wiggle_2s_ease-in-out_infinite]"
+							class="mx-1 content-center w-[65px] h-[65px] hover:animate-[wiggle_2s_ease-in-out_infinite] {!loadingEnd?"animate-[wiggle_2s_ease-in-out_infinite]":""}"
 							src="https://media.discordapp.net/attachments/1123335980074663936/1164590657545969784/minilogocr.webp?ex=6543c491&is=65314f91&hm=6b88ad5ea2464b4a6ba0a2c67fb3dcfa1881b8e4a06032080dd1a73d87bbfe30&=&width=530&height=487"
 							alt="ΣΙΤ"
-						/></a
-					>
+						/></button
+					><div data-popup="popupLogo" class="p-2 card z-10">
+						<div class="arrow bg-gradient-to-l from-transparent to-blue-400" />
+						<p>Πάτα για να πας πίσω!</p>
+					</div>
 				</svelte:fragment>
 				<!-- <svelte:fragment >
 				<div class="content-center hidden sm:{"block flex"}">
@@ -123,7 +136,7 @@
 							alt="ΣΙΤ"
 						/></a
 					></div> -->
-						<TabGroup>
+						<TabGroup class="text-slate-400" active="font-bold text-white"  hover="hover:variant-ghost-surface">
 							<TabAnchor href="/" selected={$page.url.pathname === '/'}>Αρχική</TabAnchor>
 							{#if $currentUser}
 							<TabAnchor class="" selected={$page.url.pathname.includes("newration")}
@@ -147,6 +160,8 @@
 								selected={$page.url.pathname === '/about'}>Πληροφορίες</TabAnchor
 							>
 						</TabGroup>
+						<div class="flex flex-col">
+							<!--<div class="w-3 mb-2"><LightSwitch  /></div> -->
 							{#if $currentUser}
 							<button class="  rounded-full" use:popup={popupUser}
 								><svg class="w-10 h-8 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -165,7 +180,7 @@
 									</li>
 								</ol>
 							</div>
-							{/if}
+							{/if}</div>
 							<!-- <Dropdown class=""  containerClass="opacity-90 relative pr-10  "
 							><DropdownItem><a href="/profile">Επεξεργασία</a></DropdownItem>
 							<DropdownItem><button on:click={logout} >Αποσύνδεση</button></DropdownItem>
@@ -199,7 +214,7 @@
 		</svelte:fragment>
 		<!-- Page Route Content -->
 		<div
-			class="container h-full mx-auto md:w-full flex justify-center text-center items-center my-5 overflow-x-auto"
+			class="container h-full mx-auto md:w-full flex justify-center text-center items-center my-5 overflow-x-hidden hide-scrollbar"
 		>
 			<div class="w-full">
 				<slot />
@@ -207,7 +222,7 @@
 		</div>
 		<svelte:fragment slot="pageFooter">
 			<footer
-				class="p-4 text-center text-secondary-700 dark:bg-secondary-700 dark:text-secondary-200 print:text-xs print:text-black"
+				class="p-4 text-center text-slate-100 print:text-xs print:text-black"
 			>
 				<!-- <hr class="border-t-1 mb-2 border-primary-500 mx-auto" /> -->
 				<div class="flex-col">
@@ -224,7 +239,7 @@
 						Εργαστήριο Διατροφής <a class="hover:underline" href="https://www.vet.auth.gr"
 							>Κτηνιατρικής Σχολής ΑΠΘ</a
 						><br />
-						<div class="text-slate-600 dark:text-secondary-300 print:hidden">
+						<div class="text-slate-100 dark:text-secondary-300 print:hidden">
 							© {new Date().getFullYear()} | Powered by
 							<a class="text-primary-500 hover:underline" href="https://kit.svelte.dev/"
 								>SvelteKit</a

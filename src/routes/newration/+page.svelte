@@ -9,6 +9,8 @@
 	import type { State } from '$lib/stores/types';
 	import RationInfo from '$lib/RationInfo.svelte';
 	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'Δεν μπόρεσε να αποθηκευτεί το σιτηρέσιο.',
@@ -44,11 +46,10 @@
 		te.background="bg-red-600"
 		toastStore.trigger(te);
 	}}
-// onMount(()=>{
-// 	if ($page.data.ration_id){
-// 		console.log($page.data.ration_id)
-// 	}
-// })
+	let mounted:Boolean;
+onMount(()=>{
+	mounted=true;
+})
 async function loadration(){
 	
 	
@@ -71,14 +72,18 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 </script>
 
 <div class="hide-scrollbar">
-	<div class="print:hidden">
-		<h2 class="text-xl md:text-3xl lg:text-4xl font-bold mb-2">Χειροκίνητος Υπολογισμός Σιτηρεσίου</h2>
+	{#if mounted}
+	<div in:fly={{ y: -200, duration: 1000 }} class="print:hidden">
+		<p class="text-xl md:text-3xl lg:text-4xl mb-2 heading">Χειροκίνητος Υπολογισμός Σιτηρεσίου</p>
 		<div class="justify-center inline-flex mb-4"><a href="/newration/linear"><div class="mx-auto rounded-full hover:underline hover:bg-gray-200 hover:bg-opacity-75 hover:ring-2 btn outline-dotted outline-1 "><p class="md:text-lg">Αυτόματη Επίλυση</p> <p class="text-xs -mb-1 ">με χρήση δυναμικού προγραμματισμού</p></div></a></div>
 		<hr />
 		
 	</div>
-	<form id="FeedRationForm" on:submit|preventDefault>
-		<div class="heading print:hidden">
+	{/if}
+	{#if mounted}
+	<form in:fly={{ y: 200, duration: 1000 }} id="FeedRationForm" on:submit|preventDefault>
+		
+		<div class="heading text-3xl print:hidden">
 			<h2>Βήμα 1: Γενικές Πληροφορίες</h2>
 		</div>
 		
@@ -90,7 +95,7 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 
 		<hr />
 
-		<div class="heading print:hidden">
+		<div class="heading text-3xl  print:hidden">
 			<h2>Βήμα 2: Εισαγωγή Τροφών</h2>
 		</div>
 		<div class="hidden print:block text-center text-lg my-3">Πίνακας Σιτηρεσίου</div>
@@ -104,7 +109,7 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 			<EditableTable stage2Read={record} bind:currentState/>
 	{/if}
 		<!-- {JSON.stringify(currentState)} -->
-		<div class="heading print:hidden">
+		<div class="heading text-3xl print:hidden">
 			<h2>Βήμα 3: Αποθήκευση / Διαμοιρασμός</h2>
 		</div>
 		<div class="info" style="">
@@ -114,13 +119,13 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 
 		
 	</form>
+	{/if}
 </div>
 <style lang="postcss">
 	.info {
 		@apply my-2 bg-secondary-400 rounded-lg print:hidden mx-auto max-w-lg;
 	}
 	.heading {
-		font-size: x-large;
 		margin-top: 1rem;
 		@apply  underline
 	}

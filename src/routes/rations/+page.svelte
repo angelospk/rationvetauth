@@ -8,6 +8,7 @@
 	import { goto } from "$app/navigation";
 	import LoadingCircles from "$lib/Loading Circles.svelte";
 	import { userRations } from "$lib/stores/data";
+	import { fly } from "svelte/transition";
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'This message will auto-hide after 3 seconds.',
@@ -17,19 +18,11 @@ let rations:State[];
 function totalWeight(selfeeds:Feed[]) {
 		return selfeeds.reduce((acc, curr) => acc + <number>curr.weight||0, 0);
 	}
-	onMount(async () => {
-		// rations=$userRations;
-		// try {
-        //     rations=await pb.collection('rations').getFullList({
-        //     				sort: '-created'
-        //     		}) || [];
-        // } catch (error) {
-        //     te.message="Απέτυχε η φόρτωση των σιτηρεσίων!"
-        //     te.background="bg-red-600"
-        //     toastStore.trigger(te);
-        //     console.log(error)
-        // }
-	});
+    let mounted:boolean;
+    onMount(()=>{
+    mounted=true
+  })
+	
 
 
 	function gotoration(id: string|null) {
@@ -37,8 +30,9 @@ function totalWeight(selfeeds:Feed[]) {
         goto("/ration/"+id)
 	}
 </script>
-<h1 class="font-bold text-2xl mb-6">Τα Σιτηρέσιά μου</h1>
-
+{#if mounted}
+<p in:fly={{ y: -200, duration: 1000 }} class=" text-3xl lg:text-5xl heading mb-6">Τα Σιτηρέσιά μου</p>
+{/if}
 
 {#if $userRations.length==0}
 <div><button class="koumpi"><a href="/newration">
@@ -59,7 +53,8 @@ function totalWeight(selfeeds:Feed[]) {
 </svg> Φτιάξε το πρώτο σου σιτηρέσιο!</div></a></button></div>
 
 {:else}
-<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+{#if mounted}
+<div in:fly={{ y: 100, duration: 1000 }} class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
     {#each $userRations as ration}
         <button class="card card-hover bg-white shadow-lg rounded-lg p-4 mx-auto hover:variant-outline-secondary focus:animate-ping" on:click={gotoration(ration?.id||"")}>
             <div class="flex justify-between space-x-3 sm:space-x-10 items-start">
@@ -75,4 +70,5 @@ function totalWeight(selfeeds:Feed[]) {
         </button>
     {/each}
 </div>
+{/if}
 {/if}
