@@ -128,7 +128,7 @@
 							{/if}
 {#if showVerification}
 	<div class="card p-2 mt-4 bg-red-500 w-full flex flex-col "><p class="">Έχει σταλεί μήνυμα επιβεβαίωσης στο mail σου! Επιβεβαίωσε το email σου πριν συνδεθείς!</p>
-	<button class="koumpi text-xs sm:text-base" on:click={sendVerif}>Ζήτα ξανά επιβεβαίωση</button></div>
+	<button class="koumpi text-xs sm:text-base" on:click={sendVerif}>Ζήτα ξανά email επιβεβαίωσης</button></div>
 {/if}
 							<hr class="my-6" />
 							<p class="mt-6 text-sm text-center text-gray-400">

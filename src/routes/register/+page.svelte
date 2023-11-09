@@ -36,15 +36,12 @@
 {:else}
 	<div class="flex items-center w-full max-w-lg px-6 mx-auto">
 		<div class="flex-1">
-			<div class="text-center my-10">
-				<h1 class="mt-3 text-slate-100 dark:text-gray-300 text-3xl">Δημιουργία Λογαριασμού</h1>
+			<div class="text-center my-4">
+				<h1 class="text-slate-100 dark:text-gray-300 text-3xl">Δημιουργία Λογαριασμού</h1>
 			</div>
 			
 			
-			<div class="flex justify-center"><p class="text-xl text-slate-100 pt-4 mr-5 ">Είμαι: </p>  <div><RadioGroup  active="variant-filled-success" hover="hover:variant-soft-success">
-				<RadioItem bind:group={val} name="justify" value={0}>Ιδιώτης</RadioItem>
-				<RadioItem bind:group={val} name="justify" value={1}>Φοιτητής</RadioItem>
-			</RadioGroup></div></div>
+			
 			<div class="mt-8">
 				<form method="POST"
 				action="?/register"
@@ -82,6 +79,10 @@
 						
 					};
 				}}>
+				<div class="flex justify-center"><p class="text-xl text-slate-100 pt-4 mr-5 ">Είμαι: </p>  <div><RadioGroup  active="variant-filled-success" hover="hover:variant-soft-success">
+					<RadioItem bind:group={val} name="justify" value={0}>Ιδιώτης</RadioItem>
+					<RadioItem bind:group={val} name="justify" value={1}>Φοιτητής</RadioItem>
+				</RadioGroup></div></div>
 					<div>
 						<label for="email" class="block mb-2 text-xl text-slate-100 dark:text-gray-200 text-left"
 							>Email</label

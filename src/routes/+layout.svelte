@@ -28,6 +28,8 @@
 	}
 	onMount(async () => {
 		pb.autoCancellation(false);
+		// if ($currentUser || $page.url.includes("ration"))
+		if ($page.url.pathname == "/" || $page.url.pathname=="/about") loadedTables.set(true);
 		const res = await fetch('/api/data');
 		if (res.ok) {
 			let dat = await res.json();

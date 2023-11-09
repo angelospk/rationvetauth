@@ -1,33 +1,54 @@
+
 <script>
 	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
+	import { fade, blur } from 'svelte/transition';
 	import { fly } from 'svelte/transition';
 
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { userRations } from '$lib/stores/data';
 	import LoginComponent from './login/LoginComponent.svelte';
 	let mounted;
+	let letters;
+	function typewriter(node, { speed = 2 }) {
+		const valid = node.childNodes.length === 1 && node.childNodes[0].nodeType === Node.TEXT_NODE;
 
-	onMount(() => {
+		if (!valid) {
+			throw new Error(`This transition only works on elements with a single text node child`);
+		}
+
+		const text = node.textContent;
+		const duration = text.length / (speed * 0.01);
+
+		return {
+			duration,
+			tick: (t) => {
+				const i = ~~(text.length * t);
+				node.textContent = text.slice(0, i);
+			}
+		};
+	}
+	onMount(async() => {
 		mounted = true;
+		setTimeout(()=>{letters=true;
+		},600)
 	});
 </script>
 
 <div class="flex-col justify-center space-y-5 lg:space-x-5 lg:flex-row flex pt-[3vh]">
-	<div class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl max-w-5xl mr-3">
+	<div class="text-lg sm:text-3xl md:text-4xl lg:text-5xl max-w-5xl mr-3">
 		{#if !$currentUser && mounted}<p
-				in:fly={{ y: -200, duration: 1500 }}
-				out:fade
-				class="my-2 lg:mt-[30vh] lg:mr-10 heading text-5xl"
-			>
-				Δημιουργία - επίλυση σιτηρεσίων<br />για φοιτητές αλλά και ιδιώτες!
+				in:fly={{y:-150, duration:1000}}
+				class="my-2 lg:mt-[30vh] lg:mr-10 text-3xl lg:text-5xl heading whitespace-pre-line"
+			>Δημιουργία - επίλυση σιτηρεσίων</p>{/if}
+			{#if !$currentUser && letters}<p in:typewriter class="my-4 lg:mr-10 heading text-3xl lg:text-5xl  font-bold">
+			για φοιτητές και ιδιώτες!
 			</p>{/if}
 	</div>
 
 	{#if $currentUser}
 		<div class="flex flex-col mx-auto gap-4">
 			<div class="inline-flex text-5xl mb-6">
-				{#if mounted}<p in:fly={{ y: -200, duration: 1000 }} class="heading">Καλώς ήλθατε {$currentUser.name}!</p>{/if}
+				{#if mounted}<p in:fly={{ y: -200, duration: 1000 }} class="heading">Καλώς ήλθατε {$currentUser.Student?"φοιτητή":""} {$currentUser.name}!</p>{/if}
 			</div>
 			{#if mounted}
      <div class="max-w-sm flex flex-col mx-auto gap-3">

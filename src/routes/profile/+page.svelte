@@ -21,26 +21,18 @@
 {#if mounted}
 <p in:fly={{ y: -200, duration: 1000 }} class="text-3xl lg:text-5xl heading mb-6">Το προφίλ μου</p>
 <div in:fly={{ y: 200, duration: 1000 }} class="flex justify-center">
-  <!-- create a form for the user to change his profile details, name, telephone number, address, etc -->
-  <!-- here is an example of his details in a json so that it can help you: {"avatar":"","collectionId":"_pb_users_auth_","collectionName":"users","created":"2023-10-12 22:31:10.187Z","email":"test@gmail.com","emailVisibility":false,"id":"e5mmhbxzh7xru2k","name":"Kostas","updated":"2023-10-14 15:34:40.268Z","username":"users44465","verified":true} -->
-  <!-- you can use the currentUser store to get the user's details -->
-  
+
+  {#if !$currentUser.Student}
   <div class="card p-4 bg-transparent  hover:bg-gradient-to-br from-transparent to-lime-100 outline-dashed outline-blue-400">
     <h1 class="my-2 font-bold mb-4">Επεξεργασία Χρήστη</h1>
     <label for="name">Όνομα:</label>
     <input type="text" id="name" name="name" bind:value={formd.name} />
     <label for="phone">Τηλέφωνο:</label>
     <input type="tel" id="phone" name="phone" bind:value={formd.phone} />
-    <!-- <label for="address">Διεύθυνση:</label>
-    <input type="text" id="address" name="address" value="{$currentUser?.address||""}" />
-    <label for="city">Πόλη:</label>
-    <input type="text" id="city" name="city" value="{$currentUser?.city||""}" />
-    <label for="country">Χώρα:</label>
-    <input type="text" id="country" name="country" value="{$currentUser?.country||""}" /> -->
+
     <label for="postalCode">Ταχ. Κώδικας:</label>
     <input type="text" pattern="[0-9]{5}"  style="width: 4rem" id="postalCode" name="postalCode" bind:value={formd.postalCode} />
-    <!-- <label for="userId">userId:</label>
-    <input class="hover:cursor-not-allowed" readonly  type="text" id="userId" name="userId" value={$currentUser?.id} /> -->
+
 <br>
 
     <button class="justify-center my-3 koumpi" on:click={async ()=>{
@@ -53,7 +45,7 @@
       
     }} type="submit">Αποθήκευση</button>
     </div>
-
+  {/if}
 </div>
     
 	<a in:fly={{ y: 200, duration: 1000 }} type="button" href="/profile/changepass" class="btn my-6 bg-gradient-to-br variant-gradient-tertiary-primary">

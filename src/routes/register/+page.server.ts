@@ -13,7 +13,10 @@ export const actions: Actions = {
       password: string
       passwordConfim:string
       name:string
+      justify: string
     }
+    // console.log(data);
+    data.Student=data.Student=="1"?true:false;
     let res;
     try {
         // console.log(locals)

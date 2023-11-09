@@ -9,7 +9,7 @@
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import convertMixToFeed from './EditableTable.svelte';
 	import { formatNumber } from './greekfuncts';
-	import { fade, slide } from 'svelte/transition';
+	import { blur, fade, fly, slide } from 'svelte/transition';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message:
@@ -461,7 +461,8 @@
 		<!-- Table body -->
 		<tbody>
 			{#each selected as feed, i}
-				<tr class="">
+				<tr in:fly={{x:350, duration:200}} class="">
+					
 					{#if linear}
 						<td>
 							<input type="number" bind:value={feed.price} step="0.5" min="0" />
@@ -559,7 +560,7 @@
 					{#each columns as column}
 						{#if column.Title != 'Title' && column.Title != 'weight'}
 							{#if column.units == 'g/kg'}
-								<td class="font-bold">{formatNumber((100 * sum[column.Title]) / sum.DryMatter)}</td>
+								<td  class="font-bold">{formatNumber((100 * sum[column.Title]) / sum.DryMatter)}</td>
 							{:else}
 								<td />
 							{/if}
@@ -568,7 +569,7 @@
 				</tr>
 			{/if}
 			{#if tableOptions.ratios.visible}
-				<tr class="bg-gray-300 text-gray-700 text-lg">
+				<tr  class="bg-gray-300 text-gray-700 text-lg">
 					{#if linear}
 						<td class=" w-min" />
 					{/if}
@@ -582,7 +583,7 @@
 						{/if}
 					{/each}
 				</tr>
-				<tr class="bg-gray-300 text-gray-700">
+				<tr  class="bg-gray-300 text-gray-700">
 					{#if linear}
 						<td class=" w-min">{formatNumber(sum.price) || ''}</td>
 					{/if}
