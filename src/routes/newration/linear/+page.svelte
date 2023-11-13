@@ -82,11 +82,18 @@
 	let currentDate: string;
 	let addMetric:string="Διάλεξε ΘΟ"
 	let mounted:Boolean;
+	let test:boolean;
 
 	onMount(async()=>
 {	mounted=true;
 	userReqs=await pb.collection('requirements').getFullList()||[];
 	modalLoadReqs.meta={metrs:userReqs};
+	if ($currentUser.Student){
+		console.log("student")
+		let l=await pb.collection('settings').getOne("ucz1zj2wgphtqc3")
+		test=l?.test
+		// .then((item)=>{test=item?.test})
+	}
 	// console.log(userReqs)
 })
 </script>
@@ -189,7 +196,7 @@
 	</div>
 
 	{#if !loadedTable}
-		<EditableTable bind:rationName bind:producerName bind:currentState linear={true} requirementsString={reverseTransformObject(form)} requirements={form} />
+		<EditableTable bind:rationName bind:producerName bind:currentState linear={true} requirementsString={reverseTransformObject(form)} requirements={form} bind:test />
 	{:else}
 		<EditableTable stage2Read={record} bind:currentState />
 	{/if}

@@ -47,8 +47,9 @@
 		toastStore.trigger(te);
 	}}
 	let mounted:Boolean;
-onMount(()=>{
+onMount( ()=>{
 	mounted=true;
+
 })
 async function loadration(){
 	
@@ -104,7 +105,7 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 		</div>
 		
 	{#if !loadedTable}
-			<EditableTable bind:rationName={rationName} bind:producerName={producerName} bind:currentState/>
+			<EditableTable bind:rationName={rationName} bind:producerName={producerName} bind:currentState />
 			{:else}
 			<EditableTable stage2Read={record} bind:currentState/>
 	{/if}

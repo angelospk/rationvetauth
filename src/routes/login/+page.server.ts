@@ -6,11 +6,7 @@ import { error } from 'console';
   
 
 
-export const load = ({  url }) => {
-	return {
-		comingFrom:url.href
-	};
-};
+
 export const actions: Actions = {
   login: async ({  request }) => {
     const data = Object.fromEntries(await request.formData()) as {

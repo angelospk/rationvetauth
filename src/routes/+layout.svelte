@@ -6,7 +6,7 @@
 	import { page } from '$app/stores';
 	import { pb, currentUser } from '$lib/pocketbase';
 	import ModalExampleForm from '$lib/ModalExampleForm.svelte';
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { initializeStores } from '@skeletonlabs/skeleton';
 	import { Toast } from '@skeletonlabs/skeleton';
 	import { feeds, metrics, userFeeds, loadedTables, userRations } from '$lib/stores/data';
@@ -133,7 +133,9 @@
 					<a href="/" class="text-xl"><img class="absolute right-1/2 top-0  w-[65px] h-[65px] hover:animate-[wiggle_2s_ease-in-out_infinite] hover:scale-125" src="https://media.discordapp.net/attachments/1123335980074663936/1164590657545969784/minilogocr.webp?ex=6543c491&is=65314f91&hm=6b88ad5ea2464b4a6ba0a2c67fb3dcfa1881b8e4a06032080dd1a73d87bbfe30&=&width=530&height=487" alt="ΣΙΤ"></a>
 				</div></svelte:fragment> -->
 				<svelte:fragment slot="trail">
-					<div class="print:hidden flex justify-between text-xs sm:text-base sm:space-x-10 sm:pr-2">
+
+
+				<div class="print:hidden flex justify-between text-xs sm:text-base sm:space-x-10 sm:pr-2">
 						<!-- <div><a href="/" class=" hidden: sm:block "
 						><img
 							class="mx-1 content-center w-[65px] h-[65px] hover:animate-[wiggle_2s_ease-in-out_infinite]"
@@ -198,6 +200,8 @@
 							</a> -->
 						
 					</div>
+
+
 				</svelte:fragment>
 			</AppBar>
 			 
@@ -241,9 +245,10 @@
 						/>
 					</div>
 					<div class="text-xs sm:text-base">
-						Εργαστήριο Διατροφής <a class="hover:underline" href="https://www.vet.auth.gr"
-							>Κτηνιατρικής Σχολής ΑΠΘ</a
-						><br />
+						<div class="inline-flex gap-x-1"><p>Εργαστήριο Διατροφής </p><a class="hover:underline" href="https://www.vet.auth.gr"
+							>Κτηνιατρικής </a
+						>
+						<p class="whitespace-pre-line"> x </p><a class="hover:underline" href="https://www.ee.auth.gr">ΤΗΜΜΥ ΑΠΘ</a></div><br />
 						<div class="text-slate-100 dark:text-secondary-300 print:hidden">
 							© {new Date().getFullYear()} | Powered by
 							<a class="text-primary-500 hover:underline" href="https://kit.svelte.dev/"

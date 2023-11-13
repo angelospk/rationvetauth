@@ -62,6 +62,7 @@
 		totalWeight:0,
 		tableState: { selfeeds: [], extraCols: [] }
 	};
+	export let test:boolean=false;
 	let ratiosSelected: boolean;
 	let selected: Feed[] = [];
 	let columns: Column[] = [];
@@ -414,7 +415,9 @@
 		Σημείωση: Πατήστε το κουμπί τις αυτόματης επίλυσης αφού διάλεξτε τροφές και εισάγετε τις
 		αντίστοιχες τιμές τους.<br />
 	</div>
-	{#if selected.length > 0 && requirements.reqs.length > 0}
+	{JSON.stringify($currentUser)}
+	{JSON.stringify(test)}
+	{#if selected.length > 0 && requirements.reqs.length > 0 && !test}
 		<button
 			class="koumpi mb-3"
 			on:click={async () => {
@@ -450,7 +453,7 @@
 		{#if solved}
 			<div class="card p-4 max-w-lg mx-auto">
 				Επιτυχής επίλυση.<br />Συνολικό κόστος (για {totalWeight} κιλά): {formatNumber(
-					result?.result
+					result?.result??0
 				) || ''}
 			</div>
 		{:else}

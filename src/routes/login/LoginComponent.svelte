@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { currentUser, pb } from '$lib/pocketbase';
-	import { userFeeds } from '$lib/stores/data.js';
+	import { userFeeds, userRations } from '$lib/stores/data.js';
 	import SignInGoogle from '$lib/SignInGoogle.svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
@@ -45,7 +45,6 @@
 							return async ({ result }) => {
 								// `result` is an `ActionResult` object
 								loading = false;
-								console.log(result);
 								try {
 									// console.log(form);
 									if (result.status=200 && result?.data.verified){
@@ -58,6 +57,11 @@
 											sort: '-created'
 										})) || [];
 									if (d.length > 0) userFeeds.set(d);
+									//load user rations
+									let r = await pb.collection('rations').getFullList({
+										sort: '-created'
+									});
+									if (r.length > 0) userRations.set(r);
 									try {
 										// window.history.back();
 										goto('/');
