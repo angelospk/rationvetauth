@@ -452,9 +452,10 @@
 	{#if result != undefined}
 		{#if solved}
 			<div class="card p-4 max-w-lg mx-auto">
-				Επιτυχής επίλυση.<br />Συνολικό κόστος (για {totalWeight} κιλά): {formatNumber(
+				Μπραβο.
+				<!-- Επιτυχής επίλυση.<br />Συνολικό κόστος (για {totalWeight} κιλά): {formatNumber(
 					result?.result??0
-				) || ''}
+				) || ''} -->
 			</div>
 		{:else}
 			<div class="p-4 bg-error-400 rounded-full max-w-lg mx-auto">
