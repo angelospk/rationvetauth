@@ -45,6 +45,8 @@
 		timeout: 1000
 	};
 	async function del() {
+		//check if modal is open and close it before open the new modal
+		modalStore.close();
 		modalStore.trigger(modal);
 	}
 	async function test() {}

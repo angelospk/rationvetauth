@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta content="">
+        <style></style>
+    </head>
+    <body>
+        <script type="module">
+            import GLPK from '../dist/index.js';
+            (async () => {
+
+                const glpk = await GLPK();
+
+                function print(res) {
+                    const el = window.document.getElementById('out');
+                    el.innerHTML = JSON.stringify(res, null, 2);
+                };
+
+                const lp = {
+                    name: 'Wheat, Barley, Corn or Sugarbeet',
+                    objective: {
+                        direction: glpk.GLP_MAX,
+                        name: 'Profit (€)',
+                        vars: [
+                            { name: 'Wheat', coef: 80 },
+                            { name: 'Barley', coef: 120 },
+                            { name: 'Corn', coef: 110 },
+                            { name: 'Sugarbeet', coef: 1 }
+                        ]
+                    },
+                    subjectTo: [
+                        {
+                        name: 'Labour Availability',
+                            vars: [
+                                { name: 'Wheat', coef: 12 },
+                                { name: 'Barley', coef: 30 },
+                                { name: 'Corn', coef: 20 },
+                                { name: 'Sugarbeet', coef: 40 }
+                            ],
+                            bnds: { type: glpk.GLP_FR, ub: 5000, lb: 0.0 }
+                        },
+                        {
+                            name: 'Land (ha)',
+                            vars: [
+                                { name: 'Wheat', coef: 1 },
+                                { name: 'Barley', coef: 1 },
+                                { name: 'Corn', coef: 1 },
+                                { name: 'Sugarbeet', coef: 1 }
+                            ],
+                            bnds: { type: glpk.GLP_FX, ub: 100, lb: 100 }
+                        },
+                        {
+                            name: 'Rotation Corn contraint',
+                            vars: [
+                                { name: 'Wheat', coef: 1 },
+                                { name: 'Barley', coef: 1 },
+                                { name: 'Corn', coef: 1 },
+                                { name: 'Sugarbeet', coef: -1 }
+                            ],
+                            bnds: { type: glpk.GLP_UP, ub: 0, lb: 0 }
+                        },
+                        {
+                            name: 'Rotation Wheat contraint',
+                            vars: [
+                                { name: 'Wheat', coef: 1 }
+                            ],
+                            bnds: { type: glpk.GLP_DB, ub: 10, lb: 5 }
+                        }
+                    ]
+                };
+
+                const opt = {
+                    msglev: glpk.GLP_MSG_ALL,
+                    cb: {
+                        call: res => print(res),
+                        each: 1
+                    }
+                };
+
+                glpk.solve(lp, opt)
+                    .then(res => print(res))
+                    .catch(err => console.log(err));
+
+                window.document.getElementById('cplex').innerHTML = await glpk.write(lp);
+
+            })();
+        </script>
+        <pre id='out'></pre>
+        <pre id='cplex'></pre>
+    </body>
+</html>

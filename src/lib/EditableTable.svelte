@@ -15,6 +15,7 @@
 
 	import { formatNumber } from './greekfuncts';
 	import type { Snapshot } from '../routes/$types';
+	import solveLP from './testSolver';
 	export const snapshot: Snapshot = {
 		capture: () => currentState,
 		restore: (value) => (currentState = value)
@@ -116,7 +117,8 @@
 
 	let waitingtoLoadState = true;
 	let loaded: State | null;
-	async function convertRationMixtoFeed(ration: State): Promise<Feed> {
+	export let convertRationMixtoFeed= async(ration:State)=>{
+	// async function convertRationMixtoFeed(ration: State): Promise<Feed> {
 		let selectedMixFeeds: Feed[] = [];
 		let publicFeeds: Feed[] = ration.tableState.selfeeds.filter((x) => x.public);
 		publicFeeds.forEach((item) => {
@@ -402,6 +404,7 @@
 	bind:autocompleteOptions
 	bind:metricsAutocomplete
 	bind:userFoodAutocomplete
+
 />
 {#if linear}
 	<div class="heading print:hidden">
@@ -415,30 +418,28 @@
 		<button
 			class="koumpi mb-3"
 			on:click={async () => {
+				// solved=false;
+				// empty result
+				result = {};
 				console.log('tpt');
 				// const resp=await fetch("/api/compute",{ method:"POST", body:JSON.stringify({selected, requirements:requirements.reqs})})
-				const resp = await fetch('/api/compute', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({ selected, requirements: requirements.reqs })
-				});
-				const d = await resp.json();
-				console.log(d);
-				// solved = false;
+				// const resp = await fetch('/api/compute', {
+				// 	method: 'POST',
+				// 	headers: {
+				// 		'Content-Type': 'application/json'
+				// 	},
+				// 	body: JSON.stringify({ selected, requirements: requirements.reqs })
+				// });
+				// const d = await resp.json();
+				// console.log(d);
+				// // solved=true;
+				// result = d;
 
-				// result = solveLP(selected, requirements.reqs);
-				// if (result && result?.feasible) {
-				// 	solved=true;
-				// 	selected.forEach((feed, i) => {
-				// 		if (result.hasOwnProperty(`feed${i}`)) {
-				// 			feed.ratio = result[`feed${i}`] || 0;
-				// 		} else {
-				// 			feed.ratio = 0;
-				// 		}
-				// 	});
-				// }
+					solveLP(selected, requirements.reqs).then((r) => {
+						result = r;
+						solved = true;
+					});
+		
 			}}>Προσπάθεια Αυτόματης Επίλυσης<sup>1</sup></button
 		>
 	{:else}

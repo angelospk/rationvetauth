@@ -1,4 +1,6 @@
-import GLPK from 'glpk.js'
+// import GLPK from '$lib/glpk.js';
+import GLPK from '$lib/glpk.js/dist/index.js';
+
 // export async function testSolver() {
 // const glpk = GLPK();
 // const options = {
@@ -44,6 +46,9 @@ import GLPK from 'glpk.js'
 
 export default function solveLP(feeds, requirements, totalWeight = 100) {
     const glpk = GLPK();
+    // GLPK.onRuntimeInitialized = () => {
+    //   GLPK._setWasmPath('/path/to/glpk.wasm');
+    // };
     const options = {
     msglev: glpk.GLP_MSG_ALL,
     presol: true,

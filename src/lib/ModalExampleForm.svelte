@@ -5,18 +5,15 @@
 
 	// Stores
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import { userRations } from './stores/data';
+	import type { State } from 'flowbite-svelte/dist/carousel/Carousel.svelte';
 	const modalStore = getModalStore();
 
 	// Form Data
-	const formData = {
-		name: 'Jane Doe',
-		tel: '214-555-1234',
-		email: 'jdoe@email.com'
-	};
-
+	let selected:State;
 	// We've created a custom submit function to pass the response and close the modal.
 	function onFormSubmit(): void {
-		if ($modalStore[0].response) $modalStore[0].response(formData);
+		if ($modalStore[0].response) $modalStore[0].response(selected);
 		modalStore.close();
 	}
 
@@ -30,27 +27,31 @@
 
 {#if $modalStore[0]}
 	<div class="modal-example-form {cBase}">
-		<header class={cHeader}>{$modalStore[0].title ?? '(title missing)'}</header>
+		<header class={cHeader}>{$modalStore[0].title ?? 'Επέλεξε σιτηρέσιο'}</header>
 		<article>{$modalStore[0].body ?? '(body missing)'}</article>
 		<!-- Enable for debugging: -->
 		<form class="modal-form {cForm}">
 			<label class="label">
-				<span>Name</span>
-				<input class="input" type="text" bind:value={formData.name} placeholder="Enter name..." />
+				<span>Σιτηρέσιο</span>
+				<!-- select from different user rations -->
+				<select class="input" bind:value={selected}>
+					{#each $userRations as ration}
+						<option value={ration}>{ration.rationName}</option>
+					{/each}
 			</label>
-			<label class="label">
+			<!-- <label class="label">
 				<span>Phone Number</span>
 				<input class="input" type="tel" bind:value={formData.tel} placeholder="Enter phone..." />
 			</label>
 			<label class="label">
 				<span>Email</span>
 				<input class="input" type="email" bind:value={formData.email} placeholder="Enter email address..." />
-			</label>
+			</label> -->
 		</form>
 		<!-- prettier-ignore -->
 		<footer class="modal-footer {parent.regionFooter}">
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
-        <button class="btn {parent.buttonPositive}" on:click={onFormSubmit}>Submit Form</button>
+        <button class="btn {parent.buttonPositive}" on:click={onFormSubmit}>Φόρτωση</button>
     </footer>
 	</div>
 {/if}

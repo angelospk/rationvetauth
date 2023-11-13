@@ -5,6 +5,7 @@
 	import { onMount } from "svelte";
 	import type { AnimalInfo, Form } from "./stores/types";
 	import { transformObject } from "./greekfuncts";
+	import { fade, fly } from "svelte/transition";
 export let form:any;
   let selection = '';
     let subselection = '';
@@ -20,14 +21,11 @@ export let form:any;
   async function handleSubmit(event:Event){
     const formEl = event.target as HTMLFormElement
     const sentFormData = new FormData(formEl)
-    console.log(sentFormData)
-    // animalInfo.type=formEl
-    // animalInfo.animal=animal
+    // console.log(sentFormData)
     if (!sentFormData.has("animal")) {
-    // Append 'animal' to FormData if it doesn't exist
-    sentFormData.append("animal", animal); // Assuming `animal` is defined somewhere in your scope
+    sentFormData.append("animal", animal);
   }
-
+  console.log(formEl);
     const response = await fetch(formEl.action, {
       method: 'POST',
       body: sentFormData
@@ -69,7 +67,7 @@ export let form:any;
 
 
 {#if animal!="custom"}
-  <select name="selection" bind:value={selection} on:submit={()=>{
+  <select transition:fade={{ duration:400}} name="selection" bind:value={selection} on:submit={()=>{
     formData={...formData, animal:animal}
   }}>
     
@@ -80,14 +78,14 @@ export let form:any;
   </select>
 
   {#if selection}
-    <select name="subselection" bind:value={subselection}>
+    <select transition:fade={{duration:300}} name="subselection" bind:value={subselection}>
       <option value="">-- Επέλεξε χρονικό διάστημα --</option>
       {#each animals[animal][selection] as subcategory}
         <option value={subcategory}>{subcategory}</option>
       {/each}
       
     </select>
-    <button class="koumpi">Υποβολή</button>
+    <button transition:fade={{duration:400}} class="koumpi">Υποβολή</button>
   {/if}
   {/if}
 </form>

@@ -75,7 +75,7 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 	{#if mounted}
 	<div in:fly={{ y: -200, duration: 1000 }} class="print:hidden">
 		<p class="text-xl md:text-3xl lg:text-4xl mb-2 heading">Χειροκίνητος Υπολογισμός Σιτηρεσίου</p>
-		<div class="justify-center inline-flex mb-4"><a href="/newration/linear"><div class="mx-auto rounded-full hover:underline hover:bg-gray-200 hover:bg-opacity-75 hover:ring-2 btn outline-dotted outline-1 "><p class="md:text-lg">Αυτόματη Επίλυση</p> <p class="text-xs -mb-1 ">με χρήση δυναμικού προγραμματισμού</p></div></a></div>
+		<div class="justify-center inline-flex mb-4"><a href="/newration/linear"><div class="mx-auto rounded-full hover:underline hover:bg-gray-200 hover:bg-opacity-75 hover:ring-2 btn outline-dotted outline-1 "><p class="md:text-lg">Αυτόματη Επίλυση</p> <p class="text-xs -mb-1 ">με χρήση γραμμικού προγραμματισμού</p></div></a></div>
 		<hr />
 		
 	</div>

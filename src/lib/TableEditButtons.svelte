@@ -1,12 +1,14 @@
 <script lang="ts">
-	import { Autocomplete } from '@skeletonlabs/skeleton';
+	import { Autocomplete, getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { InputChip } from '@skeletonlabs/skeleton';
-	import type { AutocompleteOption } from '@skeletonlabs/skeleton';
+	import type { AutocompleteOption, ModalSettings } from '@skeletonlabs/skeleton';
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
 	import AutocompleteTest from './AutocompleteTest.svelte';
 	import { fly } from 'svelte/transition';
 	import { circIn } from 'svelte/easing';
+	import type { Feed } from './stores/types';
+	import { userFeeds } from './stores/data';
 	export let currentUser: any | null;
 //  import {certain} from './AddFoods.svelte'
 	const loginClick: PopupSettings = {
@@ -14,10 +16,29 @@
 		target: 'loginClick',
 		placement: 'bottom'
 	};
+	// export let convertRationMixtoFeed:Promise<Feed>;
+	// export let toastStore;
 	let addFoodVisible = false;
 	let addMetrics = false;
 	let addUserFoodVisible = false;
-
+	const modalStore = getModalStore();
+	const modal: ModalSettings={
+		type:'component',
+		component:'modalTr',
+	}
+	// const loadRation:ModalSettings={
+	// 	type:'component',
+	// 	component:'modalLoadRation',
+	// 	response: async (r)=>{
+	// 		// console.log(r)
+	// 		try {
+	// 			let d=await convertRationMixtoFeed(r)
+	// 			$userFeeds=[...$userFeeds,d]
+	// 		} catch (error) {
+	// 			toastStore.trigger({message:'Απέτυχε η φόρτωση του σιτηρεσίου!',background:'bg-red-600'})
+	// 		}
+	// 	}
+	// }
 	let inputChip = '';
 	export let inputChipList: string[] = [];
 	export let inputChipListUser: string[] = [];
@@ -150,7 +171,7 @@
 <div class="my-3 max-w-lg flex print:hidden">
 	{#if addUserFoodVisible}
 		<div in:fly={{ y: -50, duration: 200, easing:circIn }} 
-			class="card max-w-md mx-auto content-center justify-center max-h-60 p-4 overflow-y-auto"
+			class="card  max-w-md mx-auto content-center justify-center max-h-60 p-4 overflow-y-auto"
 			tabindex="-1"
 		>
 			<InputChip
@@ -161,6 +182,8 @@
 				allowUpperCase
 				placeholder="Εισάγετε τροφή..."
 			/>
+			<button class="btn mt-2 hover:translate-x-1 hover:bg-success-50-900-token btn-sm variant-outline-surface" on:click={()=>{modalStore.trigger(modal)}}>Επεξεργασία</button>
+			<!--  <button class="btn mt-2 btn-sm variant-outline-surface" on:click={()=>{modalStore.trigger(loadRation)}}>Φόρτωση Σιτηρεσίου</button> -->
 			<Autocomplete
 				bind:input={inputChip}
 				options={userFoodAutocomplete}

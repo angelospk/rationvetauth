@@ -17,6 +17,8 @@
 	import Logo from '$lib/Logo.svelte';
 	import type { Feed } from '$lib/stores/types';
 	import { browser } from '$app/environment';
+	import { fly } from 'svelte/transition';
+	import ModalTrofes from '$lib/ModalTrofes.svelte';
 	
 	initializeStores();
 	// export let data: PageData
@@ -93,16 +95,16 @@
 	}
 	const modalRegistry: Record<string, ModalComponent> = {
 		// Set a unique modal ID, then pass the component reference
-		modalComponentOne: { ref: ModalExampleForm },
+		modalLoadRation: { ref: ModalExampleForm },
 		modalTrofes: { ref: ModalExampleList },
-		modalSithresia: { ref: ModalListaSithresia }
+		modalSithresia: { ref: ModalListaSithresia },
+		modalTr: {ref: ModalTrofes}
 		// modalComponentTwo: { ref: ModalComponentTwo },
 		// ...
 	};
 </script>
-
-<Modal components={modalRegistry} height="h-30" class="overflow-y-scroll " />
 <Toast />
+<Modal components={modalRegistry} height="h-30" class="overflow-y-scroll " />
 <!-- App Shell -->
 {#if $loadedTables}
 	<AppShell regionPage="min-h-[93vh] print:min-h-0">
@@ -112,7 +114,8 @@
 			
 			<AppBar padding="0" spacing="0" background="transparent">
 				<svelte:fragment slot="lead">
-					<button on:click={()=>{
+					{#if $loadedTables && loadingEnd}
+					<button  on:click={()=>{
 						if (browser) window.history.back();
 					}} use:popup={popupLogo}  class="text-xl"
 						><img
@@ -123,7 +126,7 @@
 					><div data-popup="popupLogo" class="p-2 card z-10">
 						<div class="arrow bg-gradient-to-l from-transparent to-blue-400" />
 						<p>Πάτα για να πας πίσω!</p>
-					</div>
+					</div>{/if}
 				</svelte:fragment>
 				<!-- <svelte:fragment >
 				<div class="content-center hidden sm:{"block flex"}">
@@ -171,7 +174,7 @@
 									  </svg></button
 							>
 							
-							<div class="p-2 rounded-lg variant-filled-secondary absolute text-lg top-0 left-0 z-10" data-popup="popupUser">
+							<div in:fly={{x:200,duration:500}} class="p-2 rounded-lg variant-filled-secondary absolute text-lg top-0 left-0 z-10" data-popup="popupUser">
 								<div class="arrow variant-filled-secondary" />
 								<ol>
 									<li>
@@ -269,8 +272,5 @@
 {/if}
 
 <style>
-	.user-dropdown {
-    right: 0; /* Align the dropdown's right edge with the button's right edge */
-    left: auto; /* Reset the left value, if set */
-}
+
 </style>
