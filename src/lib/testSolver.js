@@ -44,8 +44,8 @@ import GLPK from '$lib/glpk.js/dist/index.js';
 // return res;
 // }
 
-export default function solveLP(feeds, requirements, totalWeight = 100) {
-    const glpk = GLPK();
+export default async function solveLP(feeds, requirements, totalWeight = 100) {
+    const glpk =await GLPK();
     // GLPK.onRuntimeInitialized = () => {
     //   GLPK._setWasmPath('/path/to/glpk.wasm');
     // };
