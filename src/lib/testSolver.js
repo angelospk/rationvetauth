@@ -1,54 +1,11 @@
-// import GLPK from '$lib/glpk.js';
+
 import GLPK from '$lib/glpk.js/dist/index.js';
 
-// export async function testSolver() {
-// const glpk = GLPK();
-// const options = {
-//     msglev: glpk.GLP_MSG_ALL,
-//     presol: true,
-//     cb: {
-//         call: progress => console.log(progress),
-//         each: 1
-//     }
-// };
-// const res = glpk.solve({
-//     name: 'LP',
-//     objective: {
-//         direction: glpk.GLP_MAX,
-//         name: 'obj',
-//         vars: [
-//             { name: 'x1', coef: 0.6 },
-//             { name: 'x2', coef: 0.5 }
-//         ]
-//     },
-//     subjectTo: [
-//         {
-//             name: 'cons1',
-//             vars: [
-//                 { name: 'x1', coef: 0.7 },
-//                 { name: 'x2', coef: 2.0 }
-//             ],
-//             bnds: { type: glpk.GLP_DB, ub: 2.0, lb: 1.5 }
-//         },
-//         {
-//             name: 'cons2',
-//             vars: [
-//                 { name: 'x1', coef: 3.0 },
-//                 { name: 'x2', coef: 1.0 }
-//             ],
-//             bnds: { type: glpk.GLP_UP, ub: 5.0, lb: 0.0 }
-//         }
-//     ]
-// }, options);
-// console.log(res)
-// return res;
-// }
+
 
 export default async function solveLP(feeds, requirements, totalWeight = 100) {
     const glpk =await GLPK();
-    // GLPK.onRuntimeInitialized = () => {
-    //   GLPK._setWasmPath('/path/to/glpk.wasm');
-    // };
+
     const options = {
     msglev: glpk.GLP_MSG_ALL,
     presol: true,
@@ -82,8 +39,7 @@ console.log(feeds, glpk, options)
     })),
   };
 console.log(lp)
-  const result = glpk.solve(lp, options);
-
+  const result = await glpk.solve(lp, options);
   // Display results
   if (result.result.status === glpk.GLP_OPT) {
     console.log('Optimal solution found. Objective value:', result.result.z);
