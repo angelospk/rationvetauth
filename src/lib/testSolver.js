@@ -1,7 +1,31 @@
 
 import GLPK from '$lib/glpk.js/dist/index.js';
+function convertType(req){
+  switch(req.type){
+    case ">":
+      return {
+        type: glpk.GLP_LO,
+        lb: req.value * totalWeight,
+      }
+    case "<":
+      return {
+        type: glpk.GLP_UP,
+        ub: req.value * totalWeight,
+      }
+    case "=":
+      return {
+        type: glpk.GLP_LO,
+        lb: req.value * totalWeight,
+      }
+    case "-":
+      return {
+        type: glpk.GLP_DB,
+        lb: req.value * totalWeight,
+        ub: req.topValue * totalWeight,
+      }
+  }
 
-
+}
 
 export default async function solveLP(feeds, requirements, totalWeight = 100) {
     const glpk =await GLPK();
@@ -31,10 +55,8 @@ console.log(feeds, glpk, options)
         name: `x${i}`,
         coef: feed[req.Title], // Replace with your constraint coefficients
       })),
-      bnds: {
-        type: glpk.GLP_LO, // You can change this to other types as needed
-        lb: req.value * totalWeight,
-      },
+    bnds: convertType(req)
+
     })),
   };
 console.log(lp)
