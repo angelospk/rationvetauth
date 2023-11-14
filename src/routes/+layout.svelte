@@ -249,7 +249,7 @@
 						<div class="inline-flex gap-x-1"><p>Εργαστήριο Διατροφής </p><a class="hover:underline" href="https://www.vet.auth.gr"
 							>Κτηνιατρικής </a
 						>
-						<p class="whitespace-pre-line"> x </p><a class="hover:underline" href="https://www.ee.auth.gr">ΤΗΜΜΥ ΑΠΘ</a></div><br />
+						<p class="whitespace-pre-line"> & </p><a class="hover:underline" href="https://www.ee.auth.gr">ΤΗΜΜΥ ΑΠΘ</a></div><br />
 						<div class="text-slate-100 dark:text-secondary-300 print:hidden">
 							© {new Date().getFullYear()} | Powered by
 							<a class="text-primary-500 hover:underline" href="https://kit.svelte.dev/"
