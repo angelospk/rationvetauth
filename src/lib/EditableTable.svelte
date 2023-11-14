@@ -4,18 +4,19 @@
 	import TableEditButtons from './TableEditButtons.svelte';
 
 	import { normalizeGreek } from './greekfuncts';
-	import type { AutocompleteOption } from '@skeletonlabs/skeleton';
+	import { AccordionItem, Accordion, type AutocompleteOption, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { metrics, feeds, userFeeds, loadedTables } from '$lib/stores/data';
 	import { currentUser, pb } from '$lib/pocketbase';
-	import type { AnimalReqs, Column, Feed, State, TableState } from '$lib/stores/types';
+	import type { AnimalReqs, Column, Feed, FeedConstraint, State, TableState } from '$lib/stores/types';
 	import TablePlaceHolder from '$lib/TablePlaceHolder.svelte';
-	import { getToastStore } from '@skeletonlabs/skeleton';
-	import type { ToastSettings } from '@skeletonlabs/skeleton';
+	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
+	import { SlideToggle, type ToastSettings } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 
 	import { formatNumber } from './greekfuncts';
 	import type { Snapshot } from '../routes/$types';
 	import solveLP from './testSolver';
+	import { fade, fly, blur } from 'svelte/transition';
 	export const snapshot: Snapshot = {
 		capture: () => currentState,
 		restore: (value) => (currentState = value)
@@ -74,6 +75,7 @@
 	let metricsAutocomplete: AutocompleteOption<string>[];
 	let userFoodAutocomplete: AutocompleteOption<string>[];
 	let result: object;
+	let feedConstraints:FeedConstraint[]=[];
 	export let currentState: State = {
 		rationName,
 		producerName,
@@ -96,6 +98,7 @@
 		...$feeds.filter((x) => inputChipList.includes(x.Title)),
 		...$userFeeds.filter((x) => inputChipListUser.includes(x.Title))
 	];
+	feedConstraints=[...$userFeeds,...$feeds].map(x=>{if (x.Title) return {Title:x.Title,has:false}})
 	$: minimalSelected = !ratiosSelected
 		? selected.map((item) => {
 				if (item.user) {
@@ -113,6 +116,8 @@
 					return { Title: item.Title, ratio: item.ratio, public: true };
 				}
 		  });
+
+
 
 	onMount(async () => {});
 
@@ -415,9 +420,32 @@
 		Σημείωση: Πατήστε το κουμπί τις αυτόματης επίλυσης αφού διάλεξτε τροφές και εισάγετε τις
 		αντίστοιχες τιμές τους.<br />
 	</div>
-	{JSON.stringify($currentUser)}
-	{JSON.stringify(test)}
+	<Accordion>
+		<AccordionItem><svelte:fragment slot="summary"><p class="text-slate-100">Περιορισμοί Τροφών</p></svelte:fragment>
+			<svelte:fragment slot="content" >
+			<div class="flex-container place-center justify-center  card p-2 mx-auto gap-2">
+			{#each feedConstraints.filter(x=>inputChipList.concat(inputChipListUser).includes(x.Title)) as cons}
+			<div in:fly={{x:100,duration:300}} class="inline-flex p-2 gap-x-1">
+				<SlideToggle size="sm"  name="toggle" bind:checked={cons.has}/>
+				<p class="mr-2">{cons.Title}</p>
+				{#if !cons.has}
+				<div class="inline-flex" in:blur={{amount:5, duration:300}}>
+				 <input type="number" readonly value=0/><p class="mx-1">-</p><input type="number" value=100 readonly/></div>
+				{:else}
+				<div class="inline-flex" in:blur={{amount:5, duration:300}}>
+				 <input min=0 max=100 type="number" bind:value={cons.low}/><p class="mx-1">-</p>
+				<input type="number" min=0 max=100 bind:value={cons.high}/> <p class="ml-1">%</p></div>
+				
+			{/if}
+			</div>
+
+				{/each}
+			</div>	
+			</svelte:fragment>
+		</AccordionItem>
+	</Accordion>
 	{#if selected.length > 0 && requirements.reqs.length > 0 && !test}
+	
 		<button
 			class="koumpi mb-3"
 			on:click={async () => {
@@ -453,9 +481,6 @@
 		{#if solved}
 			<div class="card p-4 max-w-lg mx-auto">
 				Μπραβο.
-				<!-- Επιτυχής επίλυση.<br />Συνολικό κόστος (για {totalWeight} κιλά): {formatNumber(
-					result?.result??0
-				) || ''} -->
 			</div>
 		{:else}
 			<div class="p-4 bg-error-400 rounded-full max-w-lg mx-auto">
@@ -467,6 +492,7 @@
 {/if}
 
 <style lang="postcss">
+
 	.info {
 		@apply my-2 bg-secondary-400 rounded-lg print:hidden mx-auto max-w-lg;
 	}

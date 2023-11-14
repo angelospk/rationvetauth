@@ -36,7 +36,7 @@
 	});
 </script>
 
-{JSON.stringify(pb.authStore.isAdmin)}
+<!-- {JSON.stringify(pb.authStore.isAdmin)} -->
 <div class="flex-col p-6">
 	<div class="text-center">
 		<p class="mt-3 text-white text-3xl dark:text-white">Σύνδεση Διαχειριστή</p>

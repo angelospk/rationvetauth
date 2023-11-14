@@ -19,6 +19,7 @@
 	import { browser } from '$app/environment';
 	import { fly } from 'svelte/transition';
 	import ModalTrofes from '$lib/ModalTrofes.svelte';
+	import ModalFeedConstraints from '$lib/ModalFeedConstraints.svelte';
 	
 	initializeStores();
 	// export let data: PageData
@@ -98,7 +99,8 @@
 		modalLoadRation: { ref: ModalExampleForm },
 		modalTrofes: { ref: ModalExampleList },
 		modalSithresia: { ref: ModalListaSithresia },
-		modalTr: {ref: ModalTrofes}
+		modalTr: {ref: ModalTrofes},
+		modalPeriorismoi:{ref:ModalFeedConstraints}
 		// modalComponentTwo: { ref: ModalComponentTwo },
 		// ...
 	};
@@ -114,7 +116,6 @@
 			
 			<AppBar padding="0" spacing="0" background="transparent">
 				<svelte:fragment slot="lead">
-					{#if $loadedTables && loadingEnd}
 					<button  on:click={()=>{
 						if (browser) window.history.back();
 					}} use:popup={popupLogo}  class="text-xl"
@@ -126,7 +127,7 @@
 					><div data-popup="popupLogo" class="p-2 card z-10">
 						<div class="arrow bg-gradient-to-l from-transparent to-blue-400" />
 						<p>Πάτα για να πας πίσω!</p>
-					</div>{/if}
+					</div>
 				</svelte:fragment>
 				<!-- <svelte:fragment >
 				<div class="content-center hidden sm:{"block flex"}">

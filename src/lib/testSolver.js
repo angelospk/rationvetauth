@@ -32,9 +32,8 @@ console.log(feeds, glpk, options)
         coef: feed[req.Title], // Replace with your constraint coefficients
       })),
       bnds: {
-        type: glpk.GLP_UP, // You can change this to other types as needed
-        ub: req.value * totalWeight,
-        lb: 0.0,
+        type: glpk.GLP_LO, // You can change this to other types as needed
+        lb: req.value * totalWeight,
       },
     })),
   };

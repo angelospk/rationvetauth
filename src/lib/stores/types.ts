@@ -10,6 +10,18 @@ export interface State{
 	id?:string
 	totalWeight:number
 }
+export type hasFeedConstraint={
+	Title:string
+	has:true
+	low:number
+	high:number
+}
+export type hasntFeedConstraint={
+	Title:string
+	has:false
+}
+export type FeedConstraint=hasFeedConstraint|hasntFeedConstraint
+
 export interface AnimalInfo{
 	animal:string
 	type:{selection:string, subselection:string}

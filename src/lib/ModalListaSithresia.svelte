@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { ListBox, ListBoxItem, getModalStore } from '@skeletonlabs/skeleton';
 	import type { Feed } from './stores/types';
-	import { metrics } from './stores/data';
 
 	// Props
 	/** Exposes parent props to this component. */
@@ -34,12 +33,7 @@
 			{/each}
 
 		</select>
-		<!-- <ListBox class="border border-surface-500 p-4">
-		{#each totalfeeds as ufeed}
-			<ListBoxItem bind:group={feed} name="chocolate" value="{ufeed}">{ufeed?.Title}</ListBoxItem>
-		{/each}
-		</ListBox> -->
-		<!-- prettier-ignore -->
+
 		<footer class="modal-footer {parent.regionFooter}">
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
         <button class="btn {parent.buttonPositive}" on:click={onFormSubmit}>Άνοιγμα</button>
