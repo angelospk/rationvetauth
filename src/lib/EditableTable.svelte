@@ -503,10 +503,9 @@
 	{:else}
 		<button class="btn bg-gray-400">Προσπάθεια Αυτόματης Επίλυσης<sup>1</sup></button>
 	{/if}
-	{JSON.stringify(result)}
 	{#if result != undefined}
 		{#if solved}
-		<div class="card p-4 max-w-lg mx-auto">Επιτυχής επίλυση.<br/>Συνολικό κόστος (για {totalWeight} κιλά): {formatNumber(result?.z) || ''} </div>
+		<div class="rounded-full bg-success-400 p-4 max-w-lg mx-auto">Επιτυχής επίλυση.<br/>Συνολικό κόστος (για {totalWeight} κιλά): {formatNumber(result?.z) || ''} </div>
 		{:else}
 			<div class="p-4 bg-error-400 rounded-full max-w-lg mx-auto">
 				Το σιτηρέσιο δεν μπόρεσε να επιλυθεί. Δοκιμάστε να τροποποιήσετε τις τροφές ή να χαλαρώσετε
