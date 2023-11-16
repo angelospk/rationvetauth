@@ -391,7 +391,7 @@
 
 <div class="overflow-x-auto rounded-md">
 	<table
-		transition:fade={{ duration: 300 }}
+		transition:blur={{ amount:3, duration: 300 }}
 		class="bg-white w-full table-row-checked"
 		title={$currentUser
 			? 'Πίνακας Σιτηρεσίου'
@@ -608,7 +608,9 @@
 			{:else}
 				<tr class="bg-gray-300 text-gray-700 text-lg">
 					{#if linear}
-						<td class=" w-min">{formatNumber(sum.price) || ''}</td>
+					{#key selected}	
+					<td class=" w-min">{formatNumber(sum.price) || ''}</td>
+					{/key}
 					{/if}
 					<td class=" w-min">Σύνολο</td>
 

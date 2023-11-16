@@ -37,6 +37,7 @@
 		meta: {metrs: $metrics.filter(x=>![...form.reqs.map(y=>y.Title),"weight","Title"].includes(x.Title))}
 		// backdropClasses: "!blur-1"
 	};
+
 	const modalLoadReqs: ModalSettings = {
 		type: 'component',
 		body: 'Επέλεξε από τη λίστα για να φορτωθεί η λίστα των προδιαγραφών!',

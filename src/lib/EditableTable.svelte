@@ -436,10 +436,13 @@
 		Σημείωση: Πατήστε το κουμπί τις αυτόματης επίλυσης αφού διάλεξτε τροφές και εισάγετε τις
 		αντίστοιχες τιμές τους.<br />
 	</div>
-	<Accordion>
+
+	{#if selected.length > 0 && requirements.reqs.length > 0 && !test}
+	<Accordion >
 		<AccordionItem
 			><svelte:fragment slot="summary"
-				><p class="text-slate-100">Περιορισμοί Τροφών</p></svelte:fragment
+				><div class="flex justify-center text-center mx-auto text-red-400">
+				<p class="text-slate-100 ">Περιορισμοί Τροφών:</p></div></svelte:fragment
 			>
 			<svelte:fragment slot="content">
 				<div class="flex-container place-center justify-center card p-2 mx-auto gap-2">
@@ -469,7 +472,6 @@
 			</svelte:fragment>
 		</AccordionItem>
 	</Accordion>
-	{#if selected.length > 0 && requirements.reqs.length > 0 && !test}
 		<button
 			class="koumpi mb-3"
 			on:click={async () => {
@@ -505,7 +507,7 @@
 	{/if}
 	{#if result != undefined}
 		{#if solved}
-		<div class="rounded-full bg-success-400 p-4 max-w-lg mx-auto">Επιτυχής επίλυση.<br/>Συνολικό κόστος (για {totalWeight} κιλά): {formatNumber(result?.z) || ''} </div>
+		<div class="rounded-full bg-green-400 p-4 max-w-lg mx-auto">Επιτυχής επίλυση.<br/>Συνολικό κόστος (για {totalWeight} κιλά): {formatNumber(result?.z) || ''} </div>
 		{:else}
 			<div class="p-4 bg-error-400 rounded-full max-w-lg mx-auto">
 				Το σιτηρέσιο δεν μπόρεσε να επιλυθεί. Δοκιμάστε να τροποποιήσετε τις τροφές ή να χαλαρώσετε
