@@ -46,19 +46,19 @@ export let form:any;
 	flex="flex-1 lg:flex-none"
 	rounded=""
 	border=""
-	class="bg-surface-100-800-token w-fit mx-auto "
+	class="bg-surface-100-800-token w-fit mx-auto mb-2"
   name="animal"
 >
 	<Tab bind:group={animal} value="poultry" name="animal" on:click={reset}   selected={animal=="poultry"}>
-		<svelte:fragment slot="lead">(icon)</svelte:fragment>
+		<svelte:fragment slot="lead"></svelte:fragment>
 		<span>Πουλερικά</span>
 	</Tab>
     <Tab bind:group={animal} value="swine" name="animal" on:click={reset}  selected={animal=="swine"}>
-		<svelte:fragment slot="lead">(icon)</svelte:fragment>
+		<svelte:fragment slot="lead"></svelte:fragment>
 		<span>Χοίροι</span>
 	</Tab>
   <Tab bind:group={animal} value="custom" name="animal" on:click={reset}  selected={animal=="custom"}>
-		<svelte:fragment slot="lead">(icon)</svelte:fragment>
+		<svelte:fragment slot="lead"></svelte:fragment>
 		<span>Προσαρμοσμένο</span>
 	</Tab>
 

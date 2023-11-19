@@ -122,7 +122,7 @@
 				}
 		  })
 		: selected.map((item) => {
-				if (item.id) {
+				if (!$feeds.map((x) => x.id).includes(item.id)) {
 					if ($userFeeds.map((x) => x.id).includes(item.id))
 						return { id: item.id, ratio: item.ratio, public: false, mix: false };
 					else return { id: item.id, ratio: item.ratio, mix: true, public: false };
@@ -438,80 +438,78 @@
 	</div>
 
 	{#if selected.length > 0 && requirements.reqs.length > 0 && !test}
-	<Accordion >
-		<AccordionItem
-			><svelte:fragment slot="summary"
-				><div class="flex justify-center text-center mx-auto text-red-400">
-				<p class="text-slate-100 ">Περιορισμοί Τροφών:</p></div></svelte:fragment
-			>
-			<svelte:fragment slot="content">
-				<div class="flex-container place-center justify-center card p-2 mx-auto gap-2">
-					{#each feedConstraints.filter((x) => inputChipList
-							.concat(inputChipListUser)
-							.includes(x.Title)) as cons}
-						<div in:fly={{ x: 100, duration: 300 }} class="inline-flex p-2 gap-x-1">
-							<SlideToggle size="sm" name="toggle" bind:checked={cons.has} />
-							<p class="mr-2">{cons.Title}</p>
-							{#if !cons.has}
-								<div class="inline-flex" in:blur={{ amount: 5, duration: 300 }}>
-									<input type="number" readonly value="0" />
-									<p class="mx-1">-</p>
-									<input type="number" value="100" readonly />
-								</div>
-							{:else}
-								<div class="inline-flex" in:blur={{ amount: 5, duration: 300 }}>
-									<input min="0" max="100" type="number" bind:value={cons.low} />
-									<p class="mx-1">-</p>
-									<input type="number" min="0" max="100" bind:value={cons.high} />
-									<p class="ml-1">%</p>
-								</div>
-							{/if}
-						</div>
-					{/each}
-				</div>
-			</svelte:fragment>
-		</AccordionItem>
-	</Accordion>
+		<Accordion>
+			<AccordionItem
+				><svelte:fragment slot="summary"
+					><div class="flex justify-center text-center mx-auto text-red-400">
+						<p class="text-slate-100">Περιορισμοί Τροφών:</p>
+					</div></svelte:fragment
+				>
+				<svelte:fragment slot="content">
+					<div class="flex-container place-center justify-center card p-2 mx-auto gap-2">
+						{#each feedConstraints.filter((x) => inputChipList
+								.concat(inputChipListUser)
+								.includes(x.Title)) as cons}
+							<div in:fly={{ x: 100, duration: 300 }} class="inline-flex p-2 gap-x-1">
+								<SlideToggle size="sm" name="toggle" bind:checked={cons.has} />
+								<p class="mr-2">{cons.Title}</p>
+								{#if !cons.has}
+									<div class="inline-flex" in:blur={{ amount: 5, duration: 300 }}>
+										<input type="number" readonly value="0" />
+										<p class="mx-1">-</p>
+										<input type="number" value="100" readonly />
+									</div>
+								{:else}
+									<div class="inline-flex" in:blur={{ amount: 5, duration: 300 }}>
+										<input min="0" max="100" type="number" bind:value={cons.low} />
+										<p class="mx-1">-</p>
+										<input type="number" min="0" max="100" bind:value={cons.high} />
+										<p class="ml-1">%</p>
+									</div>
+								{/if}
+							</div>
+						{/each}
+					</div>
+				</svelte:fragment>
+			</AccordionItem>
+		</Accordion>
 		<button
 			class="koumpi mb-3"
 			on:click={async () => {
-				solved=false;
+				solved = false;
 				// empty result
 				result = {};
-				
-				console.log('tpt');
 
-
-				let r=await solveLP(
+				let r = await solveLP(
 					selected,
 					requirements.reqs,
 					feedConstraints.filter((x) => inputChipList.concat(inputChipListUser).includes(x.Title))
-				)
+				);
 				result = r.result;
-					if (result?.status && result.status == 5) {
-						selected.forEach((feed, i) => {
-							feed.ratio = result.vars[`x${i}`];
-						});
-
-						solved = true;
-					} else {
-						solved = false;
-					}
-				
-				
-			
-			}}>Προσπάθεια Αυτόματης Επίλυσης<sup>1</sup></button
+				if (result?.status && result.status == 5 || result.status==4) {
+					selected.forEach((feed, i) => {
+						feed.ratio = result.vars[`x${i}`];
+					});
+					solved=true
+					solved=result.status==5?true:false||false
+				} else {
+					solved = false;
+				}
+			}}>Προσπάθεια Αυτόματης Επίλυσης<sup>2</sup></button
 		>
 	{:else}
 		<button class="btn bg-gray-400">Προσπάθεια Αυτόματης Επίλυσης<sup>1</sup></button>
 	{/if}
 	{#if result != undefined}
 		{#if solved}
-		<div class="rounded-full bg-green-400 p-4 max-w-lg mx-auto">Επιτυχής επίλυση.<br/>Συνολικό κόστος (για {totalWeight} κιλά): {formatNumber(result?.z) || ''} </div>
+			<div class="rounded-full bg-green-400 p-4 max-w-lg mx-auto">
+				Επιτυχής επίλυση.<br />Συνολικό κόστος (για {totalWeight} κιλά): {formatNumber(result?.z) ||
+					''}
+			</div>
 		{:else}
 			<div class="p-4 bg-error-400 rounded-full max-w-lg mx-auto">
 				Το σιτηρέσιο δεν μπόρεσε να επιλυθεί. Δοκιμάστε να τροποποιήσετε τις τροφές ή να χαλαρώσετε
-				τις λειτουργικές απαιτήσεις του ζώου.
+				τις λειτουργικές απαιτήσεις ή τους περιορισμούς τροφών.
 			</div>
 		{/if}
 	{/if}

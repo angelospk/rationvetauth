@@ -120,7 +120,6 @@ const poultry={
   "CrudeFiber": 70,
   "Calcium": 35,
   "Phosphorus": 3.5,
-  "ΚΤ": "85-120",
   "Sodium": 1.8
   },
   "41 ως 60": {
@@ -130,7 +129,6 @@ const poultry={
   "CrudeFiber": 70,
   "Calcium": 38,
   "Phosphorus": 3.5,
-  "ΚΤ": "85-120",
   "Sodium": 1.8
   },
   "61 ως 80": {
@@ -140,7 +138,6 @@ const poultry={
   "CrudeFiber": 70,
   "Calcium": 40,
   "Phosphorus": 3.5,
-  "ΚΤ": "85-120",
   "Sodium": 1.8
   }},
   "Ανάπτυξη - πάχυνση ορνιθίων / Ηλικία (εβδ)": {
@@ -152,7 +149,6 @@ const poultry={
   "Calcium": 10,
   "Phosphorus": 4.5,
   "Sodium": 1.6,
-  "ΚΤ": "10-60"
   },
   "2 ως 5": {
   "MEpoultry": 3107,
@@ -162,7 +158,6 @@ const poultry={
   "Calcium": 10,
   "Phosphorus": 4.5,
   "Sodium": 1.6,
-  "ΚΤ": "60-145"
   },
   ">5":  {
   "MEpoultry": 3107,
@@ -172,9 +167,8 @@ const poultry={
   "Calcium": 10,
   "Phosphorus": 6,
   "Sodium": 1.8,
-  "ΚΤ": ">150"
   }}}
-const swine={
+const swine2={
       "Αναπαραγωγών Χοίρων": {
         "Εγκύων": {"DE": 2868, "CrudeProtein": 130, "Lysine": 5.5, "CrudeFiber": "<100", "Calcium": 8, "Phosphorus": 4, "Sodium": 2, "ΚΤ": "2000-2500"},
         "Γαλ/γών": {"DE": 3107, "CrudeProtein": 170, "Lysine": 7.5, "CrudeFiber": "<60", "Calcium": 8, "Phosphorus": 6, "Sodium": 2.5, "ΚΤ": "3500-7000"}
@@ -186,6 +180,18 @@ const swine={
         ">19": {"DE": 3107, "CrudeProtein": 140, "Lysine": 7, "CrudeFiber": "<70", "Calcium": 7, "Phosphorus": 4, "Sodium": 1.5, "ΚΤ": "2300-3500"}
       }
   }
+  const swine={
+    "Αναπαραγωγών Χοίρων": {
+      "Εγκύων": {"DE": 2868, "CrudeProtein": 130, "Lysine": 5.5, "CrudeFiber": "<100", "Calcium": 8, "Phosphorus": 4, "Sodium": 2},
+      "Γαλ/γών": {"DE": 3107, "CrudeProtein": 170, "Lysine": 7.5, "CrudeFiber": "<60", "Calcium": 8, "Phosphorus": 6, "Sodium": 2.5}
+    },
+    "Αναπτυσσόμενων - Παχυνόμενων Χοίρων Ηλικία (εβδομάδες)": {
+      "1 ως 4": {"DE": "3227-3465", "CrudeProtein": 220, "Lysine": 14, "CrudeFiber": "<40", "Calcium": 10, "Phosphorus": 7, "Sodium": 2, "ΚΤ": null},
+      "5 ως 10": {"DE": 3107, "CrudeProtein": 180, "Lysine": 11, "CrudeFiber": "<50", "Calcium": 10, "Phosphorus": 6, "Sodium": 1.5,},
+      "11 ως 18": {"DE": 3107, "CrudeProtein": 160, "Lysine": 9, "CrudeFiber": "<60", "Calcium": 8, "Phosphorus": 6, "Sodium": 1.5, },
+      ">19": {"DE": 3107, "CrudeProtein": 140, "Lysine": 7, "CrudeFiber": "<70", "Calcium": 7, "Phosphorus": 4, "Sodium": 1.5, }
+    }
+}
 
 
 const aigoprov={

@@ -7,7 +7,6 @@
 	import { onMount } from 'svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
-	import convertMixToFeed from './EditableTable.svelte';
 	import { formatNumber } from './greekfuncts';
 	import { blur, fade, fly, slide } from 'svelte/transition';
 	const toastStore = getToastStore();
@@ -281,17 +280,16 @@
 </script>
 
 <!-- Table for feedstuff entry -->
-<div class="flex space-x-5 md:space-x-10 justify-center print:hidden">
+<div class="flex space-x-5 md:space-x-10 justify-center print:hidden text-slate-100">
 	<button class="shadow-xl rounded-full my-3 stroke-red-500 fill-red-500" use:popup={popupClick}
 		><svg
-			class="w-8 h-8 hover:fill-red-300 text-secondary-500 dark:text-white"
+			class="w-8 h-8 hover:fill-red-300 text-secondary-500 stroke-slate-300"
 			aria-hidden="true"
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
 			viewBox="0 0 20 20"
 		>
 			<path
-				stroke="currentColor"
 				stroke-linecap="round"
 				stroke-linejoin="round"
 				stroke-width="1.5"
@@ -300,17 +298,16 @@
 		</svg></button
 	>
 	<button
-		class="btn-sm rounded-full my-3 variant-ghost-secondary hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:scale-105 hover:duration-1000 duration-1000"
+		class="btn-sm rounded-full my-3 variant-ghost-secondary  hover:text-white hover:bg-gradient-to-br variant-gradient-tertiary-secondary hover:scale-105 hover:duration-1000 duration-1000"
 		use:popup={optionsClick}
 		><svg
-			class="w-6 h-6 hover:fill-gray-700 text-secondary-500 dark:text-white"
+			class="w-6 h-6 hover:fill-gray-700 text-secondary-500 dark:text-white stroke-slate-300"
 			aria-hidden="true"
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
 			viewBox="0 0 20 20"
 		>
 			<path
-				stroke="currentColor"
 				stroke-linecap="round"
 				stroke-linejoin="round"
 				stroke-width="2"
@@ -391,7 +388,7 @@
 
 <div class="overflow-x-auto rounded-md">
 	<table
-		transition:blur={{ amount:3, duration: 300 }}
+		in:blur={{ amount:3, duration: 300 }}
 		class="bg-white w-full table-row-checked"
 		title={$currentUser
 			? 'Πίνακας Σιτηρεσίου'

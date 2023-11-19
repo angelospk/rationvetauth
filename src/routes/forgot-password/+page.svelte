@@ -1,20 +1,15 @@
 <script>
 import { currentUser, pb } from "$lib/pocketbase";
-	import Input from "postcss/lib/input";
     
 let email = '';
 let res;
     const handleSubmit = async () => {
         try {
-            // res=await pb.collection('users').requestPasswordReset(email);
-            // console.log(res);
-            pb.collection('feeds').subscribe("35vfbj3kx5akeoa", (data) => {
-                console.log(data);
-            });
-            alert('Password reset email sent!');
+            await pb.collection("users").requestPasswordReset(email)
+            alert('Στάλθηκε e-mail αλλαγής κωδικού!');
         } catch (error) {
             console.error(error);
-            alert('Error resetting password. Please try again later.');
+            alert('Παρουσιάστηκε σφάλμα.');
         }
     };
 </script>

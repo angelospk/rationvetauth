@@ -75,14 +75,17 @@ console.log(feeds,feedConstraints,requirements)
         name: `x${feed.index}`,
         coef: 1, // Replace with your constraint coefficients
       })),
-    
       bnds: {
         type: glpk.GLP_DB,
         lb: con.has?con.low||0:0,
         ub: con.has?con.high||100:100,
       }, 
     })
-      )),
+      )).concat({name:"max",vars:feeds.map((feed, i) => ({
+        name: `x${i}`,
+        coef: 1, // Replace with your constraint coefficients
+      })),bnds: {type: glpk.GLP_FX, ub:100, lb:100}}),
+    
   };
 console.log(lp)
   const result = await glpk.solve(lp, options);

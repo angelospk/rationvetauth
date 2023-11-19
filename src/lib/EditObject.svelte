@@ -1,7 +1,5 @@
 <script lang="ts">
 
-	// The JSON object retrieved from your database
-	// let editedData = JSON.parse(JSON.stringify(objectData)); // Create a copy to track edits
 	import { pb } from './pocketbase';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
@@ -45,7 +43,6 @@
 		timeout: 1000
 	};
 	async function del() {
-		//check if modal is open and close it before open the new modal
 		modalStore.close();
 		modalStore.trigger(modal);
 	}
@@ -67,7 +64,7 @@
 	<div class="flex-container">
 		<div class="form-item mx-auto flex justify-between">
 			<div class="flex w-">
-				<p>Τίτλος:</p>
+				<p class="text-black">Τίτλος:</p>
 				<input class="rounded-lg" type="text" bind:value={objectData.Title} />
 			</div>
 			<button class="sm:ml-3" on:click={del}>

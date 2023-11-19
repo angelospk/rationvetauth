@@ -109,7 +109,7 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 			{:else}
 			<EditableTable stage2Read={record} bind:currentState/>
 	{/if}
-		<!-- {JSON.stringify(currentState)} -->
+		<!-- {(currentState)} -->
 		<div class="heading text-3xl print:hidden">
 			<h2>Βήμα 3: Αποθήκευση / Διαμοιρασμός</h2>
 		</div>
@@ -120,7 +120,11 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 
 		
 	</form>
+	<hr class="my-3">
+<p class="text-xs print:hidden text-slate-100 ">1. Πηγή Δημόσιων Τροφών: Π. Φλώρου-Πανέρη, Ε. Χρηστάκη, και Η. Γιάννενας, Ζωοτροϕές και καταρτισµός
+	σιτηρεσίων. Θεσσαλονίκη: Τζίολα, 2013</p>
 	{/if}
+
 </div>
 <style lang="postcss">
 	.info {
