@@ -3,11 +3,16 @@
 	import { onMount } from 'svelte';
 	import { fade, blur } from 'svelte/transition';
 	import { fly } from 'svelte/transition';
-
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { userRations } from '$lib/stores/data';
 	import LoginComponent from './login/LoginComponent.svelte';
+	/**
+	 * @type {boolean}
+	 */
 	let mounted;
+	/**
+	 * @type {boolean}
+	 */
 	let letters;
 	function typewriter(node, { speed = 2 }) {
 		const valid = node.childNodes.length === 1 && node.childNodes[0].nodeType === Node.TEXT_NODE;
@@ -48,7 +53,8 @@
 	{#if $currentUser}
 		<div class="flex flex-col mx-auto gap-4">
 			<div class="inline-flex text-5xl mb-6">
-				{#if mounted}<p in:fly={{ y: -200, duration: 1000 }} class="heading">Καλώς ήλθατε {$currentUser.Student?"φοιτητή":""} {$currentUser.name}!</p>{/if}
+				{#if mounted}<p in:fly={{ y: -200, duration: 1000 }} class="heading">
+					Καλώς ήλθατε {$currentUser.Student?"φοιτητή":""} {$currentUser.name}!</p>{/if}
 			</div>
 			{#if mounted}
      <div class="max-w-sm flex flex-col mx-auto gap-3">
@@ -62,7 +68,6 @@
 		</div>{/if}
 </div>
 
-<!-- {/if} -->
 
 <style lang="postcss">
 	.card {

@@ -127,25 +127,7 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 
 </div>
 <style lang="postcss">
-	.info {
-		@apply my-2 bg-secondary-400 rounded-lg print:hidden mx-auto max-w-lg;
-	}
-	.heading {
-		margin-top: 1rem;
-		@apply  underline
-	}
 
-	@media print {
-		/* Hide buttons and explanatory text */
-		.btn {
-			display: none;
-		}
-		.info {
-			display: none;
-		}
-		.heading{
-			display: none;
-		}
-		/* Adjust table layout for printing */
-	}
+
+
 </style>	

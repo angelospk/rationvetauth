@@ -19,11 +19,8 @@
 	import LoadingCircles from '$lib/Loading Circles.svelte';
 	import { Popover, Button } from 'flowbite-svelte';
 	import { fly } from 'svelte/transition';
-	// writable;
-	// let userFeeds = writable([]);
 	let mounted:boolean;
 	const modalStore = getModalStore();
-	// let selectedFeed:Feed;
 	const modal: ModalSettings = {
 		type: 'component',
 		body: 'Επέλεξε από τη λίστα τροφή για να φορτωθεί ως πρότυπο!',
@@ -33,7 +30,6 @@
 			empty = r;
 		},
 		buttonTextCancel: 'Ακύρωση'
-		// backdropClasses: "!blur-1"
 	};
 	onMount(async () => {
 		
@@ -225,7 +221,6 @@
 		<!-- ... -->
 	</Accordion>
 </div>	
-	<!-- <div>{JSON.stringify(data)}</div> -->
 {/if}
 
 <style >
