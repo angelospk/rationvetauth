@@ -7,7 +7,7 @@
 	import { onMount } from 'svelte';
 	import { currentUser, pb } from '$lib/pocketbase';
 
-	import { AccordionItem, getToastStore, Accordion } from '@skeletonlabs/skeleton';
+	import { AccordionItem, getToastStore, Accordion, clipboard } from '@skeletonlabs/skeleton';
 	import type {  ToastSettings } from '@skeletonlabs/skeleton';
 	import RationInfo from '$lib/RationInfo.svelte';
 	import { goto } from '$app/navigation';
@@ -42,8 +42,14 @@
 		}
 	});
 
-	let showInfoCard = false;
+	let copied = false;
 
+	function onClickHandler(): void {
+		copied = true;
+		setTimeout(() => {
+			copied = false;
+		}, 1000);
+	}
 	
 	const print = () => {
 		window.print();
@@ -84,7 +90,8 @@
 					toastStore.trigger(te);
 					userRations.update((rations) => {
 						let index = rations.findIndex((r) => r.id == $page.params.id);
-						rations[index] = ration;
+						Object.assign(rations[index],ration);
+						// rations[index] = ration;
 						return rations;
 					});
 				} catch (error) {
@@ -99,21 +106,25 @@
 	</div>
 	<Accordion class="my-3 print:hidden text-center max-w-3xl mx-auto">
 		<AccordionItem>
-			<svelte:fragment slot="lead"
-				><svg
-					class="w-6 h-6 ml-2 text-gray-800 dark:text-white"
-					aria-hidden="true"
-					xmlns="http://www.w3.org/2000/svg"
-					fill="currentColor"
-					viewBox="0 0 20 20"
-				>
-					<path
-						d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z"
-					/>
-				</svg></svelte:fragment
+			<svelte:fragment slot="summary"
+				><p class={$currentUser ? '' : 'line-through'}>Διαμοιρασμός</p></svelte:fragment
 			>
-			<svelte:fragment slot="summary">Αποστολή E-mail</svelte:fragment>
-			<svelte:fragment slot="content" ><div class="card p-4 card-hover"></div>  test</svelte:fragment>
+			<svelte:fragment slot="content"
+				><div class="flex flex-col p-4">
+						<p>Μοιράσου ή στείλε σε κάποιον το σιτηρέσιο στέλοντας τον παρακάτω σύνδεσμο.</p>
+						<p class="bg-success-600 w-fit mx-auto rounded-lg border-1 shadow-lg">
+							{$page.url.host.concat('/ration/', $page.params.id)}
+						</p>
+						<button
+							class="koumpi w-fit mx-auto"
+							use:clipboard={$page.url.host.concat('/ration/', $page.params.id)}
+							on:click={onClickHandler}
+							disabled={copied}
+						>
+							{copied ? 'Αντιγράφτηκε 👍' : 'Αντιγραφή στο πρόχειρο'}</button
+						>
+				</div>
+			</svelte:fragment>
 		</AccordionItem></Accordion
 	>
 {:else}

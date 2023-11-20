@@ -24,5 +24,5 @@
     }
     
 
-}} bind:checked={selected}>Διαδικασία Τεστ</SlideToggle>
+}} bind:checked={selected}>Διαδικασία Εξέτασης</SlideToggle>
 		<button class="koumpi max-w-md mx-auto" on:click={()=>{pb.authStore.clear();invalidateAll().then(r=>{goto('/admin')});}}>Αποσύνδεση Διαχειριστή</button>

@@ -251,7 +251,7 @@
 						>
 						<p class="whitespace-pre-line"> & </p><a class="hover:underline" href="https://www.ee.auth.gr">ΤΗΜΜΥ ΑΠΘ</a></div><br />
 						<div class="text-slate-100 dark:text-secondary-300 print:hidden">
-							© {new Date().getFullYear()} | Powered by
+							© {new Date().getFullYear()} | Developed with
 							<a class="text-primary-500 hover:underline" href="https://kit.svelte.dev/"
 								>SvelteKit</a
 							>
