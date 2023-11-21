@@ -137,7 +137,7 @@
 		<h2>Βήμα 2: Επιλογή Ζώου και Διατροφικές Ανάγκες</h2>
 	</div>
 	<div class="info" style="">
-		Σημείωση: Προσθέστε τροφές πατώντας στο "Δημόσιες Τροφές".<br />
+		Σημείωση: Προσθέστε προδιαγραφές ζώου, ή χειροκίνητες δικές σας.<br />
 	</div>
 	<div class="print:hidden">
 	<AnimalFeedRequirements bind:form animals={animals?.animals} bind:animalInfo={info}/>
@@ -193,7 +193,7 @@
 	</div>
 	<div class="hidden print:block text-center text-lg my-3">Πίνακας Σιτηρεσίου</div>
 	<div class="info" style="">
-		Σημείωση: Προσθέστε τροφές πατώντας στο "Δημόσιες Τροφές".<br />
+		Σημείωση: Προσθέστε τροφές πατώντας στο "Τροφές".<br />
 	</div>
 
 	{#if !loadedTable}
