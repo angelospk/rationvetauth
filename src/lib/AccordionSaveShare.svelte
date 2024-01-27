@@ -15,7 +15,7 @@
 	import { enhance } from '$app/forms';
 	import { userRations } from './stores/data';
 	import { page } from '$app/stores';
-	import { RecordService, type RecordModel } from 'pocketbase';
+	import type { RecordModel } from 'pocketbase';
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'Δεν μπόρεσε να αποθηκευτεί το σιτηρέσιο.',
@@ -27,7 +27,6 @@
 		target: 'popupHover',
 		placement: 'bottom'
 	};
-	let send2Email: string;
 	let record: State | RecordModel;
 	export let currentState: State;
 	export let currentDate: string;
