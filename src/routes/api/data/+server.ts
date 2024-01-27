@@ -1,5 +1,4 @@
 
-import { fetchXLSXdata } from "../../../getdata";
 import type { RequestHandler } from './$types';
 import { pb } from "$lib/pocketbase";
 let cachedData = null;
