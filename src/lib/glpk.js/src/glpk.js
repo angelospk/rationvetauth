@@ -1,6 +1,6 @@
 import GLPK from './.build/glpk.js';
 const wasmPath = process.env.NODE_ENV === 'production'
-  ? 'https://my-vercel-project.vercel.app/glpk.wasm' // Production path
+  ? 'https://rationvetauth.vercel.app/glpk.wasm' // Production path
   : '/glpk.wasm'; // Development path
 
 const glpk = function (wasmBinary=null) {
