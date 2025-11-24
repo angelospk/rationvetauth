@@ -34,7 +34,7 @@ graph TD
     E --> G[Επιλογή Ζώου]
     G --> H[Επιλογή Τροφών]
     H --> I[Ορισμός Περιορισμών]
-    I --> J[Επίλυση (GLPK)]
+    I --> J[Επίλυση με GLPK]
     J --> K[Προβολή Αποτελέσματος]
     K --> L[Αποθήκευση]
 ```
@@ -46,12 +46,12 @@ graph TD
 ```mermaid
 graph LR
     subgraph Client [Browser]
-        UI[User Interface (Svelte)]
+        UI[User Interface ]
         Logic[App Logic]
         Solver[GLPK.js / Yalps]
     end
     subgraph Server [Cloud / Local]
-        PB[PocketBase (Auth & DB)]
+        PB[PocketBase - Auth & DB]
     end
     UI --> Logic
     Logic --> Solver
