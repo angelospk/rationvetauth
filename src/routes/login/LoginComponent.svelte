@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
-	import { currentUser, pb } from '$lib/pocketbase';
-	import { userFeeds, userRations } from '$lib/stores/data.js';
+	import { authState, pb } from '$lib/pocketbase.svelte';
+	import { appState } from '$lib/stores/data.svelte';
 	import SignInGoogle from '$lib/SignInGoogle.svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
@@ -14,18 +14,18 @@
 		timeout: 3000
 	};
 	let formData: FormData;
-	let username: String;
-	let password: String;
-	let text = 'loading';
-	let loading = false;
-	let showVerification = false;
-	let emailVerif = '';
+	let username = $state("");
+	let password = $state("");
+	let text = $state('loading');
+	let loading = $state(false);
+	let showVerification = $state(false);
+	let emailVerif = $state('');
 	async function sendVerif() {
 		await pb.collection('users').requestVerification(emailVerif);
 		te.message = 'Στάλθηκε email επιβεβαίωσης. Δες σε λίγο τα εισερχόμενά σου';
 		toastStore.trigger(te);
 	}
-	export let cl: string = '';
+	let { cl = '' } = $props();
 </script>
 
 <div class="flex-col p-6 {cl}">
@@ -43,8 +43,9 @@
 				return async ({ result }) => {
 					loading = false;
 					try {
-						if ((result.status = 200 && result?.data.verified)) {
-							pb.authStore.loadFromCookie(result.data.st);
+						if (result.type === 'success' && result.data?.verified) {
+							const data = result.data as any;
+							pb.authStore.loadFromCookie(data.st);
 							te.message = 'Επιτυχής είσοδος!';
 							te.background = 'bg-green-600';
 							toastStore.trigger(te);
@@ -52,19 +53,20 @@
 								(await pb.collection('feeds').getFullList({
 									sort: '-created'
 								})) || [];
-							if (d.length > 0) userFeeds.set(d);
+							if (d.length > 0) appState.userFeeds = d;
 							let r = await pb.collection('rations').getFullList({
 								sort: '-created'
 							});
-							if (r.length > 0) userRations.set(r);
+							// Cast to any to bypass loose typing of State vs RecordModel
+							if (r.length > 0) appState.userRations = r as any;
 							try {
 								goto('/');
 							} catch (error) {
 								console.log(error);
 							}
-						} else if (!result?.data.verified) {
+						} else if (result.type === 'success' && !result.data?.verified) {
 							showVerification = true;
-							emailVerif = result?.data?.email;
+							emailVerif = (result.data as any)?.email;
 						}
 					} catch (e) {
 						console.log(e);
@@ -125,7 +127,7 @@
 						<p class="">
 							Έχει σταλεί μήνυμα επιβεβαίωσης στο mail σου! Επιβεβαίωσε το email σου πριν συνδεθείς!
 						</p>
-						<button class="koumpi text-xs sm:text-base" on:click={sendVerif}
+						<button class="koumpi text-xs sm:text-base" onclick={sendVerif}
 							>Ζήτα ξανά email επιβεβαίωσης</button
 						>
 					</div>

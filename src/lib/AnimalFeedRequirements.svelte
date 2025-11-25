@@ -6,14 +6,18 @@
 	import type { AnimalInfo, Form } from "./stores/types";
 	import { transformObject } from "./greekfuncts";
 	import { fade, fly } from "svelte/transition";
-export let form:any;
-  let selection = '';
-    let subselection = '';
-    let animal:string="poultry";
-    let formData = {}; // To hold the data to be displayed based on selections
-  export let animals;
-  export let animalInfo:AnimalInfo;
-  $:{animalInfo={animal:animal, type:{selection, subselection}}}
+
+    let { form = $bindable(), animals, animalInfo = $bindable() } = $props();
+
+    let selection = $state('');
+    let subselection = $state('');
+    let animal = $state("poultry");
+    let formData = $state({}); // To hold the data to be displayed based on selections
+
+    $effect(() => {
+        animalInfo = {animal: animal, type: {selection, subselection}};
+    });
+
   function reset(){
     selection=''
     subselection=''
@@ -38,7 +42,7 @@ export let form:any;
   }
 
     </script>
-<form on:submit|preventDefault={handleSubmit} >
+<form onsubmit={(e)=>{e.preventDefault(); handleSubmit(e)}} >
 <TabGroup 
 	justify="justify-center"
 	active="variant-filled-secondary"
@@ -49,16 +53,16 @@ export let form:any;
 	class="bg-surface-100-800-token w-fit mx-auto mb-2"
   name="animal"
 >
-	<Tab bind:group={animal} value="poultry" name="animal" on:click={reset}   selected={animal=="poultry"}>
-		<svelte:fragment slot="lead"></svelte:fragment>
+	<Tab bind:group={animal} value="poultry" name="animal" onclick={reset}   selected={animal=="poultry"}>
+		{#snippet lead()}{/snippet}
 		<span>Πουλερικά</span>
 	</Tab>
-    <Tab bind:group={animal} value="swine" name="animal" on:click={reset}  selected={animal=="swine"}>
-		<svelte:fragment slot="lead"></svelte:fragment>
+    <Tab bind:group={animal} value="swine" name="animal" onclick={reset}  selected={animal=="swine"}>
+		{#snippet lead()}{/snippet}
 		<span>Χοίροι</span>
 	</Tab>
-  <Tab bind:group={animal} value="custom" name="animal" on:click={reset}  selected={animal=="custom"}>
-		<svelte:fragment slot="lead"></svelte:fragment>
+  <Tab bind:group={animal} value="custom" name="animal" onclick={reset}  selected={animal=="custom"}>
+		{#snippet lead()}{/snippet}
 		<span>Προσαρμοσμένο</span>
 	</Tab>
 
@@ -67,7 +71,7 @@ export let form:any;
 
 
 {#if animal!="custom"}
-  <select transition:fade={{ duration:400}} name="selection" bind:value={selection} on:submit={()=>{
+  <select transition:fade={{ duration:400}} name="selection" bind:value={selection} onsubmit={()=>{
     formData={...formData, animal:animal}
   }}>
     
@@ -89,5 +93,3 @@ export let form:any;
   {/if}
   {/if}
 </form>
-
-

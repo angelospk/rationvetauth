@@ -1,6 +1,6 @@
 
 import type { RequestHandler } from './$types';
-import { pb } from "$lib/pocketbase";
+import { pb } from "$lib/pocketbase.svelte";
 let cachedData = null;
 let cacheTime = null;
 export const GET = (async () =>{

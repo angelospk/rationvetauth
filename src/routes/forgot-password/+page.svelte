@@ -1,9 +1,10 @@
-<script>
-import { currentUser, pb } from "$lib/pocketbase";
+<script lang="ts">
+import { authState, pb } from "$lib/pocketbase.svelte";
     
-let email = '';
-let res;
-    const handleSubmit = async () => {
+let email = $state('');
+let res = $state();
+    const handleSubmit = async (e: Event) => {
+		e.preventDefault();
         try {
             await pb.collection("users").requestPasswordReset(email)
             alert('Στάλθηκε e-mail αλλαγής κωδικού!');
@@ -15,9 +16,9 @@ let res;
 </script>
 
 <main>
-    {#if !$currentUser}
+    {#if !authState.user}
     <h1 class="text-3xl mb-6">Ξέχασες τον κωδικό σου;</h1>
-    <form on:submit|preventDefault={handleSubmit}>
+    <form onsubmit={handleSubmit}>
         <div class="flex flex-col justify-center space-y-4 max-w-lg mx-auto">
         <p class="text-xl">
             Email: 

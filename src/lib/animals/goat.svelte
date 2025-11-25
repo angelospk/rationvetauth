@@ -1,32 +1,58 @@
-<script>
-    let goatType = ""; // This will store the selected type for the goat (dairy, meat, etc.)
-    let stage = ""; // This will store the selected stage for the goat
-    let bodyWeight = 0; // This will store the body weight input by the user
+<script lang="ts">
+    import { GOAT_VALUES } from '$lib/animaldata';
 
-    // Use the dictionary values for GOAT_VALUES from the Python script
-    const GOAT_VALUES = {
-        // ... (the same dictionary structure as the Python script)
-    };
+    let goatType = $state(""); // This will store the selected type for the goat (dairy, meat, etc.)
+    let stage = $state(""); // This will store the selected stage for the goat
+    let bodyWeight = $state(0); // This will store the body weight input by the user
+    let milk_yield = $state(0); // Added missing variable
 
-    let requirements = {};
+    let requirements = $state({
+        DMI: 0,
+        CP: 0,
+        ME: 0,
+        Calcium: 0,
+        Phosphorus: 0,
+        Magnesium: 0,
+        VitaminA: 0,
+        VitaminD: 0,
+        VitaminE: 0
+    });
 
     function computeRequirements() {
-        let stageValues = GOAT_VALUES[goatType][stage];
+        if (!goatType || !stage || !(GOAT_VALUES as any)[goatType] || !(GOAT_VALUES as any)[goatType][stage]) return;
+
+        let stageValues = (GOAT_VALUES as any)[goatType][stage];
 
         let dmi_min = stageValues["DMI"][0];
         let dmi_max = stageValues["DMI"][1];
         requirements.DMI = (bodyWeight ** 0.75) * ((dmi_min + dmi_max) / 2);
 
-        requirements.CP = requirements.DMI * stageValues["CP%"] / 100;
+        // Check if CP% or CP exists
+        let cpVal = stageValues["CP%"] || stageValues["CP"];
+        requirements.CP = requirements.DMI * cpVal / 100;
+
         if (goatType == "dairy" && stage == "lactating") {
             // Adjust for milk yield if any (you can expand this with a milk input)
             requirements.CP += milk_yield * 0.03;
         }
 
         requirements.ME = requirements.DMI * stageValues["ME"];
-        requirements.Calcium = requirements.DMI * stageValues["Calcium%"];
-        requirements.Phosphorus = requirements.DMI * stageValues["Phosphorus%"];
-        requirements.Magnesium = requirements.DMI * stageValues["Magnesium%"];
+
+        // Handle variations in key naming (e.g. Calcium vs Calcium%) if necessary,
+        // but based on animaldata.js, GOAT_VALUES uses Calcium without %, except for dairy maybe?
+        // Checking animaldata.js: GOAT_VALUES uses "Calcium", "Phosphorus" (no %).
+        // But the original code multiplied by DMI * stageValues["Calcium%"].
+        // If the data has values like 0.9 (which looks like percent), then we should probably treat it as percent if intended,
+        // or just strict multiplication if it's absolute.
+        // Looking at data: "Calcium": 0.9. If it's %, it is 0.9%. If it's grams?
+        // The original code was `requirements.Calcium = requirements.DMI * stageValues["Calcium%"];`
+        // But GOAT_VALUES has "Calcium" key.
+        // Let's assume the key in data is "Calcium" and it acts as a percentage or factor.
+
+        requirements.Calcium = requirements.DMI * (stageValues["Calcium"] || stageValues["Calcium%"] || 0);
+        requirements.Phosphorus = requirements.DMI * (stageValues["Phosphorus"] || stageValues["Phosphorus%"] || 0);
+        requirements.Magnesium = requirements.DMI * (stageValues["Magnesium"] || stageValues["Magnesium%"] || 0);
+
         requirements.VitaminA = stageValues["VitaminA"];
         requirements.VitaminD = stageValues["VitaminD"];
         requirements.VitaminE = stageValues["VitaminE"];
@@ -35,23 +61,31 @@
 
 <select bind:value={goatType}>
     <option value="">-- select goat type --</option>
-    <option value="dry">Dry</option>
-    <option value="early_lactation">Early Lactation</option>
-    <option value="mid_late_lactation">Mid/Late Lactation</option>
-    <option value="peak">Peak</option>
+    <option value="meat">Meat</option> <!-- Fixed value to match key in animaldata.js -->
+    <option value="dairy">Dairy</option>
 </select>
 
 <select bind:value={stage}>
     <option value="">-- select stage --</option>
-    <option value="maintenance">Maintenance</option>
-    <option value="growth">Growth</option>
-    <option value="lactating">Lactating</option>
-    <option value="dry_pregnant">Dry Pregnant</option>
+    <!-- keys in meat: kid, growing, mature -->
+    <!-- keys in dairy: lactating, dry -->
+    {#if goatType === 'meat'}
+        <option value="kid">Kid</option>
+        <option value="growing">Growing</option>
+        <option value="mature">Mature</option>
+    {:else if goatType === 'dairy'}
+        <option value="lactating">Lactating</option>
+        <option value="dry">Dry</option>
+    {/if}
 </select>
 
 <input type="number" bind:value={bodyWeight} placeholder="Enter body weight (kg)" />
 
-<button on:click={computeRequirements}>Compute Nutritional Requirements</button>
+{#if goatType === 'dairy' && stage === 'lactating'}
+    <input type="number" bind:value={milk_yield} placeholder="Milk yield (kg)" />
+{/if}
+
+<button onclick={computeRequirements}>Compute Nutritional Requirements</button>
 
 <ul>
     {#if stage && bodyWeight}

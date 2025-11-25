@@ -1,19 +1,17 @@
 <script lang="ts">
 	import { ListBox, ListBoxItem, getModalStore } from '@skeletonlabs/skeleton';
 	import type { Feed } from './stores/types';
-	import { userFeeds, feeds } from './stores/data';
+	import { appState } from './stores/data.svelte';
 
 	// Props
 	/** Exposes parent props to this component. */
-	export let parent: any;
+	let { parent }: {parent: any} = $props();
 	
 	// Local
-	let feed:Feed;
+	let feed = $state<Feed>();
 	const modalStore = getModalStore();
-	let totalfeeds:Feed[];
-$:{
-totalfeeds=[...$userFeeds, ...$feeds]
-}
+	let totalfeeds = $derived([...appState.userFeeds, ...appState.feeds]);
+
 	// Handle Form Submission
 	function onFormSubmit(): void {
 		if ($modalStore[0].response) $modalStore[0].response(feed);
@@ -45,8 +43,8 @@ totalfeeds=[...$userFeeds, ...$feeds]
 		</ListBox> -->
 		<!-- prettier-ignore -->
 		<footer class="modal-footer {parent.regionFooter}">
-        <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
-        <button class="btn {parent.buttonPositive}" on:click={onFormSubmit}>Άνοιγμα</button>
+        <button class="btn {parent.buttonNeutral}" onclick={parent.onClose}>{parent.buttonTextCancel}</button>
+        <button class="btn {parent.buttonPositive}" onclick={onFormSubmit}>Άνοιγμα</button>
     </footer>
 	</div>
 {/if}

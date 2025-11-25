@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '$lib/pocketbase.svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
-	export let text:string;
+	let { text } = $props();
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'Δεν μπόρεσε να γίνει είσοδος μέσω Google. Δοκιμάστε άλλη μέθοδο',
@@ -23,7 +23,7 @@
 </script>
 
 <button
-	on:click|preventDefault={loginWithGoogle}
+	onclick={(e)=>{e.preventDefault(); loginWithGoogle()}}
 	class="google-button btn text-xs sm:text-base text-white transition-colors duration-200 transform bg-blue-300 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
 >
 	<img

@@ -1,20 +1,20 @@
 <script lang="ts">
 	import EditableTable from '$lib/EditableTable.svelte';
 	import RationInfo from '$lib/RationInfo.svelte';
-	import { currentUser, pb } from '$lib/pocketbase';
+	import { authState, pb } from '$lib/pocketbase.svelte';
 	import { getModalStore, getToastStore, type ModalSettings, type ToastSettings } from '@skeletonlabs/skeleton';
 	import type { AnimalInfo, AnimalReqs, Form, State } from '$lib/stores/types';
 	import AnimalFeedRequirements from '$lib/AnimalFeedRequirements.svelte';
 	import { page } from '$app/stores';
-	import { metrics } from '$lib/stores/data';
+	import { appState } from '$lib/stores/data.svelte';
 	import { reverseTransformObject } from '$lib/greekfuncts';
 	import { onMount } from 'svelte';
 	import AccordionSaveShare from '$lib/AccordionSaveShare.svelte';
 	import { fly } from 'svelte/transition';
 	let animals = $page.data;
-	let metr = $metrics;
-	let userReqs:AnimalReqs[];
-	let form: AnimalReqs = { reqs: [], fractions: {} };
+	let metr = appState.metrics;
+	let userReqs = $state<AnimalReqs[]>([]);
+	let form = $state<AnimalReqs>({ reqs: [], fractions: {} });
 
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
@@ -34,7 +34,7 @@
 		
 		},
 		buttonTextCancel: 'Ακύρωση',
-		meta: {metrs: $metrics.filter(x=>![...form.reqs.map(y=>y.Title),"weight","Title"].includes(x.Title))}
+		meta: {metrs: appState.metrics.filter(x=>![...form.reqs.map(y=>y.Title),"weight","Title"].includes(x.Title))}
 		// backdropClasses: "!blur-1"
 	};
 
@@ -66,7 +66,7 @@
 	// Returns the updated response value
 	response: async (r: string) => {
 		form.reqs=form.reqs.filter(x=>x.type!="any")
-		let resp=await pb.collection('requirements').create({user:$currentUser?.id||"", Title:r, requirements:form})
+		let resp=await pb.collection('requirements').create({user:authState.user?.id||"", Title:r, requirements:form})
 		if (resp){
 			console.log("success");
 		}
@@ -74,22 +74,22 @@
 };
 	// let metricRequirements=metrics
 	let send2Email: string;
-	let record: State;
-	let loadedTable: boolean = false;
-	let currentState: State;
-	let info:AnimalInfo;
-	let rationName = '';
-	let producerName = $currentUser?.name || '';
-	let currentDate: string;
-	let addMetric:string="Διάλεξε ΘΟ"
-	let mounted:Boolean;
-	let test:boolean;
+	let record = $state<State>();
+	let loadedTable = $state(false);
+	let currentState = $state<State>();
+	let info = $state<AnimalInfo>();
+	let rationName = $state('');
+	let producerName = $state(authState.user?.name || '');
+	let currentDate = $state<string>('');
+	let addMetric = $state("Διάλεξε ΘΟ");
+	let mounted = $state(false);
+	let test = $state(false);
 
 	onMount(async()=>
 {	mounted=true;
 	userReqs=await pb.collection('requirements').getFullList()||[];
 	modalLoadReqs.meta={metrs:userReqs};
-	if ($currentUser.Student){
+	if (authState.user?.Student){
 		console.log("student")
 		let l=await pb.collection('settings').getOne("ucz1zj2wgphtqc3")
 		test=l?.test
@@ -150,7 +150,7 @@
 			<div class="card p-3 flex space-x-3 overflow-x-auto">
 				
 			{#if form.reqs.length==0}
-			<div  class="btn btn-sm variant-filled mx-auto text-xs h-4"><button on:click={()=>{modalStore.trigger(modalLoadReqs)}} >Άνοιγμα</button></div>
+			<div  class="btn btn-sm variant-filled mx-auto text-xs h-4"><button onclick={()=>{modalStore.trigger(modalLoadReqs)}} >Άνοιγμα</button></div>
 			{/if}
 			
 			{#each form.reqs as req}
@@ -177,11 +177,11 @@
 			<div class="ml-auto">
 				<button
 				class="koumpi mt-2 " id="b2"
-				on:click={() => {
+				onclick={() => {
 					modalStore.trigger(modal);
 				}}>+/- ΘΟ</button
 			>
-			<p><button on:click={()=>{modalStore.trigger(saveReqs)}} class="koumpi mt-2">Αποθήκευση</button></p>
+			<p><button onclick={()=>{modalStore.trigger(saveReqs)}} class="koumpi mt-2">Αποθήκευση</button></p>
 		</div>
 		</div>
 	{/if}
@@ -199,7 +199,9 @@
 	{#if !loadedTable}
 		<EditableTable bind:rationName bind:producerName bind:currentState linear={true} requirementsString={reverseTransformObject(form)} requirements={form} bind:test />
 	{:else}
-		<EditableTable stage2Read={record} bind:currentState />
+		{#if record}
+			<EditableTable stage2Read={record} bind:currentState />
+		{/if}
 	{/if}
 	
 

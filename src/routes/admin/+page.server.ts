@@ -1,8 +1,8 @@
 
 import { redirect } from '@sveltejs/kit'
 import type { Actions } from './$types'
-import { pb } from '$lib/pocketbase'
-import { error } from 'console';
+import { pb } from '$lib/pocketbase.svelte'
+import { error } from '@sveltejs/kit';
 export const actions: Actions = {
     login: async ({  request }) => {
       const data = Object.fromEntries(await request.formData()) as {
@@ -17,7 +17,7 @@ export const actions: Actions = {
           .authWithPassword(data.email, data.password)
       } catch (e) {
         console.error(e)
-        throw error (e)
+        throw error (500, e)
       }
       if (pb.authStore.model && pb.authStore.isAdmin){return {admin:true, st:pb.authStore.exportToCookie()}}
       else {return {admin: false, email:data.email}}

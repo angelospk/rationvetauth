@@ -4,7 +4,7 @@
 
 	// Props
 	/** Exposes parent props to this component. */
-	export let parent: any;
+	let { parent } = $props();
 	//console out parrent element
     
 	// Local
@@ -29,8 +29,5 @@
         <input type="number" min=0 max=100 bind:value={cons.high}/>
         </div>
         {/each}
-	
-
-		
 	</div>
 {/if}

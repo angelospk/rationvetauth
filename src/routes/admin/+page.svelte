@@ -4,8 +4,8 @@
 	import LoadingCircles from '$lib/Loading Circles.svelte';
 	import SignInFacebook from '$lib/SignInFacebook.svelte';
 	import SignInGoogle from '$lib/SignInGoogle.svelte';
-	import { pb } from '$lib/pocketbase';
-	import { userFeeds } from '$lib/stores/data';
+	import { pb } from '$lib/pocketbase.svelte';
+	import { appState } from '$lib/stores/data.svelte';
 	import { getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 
@@ -15,20 +15,20 @@
 		timeout: 3000
 	};
 	let formData: FormData;
-	let username: String;
-	let password: String;
+	let username = $state("");
+	let password = $state("");
 	// export let data:PageData
-	let text = 'loading';
-	let loading = false;
-	let showVerification = false;
-	let emailVerif = '';
+	let text = $state('loading');
+	let loading = $state(false);
+	let showVerification = $state(false);
+	let emailVerif = $state('');
 	async function sendVerif() {
 		await pb.collection('users').requestVerification(emailVerif);
 		te.message = 'Στάλθηκε email επιβεβαίωσης. Δες σε λίγο τα εισερχόμενά σου';
 		toastStore.trigger(te);
 	}
 
-	export let cl: string = '';
+	let { cl = '' } = $props();
 	onMount(async () => {
 		if (pb.authStore.isAdmin) goto('/admin/dashboard');
 		pb.authStore.clear();
@@ -54,9 +54,9 @@
 					loading = false;
 					console.log(result);
 
-					// console.log(form);
-					if ((result.status = 200 && result?.data?.admin)) {
-						let d = pb.authStore.loadFromCookie(result.data.st);
+					if (result.type === 'success' && result.data?.admin) {
+						const data = result.data as any;
+						let d = pb.authStore.loadFromCookie(data.st);
 						try {
 							// get an up-to-date auth store state by veryfing and refreshing the loaded auth model (if any)
 							pb.authStore.isValid && (await invalidateAll());

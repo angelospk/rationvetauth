@@ -1,6 +1,6 @@
 <script lang="ts">
 
-	import { pb } from './pocketbase';
+	import { pb } from '$lib/pocketbase.svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import { getModalStore } from '@skeletonlabs/skeleton';
@@ -8,6 +8,14 @@
 	import type { Column, Feed } from './stores/types';
 	import FeedDetails from './FeedDetails.svelte';
 	const modalStore = getModalStore();
+
+	let {
+		detailed,
+		records = $bindable([]),
+		objectData = $bindable(),
+		metrics
+	} = $props();
+
 	const modal: ModalSettings = {
 		type: 'confirm',
 		// Data
@@ -31,12 +39,10 @@
 			}
 		}
 	};
-	export let detailed: boolean;
-	export let records:Feed[];
-	export let objectData: Feed;
-	export let metrics: Column[];
-	let record:Feed = objectData;
-	$: objectData = record;
+
+	let record = $state(objectData);
+	$effect(() => { objectData = record; });
+
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'This message will auto-hide after 3 seconds.',
@@ -67,7 +73,7 @@
 				<p class="text-black">Τίτλος:</p>
 				<input class="rounded-lg" type="text" bind:value={objectData.Title} />
 			</div>
-			<button class="sm:ml-3" on:click={del}>
+			<button aria-label="Delete Feed" class="sm:ml-3" onclick={del}>
 				<svg
 					class="w-6 h-6 text-red-800 dark:text-white"
 					aria-hidden="true"
@@ -87,7 +93,7 @@
 		</div>
 <FeedDetails detailed={detailed} metrics={metrics} bind:objectData={objectData} />
 	</div>
-	<button class="mt-3 koumpi" on:click|preventDefault={saveChanges}>Αποθήκευση</button>
+	<button class="mt-3 koumpi" onclick={(e)=>{e.preventDefault(); saveChanges()}}>Αποθήκευση</button>
 </div>
 
 <style>

@@ -1,16 +1,16 @@
 <script lang="ts">
 	// Props
 	/** Exposes parent props to this component. */
-	export let parent: any;
+	let { parent }: {parent: any} = $props();
 
 	// Stores
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { userRations } from './stores/data';
-	import type { State } from 'flowbite-svelte/dist/carousel/Carousel.svelte';
+	import { appState } from './stores/data.svelte';
+	import type { State } from './stores/types';
 	const modalStore = getModalStore();
 
 	// Form Data
-	let selected:State;
+	let selected = $state<State>();
 	// We've created a custom submit function to pass the response and close the modal.
 	function onFormSubmit(): void {
 		if ($modalStore[0].response) $modalStore[0].response(selected);
@@ -35,23 +35,16 @@
 				<span>Σιτηρέσιο</span>
 				<!-- select from different user rations -->
 				<select class="input" bind:value={selected}>
-					{#each $userRations as ration}
+					{#each appState.userRations as ration}
 						<option value={ration}>{ration.rationName}</option>
 					{/each}
+				</select>
 			</label>
-			<!-- <label class="label">
-				<span>Phone Number</span>
-				<input class="input" type="tel" bind:value={formData.tel} placeholder="Enter phone..." />
-			</label>
-			<label class="label">
-				<span>Email</span>
-				<input class="input" type="email" bind:value={formData.email} placeholder="Enter email address..." />
-			</label> -->
 		</form>
 		<!-- prettier-ignore -->
 		<footer class="modal-footer {parent.regionFooter}">
-        <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
-        <button class="btn {parent.buttonPositive}" on:click={onFormSubmit}>Φόρτωση</button>
+        <button class="btn {parent.buttonNeutral}" onclick={parent.onClose}>{parent.buttonTextCancel}</button>
+        <button class="btn {parent.buttonPositive}" onclick={onFormSubmit}>Φόρτωση</button>
     </footer>
 	</div>
 {/if}

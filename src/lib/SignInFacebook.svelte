@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '$lib/pocketbase.svelte';
     import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
-	export let text:string;
+	let { text } = $props();
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 	message: 'Δεν μπόρεσε να γίνει είσοδος μέσω Google. Δοκιμάστε άλλη μέθοδο',
@@ -25,7 +25,7 @@
 
 
 <button
-	on:click|preventDefault={loginWithFacebook}
+	onclick={(e)=>{e.preventDefault(); loginWithFacebook()}}
 	class="facebook-button text-xs sm:text-base btn flex items-center justify-center text-white transition-colors duration-200 transform bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:bg-blue-500 focus:ring focus:ring-blue-700 focus:ring-opacity-50 active:bg-blue-700 px-4 py-2"
 >
 	<img

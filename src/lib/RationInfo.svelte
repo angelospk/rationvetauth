@@ -1,8 +1,10 @@
 <script lang="ts">
-	export let rationName: string = '';
-	export let producerName: string;
-	export let currentDate = new Date().toISOString().split('T')[0];
-	export let editable: boolean = false;
+	let {
+		rationName = $bindable(''),
+		producerName = $bindable(''),
+		currentDate = $bindable(new Date().toISOString().split('T')[0]),
+		editable = false
+	} = $props();
 </script>
 
 
@@ -97,5 +99,3 @@
 
 
 <br class="my-3">
-
-

@@ -5,7 +5,7 @@
 	import EditableTable from '$lib/EditableTable.svelte';
 	import { Accordion,  AccordionItem, getToastStore, type PopupSettings, type ToastSettings } from '@skeletonlabs/skeleton';
 	// Your Svelte component
-	import { currentUser, pb } from '$lib/pocketbase';
+	import { authState, pb } from '$lib/pocketbase.svelte';
 	import type { State } from '$lib/stores/types';
 	import RationInfo from '$lib/RationInfo.svelte';
 	import { page } from '$app/stores';
@@ -23,17 +23,18 @@
 		placement: 'bottom'
 	};
 	let send2Email:string;
-	let record:State;
-	let loadedTable:boolean=false;
-	let currentState:State;
-	let rationName = '';
-	let producerName = $currentUser?.name||"";
-	let currentDate: string;
+	let record = $state<State>();
+	let loadedTable = $state(false);
+	let currentState = $state<State>();
+	let rationName = $state('');
+	let producerName = $state(authState.user?.name||"");
+	let currentDate = $state<string>();
+
 	async function saveRation() {
 	let ration2save={...currentState}
 	ration2save.date=currentDate
-	ration2save.user=$currentUser?.id
-	if (ration2save.producerName=="") ration2save.producerName=$currentUser?.name
+	ration2save.user=authState.user?.id
+	if (ration2save.producerName=="") ration2save.producerName=authState.user?.name
 	console.log(ration2save)
 	try {
 		const record= await pb.collection('rations').create(ration2save)
@@ -46,29 +47,31 @@
 		te.background="bg-red-600"
 		toastStore.trigger(te);
 	}}
-	let mounted:Boolean;
+	let mounted = $state(false);
 onMount( ()=>{
 	mounted=true;
 
 })
 async function loadration(){
-	
-	
 	try {
 		record=await pb.collection('rations').getOne($page.data.ration_id)
 	} catch (error) {
 		console.log(error)
 	}
 	loadedTable=true;
-	rationName=record?.rationName;
-	producerName=record?.producerName;
+	rationName=record?.rationName ?? '';
+	producerName=record?.producerName ?? '';
 
 }
 const print = () => {
 		window.print();
 	};
-$:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
-	}}
+
+$effect(() => {
+	if ($page.data?.ration_id) {
+		loadration().then(() => console.log("loaded"));
+	}
+});
 	
 </script>
 
@@ -82,7 +85,7 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 	</div>
 	{/if}
 	{#if mounted}
-	<form in:fly={{ y: 200, duration: 1000 }} id="FeedRationForm" on:submit|preventDefault>
+	<form in:fly={{ y: 200, duration: 1000 }} id="FeedRationForm" onsubmit={(e) => e.preventDefault()}>
 		
 		<div class="heading text-3xl print:hidden">
 			<h2>Βήμα 1: Γενικές Πληροφορίες</h2>
@@ -130,4 +133,4 @@ $:{if ($page.data?.ration_id){  loadration().then(()=>console.log("loaded"))
 
 
 
-</style>	
+</style>

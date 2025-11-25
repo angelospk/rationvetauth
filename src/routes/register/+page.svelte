@@ -1,7 +1,7 @@
 <script lang="ts">
 	import SignInGoogle from '../../lib/SignInGoogle.svelte';
 
-	import { currentUser, pb } from '$lib/pocketbase';
+	import { authState, pb } from '$lib/pocketbase.svelte';
 	import SignInFacebook from '$lib/SignInFacebook.svelte';
 	import { enhance } from '$app/forms';
 	import LoadingCircles from '$lib/Loading Circles.svelte';
@@ -9,7 +9,7 @@
 	import { RadioGroup, RadioItem, getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
-	import { userFeeds } from '$lib/stores/data';
+	import { appState } from '$lib/stores/data.svelte';
 	import Error from '../+error.svelte';
 	import { P } from 'flowbite-svelte';
 	const toastStore = getToastStore();
@@ -17,16 +17,16 @@
 		message: 'This message will auto-hide after 3 seconds.',
 		timeout: 3000
 	};
-	let username: String;
-	let password: String;
-	let loading = false;
-	let passwordConfirm: string;
-	let text: string;
-	let val = 0;
-	let name: string;
+	let username = $state("");
+	let password = $state("");
+	let loading = $state(false);
+	let passwordConfirm = $state("");
+	let text = $state("");
+	let val = $state(0);
+	let name = $state("");
 </script>
 
-{#if $currentUser}
+{#if authState.user}
 	<p>Είσαι ήδη εγγεργραμμένος!</p>
 	<a
 		href="/"
@@ -59,7 +59,7 @@
 								goto('/login');
 							} catch (e) {
 								console.log(e);
-								text = 'Δεν μπόρεσε να πραγματοποιηθεί εγγραφή.'.concat(e);
+								text = 'Δεν μπόρεσε να πραγματοποιηθεί εγγραφή.'.concat(String(e));
 								te.background = 'bg-red-500';
 								te.message = text;
 								toastStore.trigger(te);
