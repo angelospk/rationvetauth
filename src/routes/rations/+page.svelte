@@ -2,12 +2,12 @@
 	import type { Feed } from '$lib/stores/types';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { userRations } from '$lib/stores/data';
+	import { appState } from '$lib/stores/data.svelte';
 	import { fly } from 'svelte/transition';
 	function totalWeight(selfeeds: Feed[]) {
 		return selfeeds.reduce((acc, curr) => acc + <number>curr.weight || 0, 0);
 	}
-	let mounted: boolean;
+	let mounted = $state(false);
 	onMount(() => {
 		mounted = true;
 	});
@@ -21,7 +21,7 @@
 		Τα Σιτηρέσιά μου
 	</p>
 {/if}
-{#if $userRations.length == 0}
+{#if appState.userRations.length == 0}
 	<div>
 		<button class="koumpi"
 			><a href="/newration">
@@ -47,10 +47,10 @@
 	</div>
 {:else if mounted}
 	<div in:fly={{ y: 100, duration: 1000 }} class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-		{#each $userRations as ration}
+		{#each appState.userRations as ration}
 			<button
 				class="card card-hover bg-white shadow-lg rounded-lg p-4 mx-auto hover:variant-outline-secondary focus:animate-ping"
-				on:click={gotoration(ration?.id || '')}
+				onclick={()=>gotoration(ration?.id || '')}
 			>
 				<div class="flex justify-between space-x-3 sm:space-x-10 items-start">
 					<h2 class="text-lg font-semibold mb-2">{ration.rationName || 'Σιτηρέσιο Χωρίς Τίτλο'}</h2>

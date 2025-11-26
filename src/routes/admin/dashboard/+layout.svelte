@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '$lib/pocketbase.svelte';
     import type { LayoutData } from './$types';
     
-    export let data: LayoutData;
+    let { data, children } = $props();
     console.log(data)
 </script>
 <div class="flex flex-col justify-center place-center gap-3 mx-auto">
-<slot/>
+{@render children()}
 
 </div>

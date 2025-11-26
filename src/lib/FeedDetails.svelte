@@ -1,9 +1,7 @@
 <script lang="ts">
 	import type { Feed, Column } from "./stores/types";
 
-	export let objectData:Feed;
-	export let metrics:Column[];
-	export let detailed:boolean;
+	let { objectData = $bindable(), metrics, detailed } = $props();
 
 </script>
 		{#if detailed}
@@ -84,4 +82,3 @@
 		width: 5rem;
 	} */
 </style>
-

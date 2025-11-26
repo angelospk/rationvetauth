@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 
 	import LoadingCircles from '$lib/Loading Circles.svelte';
-	import { pb, currentUser } from '$lib/pocketbase';
+	import { pb, authState } from '$lib/pocketbase.svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 
@@ -13,17 +13,17 @@
 		message: 'This message will auto-hide after 3 seconds.',
 		timeout: 3000
 	};
-	let loading = false;
+	let loading = $state(false);
 	//add missing variables
-	let password: string;
-	let passwordConfirm: string;
-	let text: string;
-	let oldPassword: string;
+	let password = $state("");
+	let passwordConfirm = $state("");
+	let text = $state("");
+	let oldPassword = $state("");
     async function passchange(){
         loading=true;
         const data={oldPassword:oldPassword, password:password, passwordConfirm:passwordConfirm}
         try{
-        await pb.collection('users').update($currentUser?.id, data)
+        await pb.collection('users').update(authState.user?.id, data)
             te.message="Επιτυχής αλλαγή κωδικού!"
             te.background="bg-green-600"
             toastStore.trigger(te)
@@ -81,7 +81,7 @@ loading=false;
 		<div class="mt-6">
 			{#if !loading}
 				<button
-					class="w-full px-4 py-2 koumpi" on:click={passchange}
+					class="w-full px-4 py-2 koumpi" onclick={passchange}
 				>
 					Αλλαγή κωδικού
 				</button>

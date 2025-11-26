@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { metrics, feeds, userFeeds, loadedTables } from '$lib/stores/data';
+	import { appState } from '$lib/stores/data.svelte';
 	import type { State, TableState } from '$lib/stores/types';
 	import FeedsTable from '$lib/FeedsTable.svelte';
 	import TablePlaceHolder from '$lib/TablePlaceHolder.svelte';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { currentUser, pb } from '$lib/pocketbase';
+	import { authState, pb } from '$lib/pocketbase.svelte';
 
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
@@ -17,12 +17,12 @@
 		message: 'This message will auto-hide after 3 seconds.',
 		timeout: 3000
 	};
-	let ration: State;
-	let err = false;
+	let ration = $state<State>();
+	let err = $state(false);
 
 	onMount(async () => {
 		try {
-			ration = await pb.collection('rations').getOne($page.params.id);
+			ration = await pb.collection('rations').getOne($page.params.id || "");
 		} catch (error) {
 			te.message = 'Απέτυχε η φόρτωση του σιτηρεσίου!';
 			te.background = 'bg-red-600';
@@ -38,7 +38,7 @@
 
 {#if err}
 	<h1 class="card p-4 bg-error-500">Ουψ! Το σιτηρέσιο δεν μπορεί να φορτωθεί!</h1>
-{:else if $loadedTables && ration}
+{:else if appState.loadedTables && ration}
 	<div in:fly={{ y: -200, duration: 1000 }}>
 		<RationInfo
 			producerName={ration?.producerName}
@@ -49,14 +49,14 @@
 	<div in:fly={{ y: 200, duration: 1000 }}>
 		<FeedsTable
 			{ration}
-			userFeeds={$userFeeds}
-			feeds={$feeds}
-			metrics={$metrics}
-			edit={Boolean($currentUser)}
+			userFeeds={appState.userFeeds}
+			feeds={appState.feeds}
+			metrics={appState.metrics}
+			edit={Boolean(authState.user)}
 		/>
 
 		<div class="flex justify-center space-x-1 sm:space-x-5 text-xs sm:text-base">
-			{#if $currentUser?.id == ration?.user}
+			{#if authState.user?.id == ration?.user}
 				<a class="koumpi btn-sm sm:btn-base" href={'/ration/' + ration?.id + '/edit'}
 					><svg
 						class="w-6 h-6 text-gray-800 dark:text-white mr-2"
@@ -75,7 +75,7 @@
 					</svg> Επεξεργασία Σιτηρεσίου</a
 				>
 
-				<button class="koumpi" on:click={print}
+				<button class="koumpi" onclick={print}
 					><div class="flex space-x-2 mr-2">
 						<svg
 							class="w-6 h-6 text-gray-800 dark:text-white"

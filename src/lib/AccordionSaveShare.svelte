@@ -10,10 +10,10 @@
 	import { popup } from '@skeletonlabs/skeleton';
 
 	// Your Svelte component
-	import { currentUser, pb } from '$lib/pocketbase';
+	import { authState, pb } from '$lib/pocketbase.svelte';
 	import type { State } from '$lib/stores/types';
 	import { enhance } from '$app/forms';
-	import { userRations } from './stores/data';
+	import { appState } from './stores/data.svelte';
 	import { page } from '$app/stores';
 	import type { RecordModel } from 'pocketbase';
 	const toastStore = getToastStore();
@@ -27,21 +27,21 @@
 		target: 'popupHover',
 		placement: 'bottom'
 	};
-	let record: State | RecordModel;
-	export let currentState: State;
-	export let currentDate: string;
+	let record = $state<State | RecordModel>();
+	let { currentState = $bindable(), currentDate = $bindable() } = $props();
+
 	async function saveRation() {
 		let ration2save = { ...currentState };
 		ration2save.date = currentDate;
-		ration2save.user = $currentUser?.id;
-		if (ration2save.producerName == '') ration2save.producerName = $currentUser?.name;
+		ration2save.user = authState.user?.id;
+		if (ration2save.producerName == '') ration2save.producerName = authState.user?.name;
 		console.log(ration2save);
 		try {
 			record = await pb.collection('rations').create(ration2save);
 			te.message = 'Ο πίνακας σιτηρεσίου αποθηκεύτηκε επιτυχώς!';
 			te.background = 'bg-green-600';
 			toastStore.trigger(te);
-			$userRations = [...$userRations, record];
+			appState.userRations = [...appState.userRations, record];
 		} catch (error) {
 			console.log(error);
 			// te.message=+"Πληροφορίες: ".concat(error)
@@ -49,7 +49,7 @@
 			toastStore.trigger(te);
 		}
 	}
-	let copied = false;
+	let copied = $state(false);
 
 	function onClickHandler(): void {
 		copied = true;
@@ -66,8 +66,8 @@
 <div class="text-center max-w-3xl mx-auto print:hidden text-slate-50">
 	<Accordion>
 		<AccordionItem>
-			<svelte:fragment slot="lead"
-				><div class="flex space-x-2">
+			{#snippet lead()}
+				<div class="flex space-x-2">
 					<svg
 						class="w-6 h-6 text-gray-800 dark:text-white"
 						aria-hidden="true"
@@ -95,30 +95,32 @@
 							d="M1 18a.969.969 0 0 0 .933 1h12.134A.97.97 0 0 0 15 18M1 7V5.828a2 2 0 0 1 .586-1.414l2.828-2.828A2 2 0 0 1 5.828 1h8.239A.97.97 0 0 1 15 2v5M6 1v4a1 1 0 0 1-1 1H1m0 9v-5h1.5a1.5 1.5 0 1 1 0 3H1m12 2v-5h2m-2 3h2m-8-3v5h1.375A1.626 1.626 0 0 0 10 13.375v-1.75A1.626 1.626 0 0 0 8.375 10H7Z"
 						/>
 					</svg>
-				</div></svelte:fragment
-			>
-			<svelte:fragment slot="summary">Εκτύπωση</svelte:fragment>
-			<svelte:fragment slot="content">
+				</div>
+			{/snippet}
+			{#snippet summary()}
+				Εκτύπωση
+			{/snippet}
+			{#snippet content()}
 				<div class=" p-4">
 					Εκτύπωσε ή αποθήκευσε ως pdf.<br /><button
 						class="koumpi my-3"
 						id="ekt"
 						use:popup={popupHover}
-						on:click={print}
+						onclick={print}
 					>
 						Εκτύπωση</button
 					>
 					<div class=" p-4 rounded-lg variant-filled-primary" data-popup="popupHover">
-						<div class="arrow variant-filled-primary" />
+						<div class="arrow variant-filled-primary"></div>
 						Για περισσότερες από οχτώ Θρεπτκές Ουσίες στον πίνακα προτείνεται προσανατολισμός Landscape
 						στην Εκτύπωση.
 					</div>
 				</div>
-			</svelte:fragment>
+			{/snippet}
 		</AccordionItem>
 		<AccordionItem>
-			<svelte:fragment slot="lead"
-				><svg
+			{#snippet lead()}
+				<svg
 					class="w-6 h-6 ml-2 text-gray-800 dark:text-white"
 					aria-hidden="true"
 					xmlns="http://www.w3.org/2000/svg"
@@ -128,25 +130,25 @@
 					<path
 						d="M13 20a1 1 0 0 1-.64-.231L7 15.3l-5.36 4.469A1 1 0 0 1 0 19V2a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v17a1 1 0 0 1-1 1Z"
 					/>
-				</svg></svelte:fragment
-			>
-			<svelte:fragment slot="summary"
-				><p class={$currentUser ? '' : 'line-through'}>Αποθήκευση</p></svelte:fragment
-			>
-			<svelte:fragment slot="content">
+				</svg>
+			{/snippet}
+			{#snippet summary()}
+				<p class={authState.user ? '' : 'line-through'}>Αποθήκευση</p>
+			{/snippet}
+			{#snippet content()}
 				<div class=" p-4">
-					{#if !$currentUser}
+					{#if !authState.user}
 						Συνδέσου για να μπορείς να αποθηκεύεις σιτηρέσια στο λογαριασμό σου.
 					{:else}
 						Αποθήκευσε το παραπάνω σιτηρέσιο για μελλοντική χρήση ή επεξεργασία. <br />
-						<button class="koumpi my-3" on:click={saveRation}> Αποθήκευση</button>
+						<button class="koumpi my-3" onclick={saveRation}> Αποθήκευση</button>
 					{/if}
 				</div>
-			</svelte:fragment>
+			{/snippet}
 		</AccordionItem>
 		<AccordionItem>
-			<svelte:fragment slot="lead"
-				><svg
+			{#snippet lead()}
+				<svg
 					class="w-6 h-6 ml-2 text-gray-800 dark:text-white"
 					aria-hidden="true"
 					xmlns="http://www.w3.org/2000/svg"
@@ -156,13 +158,13 @@
 					<path
 						d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z"
 					/>
-				</svg></svelte:fragment
-			>
-			<svelte:fragment slot="summary"
-				><p class={$currentUser ? '' : 'line-through'}>Διαμοιρασμός</p></svelte:fragment
-			>
-			<svelte:fragment slot="content"
-				><div class="flex flex-col p-4">
+				</svg>
+			{/snippet}
+			{#snippet summary()}
+				<p class={authState.user ? '' : 'line-through'}>Διαμοιρασμός</p>
+			{/snippet}
+			{#snippet content()}
+				<div class="flex flex-col p-4">
 					{#if record && record?.id}
 						<p>Μοιράσου ή στείλε σε κάποιον το σιτηρέσιο στέλοντας τον παρακάτω σύνδεσμο.</p>
 						<p class="bg-success-600 w-fit mx-auto rounded-lg border-1 shadow-lg">
@@ -171,7 +173,7 @@
 						<button
 							class="koumpi w-fit mx-auto"
 							use:clipboard={$page.url.host.concat('/ration/', record?.id)}
-							on:click={onClickHandler}
+							onclick={onClickHandler}
 							disabled={copied}
 						>
 							{copied ? 'Αντιγράφτηκε 👍' : 'Αντιγραφή στο πρόχειρο'}</button
@@ -180,7 +182,7 @@
 						<p>Κάνε αποθήκευση σιτηρεσίου πρώτα.</p>
 					{/if}
 				</div>
-			</svelte:fragment>
+			{/snippet}
 		</AccordionItem>
 	</Accordion>
 </div>

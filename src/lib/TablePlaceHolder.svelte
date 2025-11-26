@@ -3,18 +3,17 @@
 </p>
 <section class="card w-full bg-slate-200">
 	<div class="p-4 space-y-4 animate-pulse">
-		<div class="placeholder" />
+		<div class="placeholder"></div>
 		<div class="grid grid-cols-3 gap-8 animate-pulse">
-			<div class="placeholder" />
-			<div class="placeholder" />
-			<div class="placeholder" />
+			<div class="placeholder"></div>
+			<div class="placeholder"></div>
+			<div class="placeholder"></div>
 		</div>
 		<div class="grid grid-cols-4 gap-4 animate-pulse">
-			<div class="placeholder" />
-			<div class="placeholder" />
-			<div class="placeholder" />
-			<div class="placeholder" />
+			<div class="placeholder"></div>
+			<div class="placeholder"></div>
+			<div class="placeholder"></div>
+			<div class="placeholder"></div>
 		</div>
 	</div>
 </section>
-

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { currentUser, pb } from '$lib/pocketbase';
+	import { authState, pb } from '$lib/pocketbase.svelte';
 	import {
 		Accordion,
 		AccordionItem,
@@ -10,7 +10,7 @@
 		getModalStore
 	} from '@skeletonlabs/skeleton';
 	import EditObject from '$lib/EditObject.svelte';
-	import { metrics, userFeeds } from '$lib/stores/data';
+	import { appState } from '$lib/stores/data.svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { ModalSettings, ToastSettings } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
@@ -19,7 +19,7 @@
 	import LoadingCircles from '$lib/Loading Circles.svelte';
 	import { Popover, Button } from 'flowbite-svelte';
 	import { fly } from 'svelte/transition';
-	let mounted:boolean;
+	let mounted = $state(false);
 	const modalStore = getModalStore();
 	const modal: ModalSettings = {
 		type: 'component',
@@ -33,46 +33,40 @@
 	};
 	onMount(async () => {
 		
-		if ($userFeeds.length == 0) {
+		if (appState.userFeeds.length == 0) {
 			const r: any =
 				(await pb.collection('feeds').getFullList({
 					sort: '-created'
 				})) || [];
 			console.log(r);
-			userFeeds.set(r);
+			appState.userFeeds = r;
 		}
 		mounted=true;
 	});
-	function createEmpty() {
-		let empty: Feed = {};
+	function createEmpty(): Partial<Feed> {
+		let empty: Partial<Feed> = {};
 		for (let x of m) {
-			empty[x.Title] = 0;
+			(empty as any)[x.Title] = 0;
 		}
 		empty.Title = '';
 		return empty;
 	}
-	let m: any = [];
-
-	$: {
-		m = $metrics.filter((x) => x.cat);
-	}
+	let m: any = $derived(appState.metrics.filter((x) => x.cat));
 
 	const toastStore = getToastStore();
 	let te: ToastSettings = {
 		message: 'This message will auto-hide after 3 seconds.',
 		timeout: 1000
 	};
-	let detailed: boolean = true;
-	let empty: Feed = createEmpty();
+	let detailed = $state(true);
+	let empty = $state(createEmpty());
 	const saveChanges = async () => {
 		try {
-			empty.user = $currentUser?.id;
+			empty.user = authState.user?.id;
 			const record = await pb.collection('feeds').create(empty);
 			console.log('epistrofi:', record);
 			try {
-				$userFeeds=[record,...$userFeeds]
-				// userFeeds.update((arr) => [record, ...arr]);
-				
+				appState.userFeeds = [record, ...appState.userFeeds];
 				empty = createEmpty();
 			} catch (err) {
 				console.log(err);
@@ -111,10 +105,10 @@
 {#if mounted}
 <div in:fly={{ y: 200, duration: 1000 }}>
 <Accordion >
-		{#each $userFeeds as da}
+		{#each appState.userFeeds as da, i}
 			<AccordionItem>
-				<svelte:fragment slot="lead"
-					><svg
+				{#snippet lead()}
+					<svg
 						class="w-6 h-6 text-slate-200"
 						aria-hidden="true"
 						xmlns="http://www.w3.org/2000/svg"
@@ -128,28 +122,28 @@
 							stroke-width="2"
 							d="M4.109 17H1v-2a4 4 0 0 1 4-4h.87M10 4.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm7.95 2.55a2 2 0 0 1 0 2.829l-6.364 6.364-3.536.707.707-3.536 6.364-6.364a2 2 0 0 1 2.829 0Z"
 						/>
-					</svg></svelte:fragment
-				>
-				<svelte:fragment slot="summary"
-					><div class="flex justify-start">
+					</svg>
+				{/snippet}
+				{#snippet summary()}
+					<div class="flex justify-start">
 						<p class="text-black ml-auto">{da?.Title}</p>
 						<div class="text-xs ml-auto">{da.updated}</div>
-					</div></svelte:fragment
-				>
-				<svelte:fragment slot="content"
-					><EditObject
+					</div>
+				{/snippet}
+				{#snippet content()}
+					<EditObject
 						{detailed}
-						bind:objectData={da}
+						bind:objectData={appState.userFeeds[i]}
 						metrics={m}
-						bind:records={$userFeeds}
-					/></svelte:fragment
-				>
+						bind:records={appState.userFeeds}
+					/>
+				{/snippet}
 			</AccordionItem>
 		{/each}
 		<hr />
 		<AccordionItem>
-			<svelte:fragment slot="lead"
-				><svg
+			{#snippet lead()}
+				<svg
 					class="w-6 h-6 text-slate-100"
 					aria-hidden="true"
 					xmlns="http://www.w3.org/2000/svg"
@@ -163,23 +157,27 @@
 						stroke-width="2"
 						d="M13 8h6m-3 3V5m-6-.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0ZM5 11h3a4 4 0 0 1 4 4v2H1v-2a4 4 0 0 1 4-4Z"
 					/>
-				</svg></svelte:fragment
-			>
-			<svelte:fragment slot="summary"><p class="text-center mr-[9rem]">Φτιάξε Νέα Τροφή!</p></svelte:fragment>
-			<svelte:fragment slot="content"
-				><div class="card p-3">
+				</svg>
+			{/snippet}
+			{#snippet summary()}
+				<p class="text-center mr-[9rem]">Φτιάξε Νέα Τροφή!</p>
+			{/snippet}
+			{#snippet content()}
+				<div class="card p-3">
 					<div class="flex-container">
 						<div class="flex justify-center w-full">
 							<button
+                aria-label="Template Feed"
 								class="koumpi mt-2"
 								id="b2"
-								on:click={() => {
+								onclick={() => {
 									modalStore.trigger(modal);
 								}}>Πρότυπο τροφής</button
 							>
 							<button
+                aria-label="Empty Feed"
 								class="sm:ml-3"
-								on:click={() => {
+								onclick={() => {
 									empty = createEmpty();
 								}}
 							>
@@ -213,10 +211,10 @@
 							<input class="rounded-lg ml-1" type="text" bind:value={empty.Title} />
 						</div>
 						<FeedDetails {detailed} metrics={m} bind:objectData={empty} />
-						<button class="my-3 koumpi" on:click|preventDefault={saveChanges}>Αποθήκευση</button>
+						<button class="my-3 koumpi" onclick={saveChanges}>Αποθήκευση</button>
 					</div>
-				</div></svelte:fragment
-			>
+				</div>
+			{/snippet}
 		</AccordionItem>
 		<!-- ... -->
 	</Accordion>

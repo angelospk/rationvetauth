@@ -1,8 +1,8 @@
-<script> 
+<script lang="ts">
     let selection = '';
     let subselection = '';
 
-    const data={
+    const data: any={
     "Αυγοπαραγωγών / Περίοδος αυγοπαραγωγής (εβδ)": {
       "Food Intake (g/day)": "85-120",
       "18 ως 40": {
@@ -63,7 +63,7 @@
   "Sodium": 1.8,
   "Food Intake (g/day)": ">150"
   }}}
-    let formData = {}; // To hold the data to be displayed based on selections
+    let formData: any = {}; // To hold the data to be displayed based on selections
     function handleChange() {
       formData = data[selection][subselection];
     }
@@ -88,26 +88,30 @@
   
   {#if formData}
     <table>
-      <tr>
-        <th>MEpoultry</th>
-        <th>CrudeProtein</th>
-        <th>Lysine</th>
-        <th>CrudeFiber</th>
-        <th>Calcium</th>
-        <th>Phosphorus</th>
-        <th>Sodium</th>
-        <th>Food Intake (g/day)</th>
-      </tr>
-      <tr>
-        <td>{formData.MEpoultry}</td>
-        <td>{formData.CrudeProtein}</td>
-        <td>{formData.Lysine}</td>
-        <td>{formData.CrudeFiber}</td> <!-- Displaying as less than the value -->
-        <td>{formData.Calcium}</td>
-        <td>{formData.Phosphorus}</td>
-        <td>{formData.Sodium}</td>
-        <td>{formData['Food Intake (g/day)']}</td>
-      </tr>
+      <thead>
+        <tr>
+          <th>MEpoultry</th>
+          <th>CrudeProtein</th>
+          <th>Lysine</th>
+          <th>CrudeFiber</th>
+          <th>Calcium</th>
+          <th>Phosphorus</th>
+          <th>Sodium</th>
+          <th>Food Intake (g/day)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{formData.MEpoultry}</td>
+          <td>{formData.CrudeProtein}</td>
+          <td>{formData.Lysine}</td>
+          <td>{formData.CrudeFiber}</td> <!-- Displaying as less than the value -->
+          <td>{formData.Calcium}</td>
+          <td>{formData.Phosphorus}</td>
+          <td>{formData.Sodium}</td>
+          <td>{formData['Food Intake (g/day)']}</td>
+        </tr>
+      </tbody>
     </table>
   {/if}
   

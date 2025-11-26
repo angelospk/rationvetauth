@@ -1,15 +1,25 @@
-<script>
-    let cattleType = ""; // This will store the selected type for the cattle (beef, dairy)
-    let stage = ""; // This will store the selected stage for the cattle
-    let bodyWeight = 0; // This will store the body weight input by the user
+<script lang="ts">
+    import { CATTLE_VALUES } from '$lib/animaldata';
 
-    // Assuming you have a dictionary similar to previous examples named CATTLE_VALUES
+    let cattleType = $state(""); // This will store the selected type for the cattle (beef, dairy)
+    let stage = $state(""); // This will store the selected stage for the cattle
+    let bodyWeight = $state(0); // This will store the body weight input by the user
 
-
-	let requirements = {DMI:0,CP:0,ME:0,Calcium:0,Phosphorus:0,VitaminA:0,VitaminD:0,VitaminE	:0};
+    let requirements = $state({
+        DMI: 0,
+        CP: 0,
+        ME: 0,
+        Calcium: 0,
+        Phosphorus: 0,
+        VitaminA: 0,
+        VitaminD: 0,
+        VitaminE: 0
+    });
 
     function computeRequirements() {
-        let stageValues = CATTLE_VALUES[cattleType][stage];
+        if (!cattleType || !stage || !(CATTLE_VALUES as any)[cattleType] || !(CATTLE_VALUES as any)[cattleType][stage]) return;
+
+        let stageValues = (CATTLE_VALUES as any)[cattleType][stage];
 
         let dmi_min = stageValues["DMI"][0];
         let dmi_max = stageValues["DMI"][1];
@@ -49,7 +59,7 @@
 
 <input type="number" bind:value={bodyWeight} placeholder="Enter body weight (kg)" />
 
-<button on:click={computeRequirements}>Compute Nutritional Requirements</button>    
+<button onclick={computeRequirements}>Compute Nutritional Requirements</button>
 
 <ul>
     {#if stage && bodyWeight}
@@ -64,4 +74,3 @@
         <li><strong>Vitamin E (mg/day):</strong> {requirements.VitaminE}</li>
     {/if}
 </ul>
-

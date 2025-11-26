@@ -1,7 +1,7 @@
 
 import { error, redirect } from '@sveltejs/kit'
 import type { Actions } from './$types'
-import { pb } from '$lib/pocketbase'
+import { pb } from '$lib/pocketbase.svelte'
   
 
 
@@ -14,6 +14,7 @@ export const actions: Actions = {
       passwordConfim:string
       name:string
       justify: string
+      Student?: boolean | string
     }
     // console.log(data);
     data.Student=data.Student=="1"?true:false;
@@ -32,7 +33,7 @@ export const actions: Actions = {
     // console.log(pb.authStore.exportToCookie())
     return {registered:true}
     // throw error (404);
-    return {logged:true, data:res}
+    // return {logged:true, data:res}
     // throw redirect(303, '/')
   },
 }

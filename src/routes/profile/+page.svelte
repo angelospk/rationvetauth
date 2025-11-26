@@ -1,10 +1,20 @@
 <script lang="ts">
-	import { currentUser, pb } from '$lib/pocketbase';
+	import { authState, pb } from '$lib/pocketbase.svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
-  let mounted:boolean;
-  let formd={name:$currentUser?.name, phone:$currentUser?.phone, postalCode:$currentUser?.postalCode};
+  let mounted = $state(false);
+  let formd = $state({name: authState.user?.name, phone: authState.user?.phone, postalCode: authState.user?.postalCode});
+
+  // Sync formd with user state if user loads later
+  $effect(() => {
+    if (authState.user) {
+        if (!formd.name) formd.name = authState.user.name;
+        if (!formd.phone) formd.phone = authState.user.phone;
+        if (!formd.postalCode) formd.postalCode = authState.user.postalCode;
+    }
+  });
+
   let toast=getToastStore()
 	onMount(()=>{
     mounted=true
@@ -14,7 +24,7 @@
 <p in:fly={{ y: -200, duration: 1000 }} class="text-3xl lg:text-5xl heading mb-6">Το προφίλ μου</p>
 <div in:fly={{ y: 200, duration: 1000 }} class="flex justify-center">
 
-  {#if !$currentUser?.Student}
+  {#if !authState.user?.Student}
   <div class="card p-4 bg-transparent  hover:bg-gradient-to-br from-transparent to-lime-100 outline-dashed outline-blue-400">
     <h1 class="my-2 font-bold mb-4">Επεξεργασία Χρήστη</h1>
     <label for="name">Όνομα:</label>
@@ -25,9 +35,9 @@
     <label for="postalCode">Ταχ. Κώδικας:</label>
     <input type="text" pattern="[0-9]{5}"  style="width: 4rem" id="postalCode" name="postalCode" bind:value={formd.postalCode} />
 <br>
-    <button class="justify-center my-3 koumpi" on:click={async ()=>{
+    <button class="justify-center my-3 koumpi" onclick={async ()=>{
       try {
-        await pb.collection('users').update($currentUser?.id, formd);
+        await pb.collection('users').update(authState.user?.id, formd);
       toast.trigger({message:"Οι αλλαγές αποθηκεύτηκαν επιτυχώς!", timeout:3000, background:"bg-green-400"})
       } catch (error) {
         toast.trigger({message:"Η αποθήκευση απέτυχε!", timeout:3000, background:"bg-red-400"})

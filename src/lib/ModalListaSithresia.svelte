@@ -4,10 +4,10 @@
 
 	// Props
 	/** Exposes parent props to this component. */
-	export let parent: any;
+	let { parent }: {parent: any} = $props();
 	
 	// Local
-	let feed:Feed;
+	let feed = $state<Feed>();
 	const modalStore = getModalStore();
 	let totalfeeds:Feed[];
 	// Handle Form Submission
@@ -35,8 +35,8 @@
 		</select>
 
 		<footer class="modal-footer {parent.regionFooter}">
-        <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
-        <button class="btn {parent.buttonPositive}" on:click={onFormSubmit}>Άνοιγμα</button>
+        <button class="btn {parent.buttonNeutral}" onclick={parent.onClose}>{parent.buttonTextCancel}</button>
+        <button class="btn {parent.buttonPositive}" onclick={onFormSubmit}>Άνοιγμα</button>
     </footer>
 	</div>
 {/if}
