@@ -15,9 +15,9 @@
 		timeout: 3000
 	};
 	let formData: FormData;
-	let username = $state("");
-	let password = $state("");
-	// export let data:PageData
+	let username = $state('');
+	let password = $state('');
+
 	let text = $state('loading');
 	let loading = $state(false);
 	let showVerification = $state(false);

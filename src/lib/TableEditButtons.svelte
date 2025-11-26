@@ -20,14 +20,13 @@
 		userFoodAutocomplete = [] as AutocompleteOption<string, unknown>[]
 	} = $props();
 
-//  import {certain} from './AddFoods.svelte'
+	// import {certain} from './AddFoods.svelte'
 	const loginClick: PopupSettings = {
 		event: 'hover',
 		target: 'loginClick',
 		placement: 'bottom'
 	};
-	// export let convertRationMixtoFeed:Promise<Feed>;
-	// export let toastStore;
+
 	let addFoodVisible = $state(false);
 	let addMetrics = $state(false);
 	let addUserFoodVisible = $state(false);
@@ -109,25 +108,7 @@
 			return true;
 		}
 	}
-	// $: autocompleteOptions = $feeds.map((feed) => ({
-	// 	label: feed.Title,
-	// 	value: feed.Title,
-	// 	keywords: feed.keywords
-	// 		? feed.keywords.split(', ').concat(normalizeGreek(feed.Title))
-	// 		: normalizeGreek(feed.Title)
-	// }));
-	// $: metricsAutocomplete = $metrics
-	// 	.filter((x) => !certain.includes(x.Title))
-	// 	.map((x) => ({
-	// 		label: x.labelgr,
-	// 		value: x.Title,
-	// 		keywords: normalizeGreek(x.labelgr)
-	// 	}));
-	// $:	userFoodAutocomplete = $userFeeds.map((x) => ({
-	// 		label: x.Title,
-	// 		value: x.Title,
-	// 		keywords: normalizeGreek(x.Title)
-	// 	}));
+
 </script>
 <div class="mx-auto max-w-3xl">
 <div class="my-3 flex justify-between space-x-1 md:space-x-5">

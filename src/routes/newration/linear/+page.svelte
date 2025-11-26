@@ -2,7 +2,12 @@
 	import EditableTable from '$lib/EditableTable.svelte';
 	import RationInfo from '$lib/RationInfo.svelte';
 	import { authState, pb } from '$lib/pocketbase.svelte';
-	import { getModalStore, getToastStore, type ModalSettings, type ToastSettings } from '@skeletonlabs/skeleton';
+	import {
+		getModalStore,
+		getToastStore,
+		type ModalSettings,
+		type ToastSettings
+	} from '@skeletonlabs/skeleton';
 	import type { AnimalInfo, AnimalReqs, Form, State } from '$lib/stores/types';
 	import AnimalFeedRequirements from '$lib/AnimalFeedRequirements.svelte';
 	import { page } from '$app/stores';
@@ -29,12 +34,16 @@
 		body: 'Επέλεξε από τη λίστα για να φορτωθεί η προδιαγραφή!',
 		component: 'modalSithresia',
 		response(r) {
-			if (r){
-			form.reqs=[...form.reqs,{Title:r.Title, type:"any", value:0}]}
-		
+			if (r) {
+				form.reqs = [...form.reqs, { Title: r.Title, type: 'any', value: 0 }];
+			}
 		},
 		buttonTextCancel: 'Ακύρωση',
-		meta: {metrs: appState.metrics.filter(x=>![...form.reqs.map(y=>y.Title),"weight","Title"].includes(x.Title))}
+		meta: {
+			metrs: appState.metrics.filter(
+				(x) => ![...form.reqs.map((y) => y.Title), 'weight', 'Title'].includes(x.Title)
+			)
+		}
 		// backdropClasses: "!blur-1"
 	};
 
@@ -43,64 +52,69 @@
 		body: 'Επέλεξε από τη λίστα για να φορτωθεί η λίστα των προδιαγραφών!',
 		component: 'modalSithresia',
 		response(r) {
-			if (r && r.requirements && r.requirements?.reqs.length>0){
-			form=r.requirements
-			// console.log(r);
+			if (r && r.requirements && r.requirements?.reqs.length > 0) {
+				form = r.requirements;
+				// console.log(r);
 			}
-		
 		},
-		buttonTextCancel: 'Ακύρωση',
-		
+		buttonTextCancel: 'Ακύρωση'
+
 		// backdropClasses: "!blur-1"
 	};
 	const saveReqs: ModalSettings = {
-	type: 'prompt',
-	// Data
-	title: 'Εισάγετε Όνομα',
-	body: 'Ονομάστε τις προδιαγραφές για να τις ξεχωρίζετε.',
-	// Populates the input value and attributes
-	value: '',
-	buttonTextConfirm: 'Επικύρωση',
-	buttonTextCancel: 'Ακύρωση',
-	valueAttr: { type: 'text', minlength: 3, required: true },
-	// Returns the updated response value
-	response: async (r: string) => {
-		form.reqs=form.reqs.filter(x=>x.type!="any")
-		let resp=await pb.collection('requirements').create({user:authState.user?.id||"", Title:r, requirements:form})
-		if (resp){
-			console.log("success");
+		type: 'prompt',
+		// Data
+		title: 'Εισάγετε Όνομα',
+		body: 'Ονομάστε τις προδιαγραφές για να τις ξεχωρίζετε.',
+		// Populates the input value and attributes
+		value: '',
+		buttonTextConfirm: 'Επικύρωση',
+		buttonTextCancel: 'Ακύρωση',
+		valueAttr: { type: 'text', minlength: 3, required: true },
+		// Returns the updated response value
+		response: async (r: string) => {
+			form.reqs = form.reqs.filter((x) => x.type != 'any');
+			let resp = await pb
+				.collection('requirements')
+				.create({ user: authState.user?.id || '', Title: r, requirements: form });
+			if (resp) {
+				console.log('success');
+			}
 		}
-	},
-};
+	};
 	// let metricRequirements=metrics
 	let send2Email: string;
 	let record = $state<State>();
 	let loadedTable = $state(false);
-	let currentState = $state<State>();
+	let currentState = $state<State>({
+		rationName: '',
+		producerName: '',
+		totalWeight: 0,
+		tableState: { selfeeds: [], extraCols: [] }
+	} as State);
 	let info = $state<AnimalInfo>();
 	let rationName = $state('');
 	let producerName = $state(authState.user?.name || '');
-	let currentDate = $state<string>('');
-	let addMetric = $state("Διάλεξε ΘΟ");
+	let currentDate = $state<string>(new Date().toISOString().split('T')[0]);
+	let addMetric = $state('Διάλεξε ΘΟ');
 	let mounted = $state(false);
 	let test = $state(false);
 
-	onMount(async()=>
-{	mounted=true;
-	userReqs=await pb.collection('requirements').getFullList()||[];
-	modalLoadReqs.meta={metrs:userReqs};
-	if (authState.user?.Student){
-		console.log("student")
-		let l=await pb.collection('settings').getOne("ucz1zj2wgphtqc3")
-		test=l?.test
-		// .then((item)=>{test=item?.test})
-	}
-	// console.log(userReqs)
-})
+	onMount(async () => {
+		mounted = true;
+		userReqs = (await pb.collection('requirements').getFullList()) || [];
+		modalLoadReqs.meta = { metrs: userReqs };
+		if (authState.user?.Student) {
+			console.log('student');
+			let l = await pb.collection('settings').getOne('ucz1zj2wgphtqc3');
+			test = l?.test;
+			// .then((item)=>{test=item?.test})
+		}
+		// console.log(userReqs)
+	});
 </script>
 
-
-	{#if mounted}
+{#if mounted}
 	<div in:fly={{ y: -200, duration: 1000 }} class="print:hidden">
 		<h2 class="text-xl md:text-3xl lg:text-4xl heading mb-2">
 			Επίλυση Σιτηρεσίου με Γραμμικό Προγραμματισμό
@@ -117,102 +131,131 @@
 		</div>
 		<hr />
 	</div>
-	{/if}
-	{#if mounted}
+{/if}
+{#if mounted}
 	<div in:fly={{ y: 200, duration: 1000 }} class="overflow-x-hidden">
-		
-	<div class="heading print:hidden text-3xl">
-		<h2>Βήμα 1: Γενικές Πληροφορίες</h2>
-	</div>
+		<div class="heading print:hidden text-3xl">
+			<h2>Βήμα 1: Γενικές Πληροφορίες</h2>
+		</div>
 
-	<div class="info">
-		Συμπληρώστε μόνο αν έχετε σκοπό να αποθηκεύσετε ή να αποστείλετε το σιτηρέσιο.
-	</div>
-	<RationInfo bind:rationName bind:producerName bind:currentDate editable={true} />
-	<!-- <GeneralInfo bind:rationName={rationName} bind:producerName={producerName} bind:currentDate /> -->
+		<div class="info">
+			Συμπληρώστε μόνο αν έχετε σκοπό να αποθηκεύσετε ή να αποστείλετε το σιτηρέσιο.
+		</div>
+		<RationInfo bind:rationName bind:producerName bind:currentDate editable={true} />
+		<!-- <GeneralInfo bind:rationName={rationName} bind:producerName={producerName} bind:currentDate /> -->
 
-	<hr class="my-2" />
-	
-	<div class="heading print:hidden text-3xl">
-		<h2>Βήμα 2: Επιλογή Ζώου και Διατροφικές Ανάγκες</h2>
-	</div>
-	<div class="info" style="">
-		Σημείωση: Προσθέστε προδιαγραφές ζώου, ή χειροκίνητες δικές σας.<br />
-	</div>
-	<div class="print:hidden">
-	<AnimalFeedRequirements bind:form animals={animals?.animals} bind:animalInfo={info}/>
-	{#if form.reqs.length > 0 || info?.animal=="custom"}
-			{#if info }
-				<div class="flex-col">Ζώο: {info.animal}</div>
-				{#if info.type.subselection.length>0}<div class="flex-col">{info.type.selection}/{info.type.subselection}</div>{/if}
+		<hr class="my-2" />
 
-			{/if}
-			<div class="card p-3 flex space-x-3 overflow-x-auto">
-				
-			{#if form.reqs.length==0}
-			<div  class="btn btn-sm variant-filled mx-auto text-xs h-4"><button onclick={()=>{modalStore.trigger(modalLoadReqs)}} >Άνοιγμα</button></div>
-			{/if}
-			
-			{#each form.reqs as req}
-			<div class="flex flex-col">
-				{metr.find((x) => x.Title == req.Title)?.gr || req.Title}
-				{metr.find((x) => x.Title == req.Title)?.units||""}
-				{#if req.type != "any"}
-					<input bind:value={req.value} min=0 type="number"/>
+		<div class="heading print:hidden text-3xl">
+			<h2>Βήμα 2: Επιλογή Ζώου και Διατροφικές Ανάγκες</h2>
+		</div>
+		<div class="info" style="">
+			Σημείωση: Προσθέστε προδιαγραφές ζώου, ή χειροκίνητες δικές σας.<br />
+		</div>
+		<div class="print:hidden">
+			<AnimalFeedRequirements bind:form animals={animals?.animals} bind:animalInfo={info} />
+			{#if form.reqs.length > 0 || info?.animal == 'custom'}
+				{#if info}
+					<div class="flex-col">Ζώο: {info.animal}</div>
+					{#if info.type.subselection.length > 0}<div class="flex-col">
+							{info.type.selection}/{info.type.subselection}
+						</div>{/if}
 				{/if}
-				<select bind:value={req.type}>
-					<option value="any">Οτιδήποτε</option>
-					<option value="=">{"="}</option>
-					<option value=">">{">"}</option>
-					<option value="<">{"<"}</option>
-					<option value="-">Ανάμεσα</option>
-				</select>
-				{#if req.type == "-"}
-					<input bind:value={req.topValue} type="number"/>
-				{/if}			
+				<div class="card p-3 flex space-x-3 overflow-x-auto">
+					{#if form.reqs.length == 0}
+						<div class="btn btn-sm variant-filled mx-auto text-xs h-4">
+							<button
+								onclick={() => {
+									modalStore.trigger(modalLoadReqs);
+								}}>Άνοιγμα</button
+							>
+						</div>
+					{/if}
+
+					{#each form.reqs as req}
+						<div class="flex flex-col">
+							{metr.find((x) => x.Title == req.Title)?.gr || req.Title}
+							{metr.find((x) => x.Title == req.Title)?.units || ''}
+							{#if req.type != 'any'}
+								<input bind:value={req.value} min="0" type="number" />
+							{/if}
+							<select bind:value={req.type}>
+								<option value="any">Οτιδήποτε</option>
+								<option value="=">{'='}</option>
+								<option value=">">{'>'}</option>
+								<option value="<">{'<'}</option>
+								<option value="-">Ανάμεσα</option>
+							</select>
+							{#if req.type == '-'}
+								<input bind:value={req.topValue} type="number" />
+							{/if}
+						</div>
+					{/each}
+
+					<!-- {JSON.stringify($metrics.filter(x=>!form.reqs.map(y=>y.Title).includes(x.Title)))} -->
+					<div class="ml-auto">
+						<button
+							class="koumpi mt-2"
+							id="b2"
+							onclick={() => {
+								modalStore.trigger(modal);
+							}}>+/- ΘΟ</button
+						>
+						<p>
+							<button
+								onclick={() => {
+									modalStore.trigger(saveReqs);
+								}}
+								class="koumpi mt-2">Αποθήκευση</button
+							>
+						</p>
+					</div>
+				</div>
+			{/if}
+
+			<hr class="my-5" />
+
+			<div class="heading print:hidden text-3xl">
+				<h2>Βήμα 3: Εισαγωγή Τροφών</h2>
 			</div>
-			{/each}
-	
-			<!-- {JSON.stringify($metrics.filter(x=>!form.reqs.map(y=>y.Title).includes(x.Title)))} -->
-			<div class="ml-auto">
-				<button
-				class="koumpi mt-2 " id="b2"
-				onclick={() => {
-					modalStore.trigger(modal);
-				}}>+/- ΘΟ</button
-			>
-			<p><button onclick={()=>{modalStore.trigger(saveReqs)}} class="koumpi mt-2">Αποθήκευση</button></p>
+			<div class="hidden print:block text-center text-lg my-3">Πίνακας Σιτηρεσίου</div>
+			<div class="info" style="">
+				Σημείωση: Προσθέστε τροφές πατώντας στο "Τροφές".<br />
+			</div>
+
+			{#if !loadedTable}
+				<EditableTable
+					bind:rationName
+					bind:producerName
+					bind:currentState
+					linear={true}
+					requirementsString={reverseTransformObject(form)}
+					requirements={form}
+					bind:test
+				/>
+			{:else if record}
+				<EditableTable stage2Read={record} bind:currentState />
+			{/if}
+
+			<AccordionSaveShare bind:currentDate bind:currentState />
+
+			<hr class="my-3" />
+			<p class="text-xs print:hidden text-slate-100">
+				1. Πηγή Δημόσιων Τροφών: Π. Φλώρου-Πανέρη, Ε. Χρηστάκη, και Η. Γιάννενας, Ζωοτροϕές και
+				καταρτισµός σιτηρεσίων. Θεσσαλονίκη: Τζίολα, 2013
+			</p>
+			<p class="text-xs print:hidden text-slate-100">
+				2. Τα αποτελέσματα της Αυτόματης Επίλυσης προκύπτουν μέσω γραμμικού προγραμματισμού και
+				χρησιμεύουν ως υπολογιστικές εκτιμήσεις. Ωστόσο δεν υποκαθιστούν τις συμβουλές των
+				εμπειρογνωμόνων. Ο αλγόριθμος στοχεύει στην ελαχιστοποιήση του κόστους, όμως οι διακυμάνσεις
+				στην ποιότητα των ζωοτροφών, οι συνθήκες υγείας των ζώων και άλλοι περιβαλλοντικοί
+				παράγοντες μπορούν να επηρεάσουν σημαντικά την πραγματική αποτελεσματικότητα του σιτηρεσίου.
+				Συνιστούμε ανεπιφύλακτα να συμβουλευτείτε εξειδικευμένους κτηνιάτρους και διατροφολόγους
+				ζώων για να επικυρώσετε την καταλληλότητα και την ασφάλεια της προτεινόμενης σύνθεσης
+				ζωοτροφών.
+			</p>
 		</div>
-		</div>
-	{/if}
-
-	<hr class="my-5" />
-
-	<div class="heading print:hidden text-3xl">
-		<h2>Βήμα 3: Εισαγωγή Τροφών</h2>
 	</div>
-	<div class="hidden print:block text-center text-lg my-3">Πίνακας Σιτηρεσίου</div>
-	<div class="info" style="">
-		Σημείωση: Προσθέστε τροφές πατώντας στο "Τροφές".<br />
-	</div>
-
-	{#if !loadedTable}
-		<EditableTable bind:rationName bind:producerName bind:currentState linear={true} requirementsString={reverseTransformObject(form)} requirements={form} bind:test />
-	{:else}
-		{#if record}
-			<EditableTable stage2Read={record} bind:currentState />
-		{/if}
-	{/if}
-	
-
-
-<AccordionSaveShare bind:currentDate={currentDate} bind:currentState={currentState}/>
-
-<hr class="my-3">
-<p class="text-xs print:hidden text-slate-100 ">1. Πηγή Δημόσιων Τροφών: Π. Φλώρου-Πανέρη, Ε. Χρηστάκη, και Η. Γιάννενας, Ζωοτροϕές και καταρτισµός
-	σιτηρεσίων. Θεσσαλονίκη: Τζίολα, 2013</p>
-<p class="text-xs print:hidden text-slate-100">2. Τα αποτελέσματα της Αυτόματης Επίλυσης προκύπτουν μέσω γραμμικού προγραμματισμού και χρησιμεύουν ως υπολογιστικές εκτιμήσεις. Ωστόσο δεν υποκαθιστούν τις συμβουλές των εμπειρογνωμόνων. Ο αλγόριθμος στοχεύει στην ελαχιστοποιήση του κόστους, όμως οι διακυμάνσεις στην ποιότητα των ζωοτροφών, οι συνθήκες υγείας των ζώων και άλλοι περιβαλλοντικοί παράγοντες μπορούν να επηρεάσουν σημαντικά την πραγματική αποτελεσματικότητα του σιτηρεσίου. Συνιστούμε ανεπιφύλακτα να συμβουλευτείτε εξειδικευμένους κτηνιάτρους και διατροφολόγους ζώων για να επικυρώσετε την καταλληλότητα και την ασφάλεια της προτεινόμενης σύνθεσης ζωοτροφών.</p>
-</div></div>
 {/if}
 
 <style lang="postcss">
